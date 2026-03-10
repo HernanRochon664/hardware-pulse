@@ -1,0 +1,125 @@
+# ---------------------------
+# General
+# ---------------------------
+*.DS_Store
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.cache
+
+# ---------------------------
+# Python
+# ---------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+
+# Virtual environments
+.venv/
+venv/
+env/
+.python-version
+
+# ---------------------------
+# UV (package manager)
+# ---------------------------
+.uv/
+uv.lock
+
+# ---------------------------
+# Jupyter Notebooks
+# ---------------------------
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# ---------------------------
+# Data
+# ---------------------------
+*.csv
+*.tsv
+*.parquet
+*.xlsx
+*.xls
+*.json
+*.db
+*.npy
+
+# ---------------------------
+# Models
+# ---------------------------
+models/
+checkpoints/
+*.h5
+*.pt
+*.pth
+*.onnx
+*.pickle
+*.sav
+
+# ---------------------------
+# MLFlow
+# ---------------------------
+mlruns/
+mlartifacts/
+
+# ---------------------------
+# Cache / Build / Reports
+# ---------------------------
+.cache/
+build/
+dist/
+htmlcov/
+coverage.xml
+.coverage
+.mypy_cache/
+.pytest_cache/
+.eggs/
+*.egg-info/
+
+# ---------------------------
+# Tools
+# ---------------------------
+Dockerfile~
+docker-compose.yml~
+*.dockerignore~
+
+# Black, Ruff, Linters
+.black/
+.ruff_cache/
+
+# ---------------------------
+# VSCode & IDEs
+# ---------------------------
+.vscode/
+.idea/
+*.code-workspace
+
+# ---------------------------
+# Environment Variables / Secrets
+# ---------------------------
+.env
+.env.*
+!.env.example
+*.env.local
+secret.key
+secrets.toml
+credentials.json
+
+# ---------------------------
+# Streamlit
+# ---------------------------
+.streamlit/
+
+# ---------------------------
+# FastAPI / Temp Files
+# ---------------------------
+*.sqlite3
+*.db
+logs/
+temp/
+tmp/
