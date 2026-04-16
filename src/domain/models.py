@@ -36,7 +36,7 @@ class Source(str, Enum):
 class RawListing(BaseModel):
     # --- Identity ---
     source: Source
-    url: HttpUrl
+    url: str
     timestamp: datetime
 
     # --- Core fields (always present) ---
