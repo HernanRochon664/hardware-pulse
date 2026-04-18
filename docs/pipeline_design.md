@@ -110,9 +110,9 @@ Multiple listings referring to the same GPU model must be grouped together.
 
 Matching strategy (in order of priority):
 
-1. Regex + canonical catalog  →  primary strategy
-2. Fuzzy matching             →  fallback if regex fails
-3. No match                   →  flagged for manual review
+1. Regex + canonical catalog → primary strategy
+2. Fuzzy matching → fallback if regex fails
+3. No match → flagged for manual review
 
 Example canonical SKUs:
 
@@ -313,12 +313,12 @@ Example:
 
 ## 5. Source Inventory
 
-| source       | tool                     | js_required | approx_listings | difficulty |
-| ------------ | ------------------------ | ----------- | --------------- | ---------- |
-| MercadoLibre | API (requests)           | No          | ~200            | Medium     |
-| Thot         | requests + BeautifulSoup | No          | ~15–30          | Very Low   |
-| Banifox      | requests + BeautifulSoup | No          | ~30–35          | Low        |
-| PC Store     | requests + BeautifulSoup | No          | ~40–80          | Low–Medium |
+| source       | tool                     | js_required | approx_listings | difficulty | status     |
+| ------------ | ------------------------ | ----------- | --------------- | ---------- | ---------- |
+| MercadoLibre | API (requests)           | No          | ~200            | Medium     | ✅ MVP     |
+| Thot         | requests + BeautifulSoup | No          | ~15–30          | Very Low   | ✅ MVP     |
+| Banifox      | requests + JSON endpoint | No          | ~46             | Low        | ✅ MVP     |
+| PC Store     | requests.Session         | Partial     | ~65             | High       | ⏸ Post-MVP |
 
 Notes:
 
@@ -407,41 +407,9 @@ Used to map slightly different titles to canonical SKUs.
 
 ## 7. Open Questions
 
-### MercadoLibre API limits
-
-- Are there strict rate limits?
-- Is authentication required for heavy usage?
-- How stable are search results across repeated queries?
-
----
-
-### Scraping frequency
-
-Current assumption:
-
-1 scrape per day
-
-Alternative:
-
-4 scrapes per day
-
-Trade-off:
-
-- higher frequency → better time resolution
-- higher frequency → more duplicated observations
-
----
-
 ### Product variants
 
-Variants appear such as:
+Pending decisions:
 
-RTX 4070  
-RTX 4070 OC  
-RTX 4070 Ti  
-RTX 4070 Super
-
-Decision required:
-
-- treat as separate canonical products
-- or aggregate under base SKU
+- Are RTX 4070 and RTX 4070 OC treated as the same canonical SKU?
+- Is RTX 4070 Ti a separate SKU from RTX 4070?
