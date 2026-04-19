@@ -204,3 +204,41 @@ def fetch_banifox_listings(
     )
 
     return listings
+
+# ---------------------------------------------------------------------------
+# Scraper adapter (Protocol-compliant)
+# ---------------------------------------------------------------------------
+
+
+class BanifoxScraper:
+    """
+    Thin adapter to make the functional Banifox scraper compatible
+    with the Scraper Protocol.
+
+    Holds configuration state and exposes parameterless .fetch().
+    """
+
+    def __init__(
+        self,
+        *,
+        urls: list[str],
+        delay: float = REQUEST_DELAY_DEFAULT,
+        max_pages_per_url: int = 20,
+    ):
+        if not urls:
+            raise ValueError("urls must not be empty")
+
+        self._urls = urls
+        self._delay = delay
+        self._max_pages_per_url = max_pages_per_url
+
+    @property
+    def name(self) -> str:
+        return "banifox"
+
+    def fetch(self) -> list[RawListing]:
+        return fetch_banifox_listings(
+            urls=self._urls,
+            delay=self._delay,
+            max_pages_per_url=self._max_pages_per_url,
+        )

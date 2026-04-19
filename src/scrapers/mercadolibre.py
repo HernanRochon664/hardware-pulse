@@ -177,3 +177,42 @@ def fetch_mercadolibre_listings(
     logger.info("Fetched %d listings from MercadoLibre (query=%r, category=%r)",
                 len(listings), query, category_id)
     return listings
+
+# ---------------------------------------------------------------------------
+# Scraper adapter (Protocol-compliant)
+# ---------------------------------------------------------------------------
+
+
+class MercadoLibreScraper:
+    """
+    Thin adapter to make the functional MercadoLibre scraper compatible
+    with the Scraper Protocol used by the ingestion pipeline.
+
+    This class holds configuration state (query/category/max_results)
+    and exposes a parameterless .fetch() method as required.
+    """
+
+    def __init__(
+        self,
+        *,
+        query: str | None = None,
+        category_id: str | None = None,
+        max_results: int = 200,
+    ):
+        if query is None and category_id is None:
+            raise ValueError("Provide at least one of: query, category_id")
+
+        self._query = query
+        self._category_id = category_id
+        self._max_results = max_results
+
+    @property
+    def name(self) -> str:
+        return "mercadolibre"
+
+    def fetch(self) -> list[RawListing]:
+        return fetch_mercadolibre_listings(
+            query=self._query,
+            category_id=self._category_id,
+            max_results=self._max_results,
+        )
