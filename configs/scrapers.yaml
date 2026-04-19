@@ -1,0 +1,62 @@
+# ---------------------------------------------------------------------------
+# Scraper configuration for hardware-pulse
+#
+# Precedence rules:
+# job.* overrides scraper.defaults.* overrides global.*
+#
+# request_delay applies between HTTP requests.
+# ---------------------------------------------------------------------------
+
+global:
+    request_delay: 1.0
+    timeout: 10
+
+mercadolibre:
+    enabled: true
+
+    defaults:
+        max_results: 200
+
+    jobs:
+        - name: gpu_category
+          category_id: "MLU1658"
+          # Verified via MercadoLibre API
+          # Path: Computación > Componentes de PC > Placas > Tarjetas de Video
+
+        - name: nvidia_query
+          query: "rtx 4070"
+
+        - name: amd_query
+          query: "rx 7800 xt"
+
+thot:
+    enabled: true
+
+    defaults:
+        request_delay: 1.5
+        max_pages_per_url: 20
+
+    jobs:
+        - name: gpu_category
+          urls:
+              - https://thotcomputacion.com.uy/categoria-producto/tarjetas-de-video/
+
+        - name: cpu_category
+          urls:
+              - https://thotcomputacion.com.uy/categoria-producto/procesadores/
+
+banifox:
+    enabled: true
+
+    defaults:
+        request_delay: 1.5
+        max_pages_per_url: 20
+
+    jobs:
+        - name: gpu_category
+          urls:
+              - https://www.banifox.com/tarjetas-de-video/
+
+        - name: cpu_category
+          urls:
+              - https://www.banifox.com/procesadores/
