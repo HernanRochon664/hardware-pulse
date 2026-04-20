@@ -68,21 +68,27 @@ def _parse_listing(product: Tag, fetched_at: datetime) -> RawListing | None:
     Parse a single Banifox product card into RawListing.
 
     Strategy:
-    - Title: any heading or alt text fallback
-    - URL: first <a> with href
+    - Title: from <a> tag's title attribute
+    - URL: from <a> tag's href attribute
     - Price: regex over full product text (robust to layout changes)
     """
     try:
         # Title
-        title_tag = product.select_one("h3, h2, .title, .nombre")
-        title = title_tag.get_text(strip=True) if title_tag else None
+        link_tag = product.select_one("a[title]")
+        title_raw = link_tag.get("title") if link_tag else None
+
+        if isinstance(title_raw, list):
+            title: str | None = title_raw[0] if title_raw else None
+        elif isinstance(title_raw, str):
+            title = title_raw
+        else:
+            title = None
 
         # URL
-        link_tag = product.select_one("a")
         href_raw = link_tag.get("href") if link_tag else None
 
         if isinstance(href_raw, list):
-            href = href_raw[0] if href_raw else None
+            href: str | None = href_raw[0] if href_raw else None
         elif isinstance(href_raw, str):
             href = href_raw
         else:

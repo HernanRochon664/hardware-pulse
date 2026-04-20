@@ -55,7 +55,7 @@ banifox:
     jobs:
         - name: gpu_category
           urls:
-              - https://www.banifox.com/tarjetas-de-video/
+            - https://www.banifox.com/tarjetas-de-video/n2-14/
 
         - name: cpu_category
           urls:

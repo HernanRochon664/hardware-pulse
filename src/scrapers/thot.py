@@ -74,9 +74,9 @@ def _parse_listing(product: Tag, fetched_at: datetime) -> RawListing | None:
     Returns None if any critical field is missing or unparseable.
     """
     try:
-        title_tag = product.select_one("h2.woocommerce-loop-product__title")
         price_tag = product.select_one(".price")
-        link_tag = product.select_one("a")
+        link_tag = product.select_one("a.product-loop-title")
+        title_tag = link_tag.select_one("h3") if link_tag else None
 
         if not title_tag or not price_tag or not link_tag:
             return None
@@ -167,6 +167,8 @@ def fetch_thot_listings(
         while page <= max_pages_per_url:
             url = _build_page_url(base_url, page)
             response = requests.get(url, timeout=10)
+            if response.status_code == 404:
+                break
             response.raise_for_status()
 
             soup = BeautifulSoup(response.text, "html.parser")
