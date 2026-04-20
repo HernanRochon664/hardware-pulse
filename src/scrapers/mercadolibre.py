@@ -18,7 +18,7 @@ import time
 from datetime import datetime, timezone
 
 import requests
-
+from src.auth.ml_auth import get_valid_access_token
 from src.domain.models import Condition, Currency, RawListing, Source
 
 logger = logging.getLogger(__name__)
@@ -144,12 +144,22 @@ def fetch_mercadolibre_listings(
     listings: list[RawListing] = []
     offset = 0
 
+    token = get_valid_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+    }
+
     while len(listings) < max_results:
         params = _build_params(query, category_id, offset)
 
         # raise_for_status() converts 4xx/5xx into exceptions immediately.
         # Better to fail loudly than to silently process an error response.
-        response = requests.get(search_url, params=params, timeout=10)
+        response = requests.get(
+            search_url,
+            params=params,
+            headers=headers,
+            timeout=10,
+        )
         response.raise_for_status()
 
         data = response.json()
