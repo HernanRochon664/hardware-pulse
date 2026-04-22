@@ -315,7 +315,7 @@ Example:
 
 | source       | tool                     | js_required | approx_listings | difficulty | status     |
 | ------------ | ------------------------ | ----------- | --------------- | ---------- | ---------- |
-| MercadoLibre | API (requests)           | No          | ~200            | Medium     | ✅ MVP     |
+| MercadoLibre | — | — | — | Excluded: API geo-blocked + bot detection |
 | Thot         | requests + BeautifulSoup | No          | ~15–30          | Very Low   | ✅ MVP     |
 | Banifox      | requests + JSON endpoint | No          | ~46             | Low        | ✅ MVP     |
 | PC Store     | requests.Session         | Partial     | ~65             | High       | ⏸ Post-MVP |

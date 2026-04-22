@@ -57,3 +57,4 @@ The model is useful if it can:
 - Sparse time series for some SKUs
 - Noisy product titles requiring entity resolution
 - Data collected via scraping may be incomplete or irregular
+- MercadoLibre not available in MVP (API geo-restricted, scraping blocked)
