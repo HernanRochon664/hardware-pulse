@@ -4,6 +4,7 @@ Entrypoint for the hardware-pulse ingestion pipeline.
 Responsibilities:
 - Load configuration from configs/scrapers.yaml
 - Initialize the SQLite database
+- Manage Playwright browser lifecycle
 - Instantiate enabled scrapers from config
 - Execute the ingestion pipeline and log results
 
@@ -17,8 +18,10 @@ import logging
 import sys
 from pathlib import Path
 
-# Add the project root to Python path to enable imports from src/
+# Add the project root to sys.path to enable imports from src
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from playwright.sync_api import sync_playwright
 
 from src.config import load_config
 from src.pipelines.ingest import ingest
@@ -29,24 +32,19 @@ from src.storage.schema import init_db
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Constants
-# ---------------------------------------------------------------------------
-
 DB_PATH = Path("data/hardware_pulse.db")
-
 
 # ---------------------------------------------------------------------------
 # Scraper factory
 # ---------------------------------------------------------------------------
 
 
-def build_scrapers(config):
+def build_scrapers(config, page):
     """
     Instantiate all enabled scrapers from configuration.
 
-    Applies precedence rules (job > defaults > global) via config.resolve_*.
-    Skips disabled scrapers silently.
+    Playwright Page is passed in from main() where the browser
+    lifecycle is managed. Scrapers don't own the browser.
     """
     scrapers = []
 
@@ -54,11 +52,15 @@ def build_scrapers(config):
         for job in config.mercadolibre.jobs:
             scrapers.append(
                 MercadoLibreScraper(
-                    query=job.query,
-                    category_id=job.category_id,
-                    max_results=config.resolve_max_results(
+                    queries=job.queries,
+                    page=page,
+                    delay=config.resolve_request_delay(
                         config.mercadolibre.defaults,
-                        job.max_results,
+                        job.request_delay,
+                    ),
+                    max_offsets_per_query=config.resolve_max_pages(
+                        config.mercadolibre.defaults,
+                        job.max_offsets_per_query,
                     ),
                 )
             )
@@ -116,15 +118,34 @@ def main() -> None:
     logger.info("Initializing database at %s...", DB_PATH)
     conn = init_db(DB_PATH)
 
-    logger.info("Building scrapers...")
-    scrapers = build_scrapers(config)
+    # Playwright context manager guarantees browser.close() even on error.
+    # A leaked browser process would silently consume memory across runs.
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+                    headless=True,
+                    args=["--disable-blink-features=AutomationControlled"]
+                )
+        page = browser.new_page()
+        page.set_extra_http_headers({
+            "Accept-Language": "es-UY,es;q=0.9"
+        })
 
-    if not scrapers:
-        logger.warning("No scrapers enabled. Exiting.")
-        sys.exit(0)
+        page.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
-    logger.info("Starting ingestion pipeline with %d scraper(s)...", len(scrapers))
-    result = ingest(conn=conn, scrapers=scrapers)
+        logger.info("Building scrapers...")
+        scrapers = build_scrapers(config, page)
+
+        if not scrapers:
+            logger.warning("No scrapers enabled. Exiting.")
+            browser.close()
+            sys.exit(0)
+
+        logger.info(
+            "Starting ingestion pipeline with %d scraper(s)...", len(scrapers)
+        )
+        result = ingest(conn=conn, scrapers=scrapers)
+
+        browser.close()
 
     logger.info("Pipeline complete: %s", result)
 

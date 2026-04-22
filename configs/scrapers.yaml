@@ -12,22 +12,23 @@ global:
     timeout: 10
 
 mercadolibre:
-    enabled: true
+  enabled: true
 
-    defaults:
-        max_results: 200
+  defaults:
+    max_offsets_per_query: 10
+    request_delay: 2.0
 
-    jobs:
-        - name: gpu_category
-          category_id: "MLU1658"
-          # Verified via MercadoLibre API
-          # Path: Computación > Componentes de PC > Placas > Tarjetas de Video
+  jobs:
+    - name: nvidia_gpus
+      queries:
+        - "rtx 4070"
+        - "rtx 4060"
+        - "rtx 4080"
 
-        - name: nvidia_query
-          query: "rtx 4070"
-
-        - name: amd_query
-          query: "rx 7800 xt"
+    - name: amd_gpus
+      queries:
+        - "rx 7800 xt"
+        - "rx 7900 xt"
 
 thot:
     enabled: true
@@ -59,4 +60,4 @@ banifox:
 
         - name: cpu_category
           urls:
-              - https://www.banifox.com/procesadores/
+              - https://www.banifox.com/procesadores/n2-11/

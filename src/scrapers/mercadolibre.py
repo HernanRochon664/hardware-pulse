@@ -1,12 +1,17 @@
 """
-MercadoLibre scraper for hardware-pulse.
+MercadoLibre Uruguay scraper (Playwright) for hardware-pulse.
+
+Uses a real browser to render JavaScript-heavy ML listing pages.
+The caller is responsible for managing the Playwright browser lifecycle.
 
 Responsibilities:
-- Query the MLU search API by query string or category_id
-- Handle pagination transparently
+- Navigate ML listing pages using an injected Playwright Page
+- Wait for product cards to render before extracting HTML
+- Handle offset-based pagination (_Desde_N_ URL pattern)
 - Return a list of RawListing objects
 
 Does NOT:
+- Initialize or close the Playwright browser (caller responsibility)
 - Persist data
 - Deduplicate globally
 - Resolve canonical products
@@ -14,11 +19,13 @@ Does NOT:
 """
 
 import logging
+import re
 import time
 from datetime import datetime, timezone
 
-import requests
-from src.auth.ml_auth import get_valid_access_token
+from bs4 import BeautifulSoup, Tag
+from playwright.sync_api import Page, TimeoutError as PlaywrightTimeoutError
+
 from src.domain.models import Condition, Currency, RawListing, Source
 
 logger = logging.getLogger(__name__)
@@ -27,83 +34,134 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-BASE_URL = "https://api.mercadolibre.com"
-SITE_ID = "MLU"
-PAGE_SIZE = 50          # ML's max results per request
-REQUEST_DELAY = 1.0     # seconds between requests.Be a polite scraper
+BASE_SEARCH_URL = "https://listado.mercadolibre.com.uy"
+REQUEST_DELAY_DEFAULT = 2.0
+OFFSET_STEP = 48
+
+# We wait up to 10s for the first product card to appear.
+# If ML doesn't render products within that window, the page is likely
+# a captcha, redirect, or empty result we stop pagination.
+PRODUCT_SELECTOR = ".poly-card"
+SELECTOR_TIMEOUT_MS = 20_000
 
 
 # ---------------------------------------------------------------------------
-# Internal helpers
+# URL construction
 # ---------------------------------------------------------------------------
 
 
-def _build_params(
-    query: str | None,
-    category_id: str | None,
-    offset: int,
-) -> dict:
-    """Build query parameters for the search endpoint."""
-    # offset tells ML where to start in the result set.
-    # This is how we paginate: 0, 50, 100, ...
-    params: dict = {
-        "limit": PAGE_SIZE,
-        "offset": offset,
-        "condition": "new", # only new hardware by default
-    }
-    if query:
-        params["q"] = query
-    if category_id:
-        params["category"] = category_id
-    return params
+def _normalize_query(query: str) -> str:
+    """Convert search query to URL slug: "rtx 4070" → "rtx-4070"."""
+    return re.sub(r"\s+", "-", query.strip().lower())
 
 
-def _parse_listing(item: dict, fetched_at: datetime) -> RawListing | None:
+def _build_urls(query: str, max_offsets: int, step: int = OFFSET_STEP) -> list[str]:
     """
-    Parse a single item dict from the ML API into a RawListing.
+    Build paginated URLs for a query.
 
-    Returns None if the item is missing critical fields, rather than
-    raising. This lets the caller skip bad records without crashing.
+    Pattern (empirically verified):
+    - Page 1: /rtx-4070
+    - Page 2: /rtx-4070_Desde_49
+    - Page N: /rtx-4070_Desde_{1 + (N-1) * step}
+    """
+    slug = _normalize_query(query)
+    base = f"{BASE_SEARCH_URL}/{slug}"
 
-    We use .get() defensively throughout because the ML API is not
-    fully typed: fields that appear in the docs may be absent in practice.
+    urls = [base]
+    for i in range(1, max_offsets):
+        offset = 1 + i * step
+        urls.append(f"{base}_Desde_{offset}")
+
+    return urls
+
+
+# ---------------------------------------------------------------------------
+# Price parsing
+# ---------------------------------------------------------------------------
+
+
+def _parse_price(product: Tag) -> tuple[float | None, Currency | None]:
+    """
+    Extract price from a rendered ML product card.
+
+    ML structure:
+    div.poly-price__current
+      span.andes-money-amount
+        span.andes-money-amount__currency-symbol  → "U$S" or "$"
+        span.andes-money-amount__fraction         → "1.299" (dot = thousands)
+
+    Dot is thousands separator in both UYU and USD, strip before float().
     """
     try:
-        # currency_id from ML is already "UYU" or "USD". Matches our enum
-        raw_currency = item.get("currency_id", "")
-        try:
-            currency = Currency(raw_currency)
-        except ValueError:
-            logger.warning("Unknown currency '%s' for item %s", raw_currency, item.get("id"))
+        price_container = product.select_one(
+            ".poly-price__current .andes-money-amount"
+        )
+        if not price_container:
+            return None, None
+
+        currency_tag = price_container.select_one(
+            ".andes-money-amount__currency-symbol"
+        )
+        fraction_tag = price_container.select_one(".andes-money-amount__fraction")
+
+        if not fraction_tag:
+            return None, None
+
+        currency_symbol = currency_tag.get_text(strip=True) if currency_tag else ""
+        currency = (
+            Currency.USD if "U$S" in currency_symbol or "US$" in currency_symbol
+            else Currency.UYU
+        )
+
+        raw = fraction_tag.get_text(strip=True).replace(".", "")
+        return float(raw), currency
+
+    except (ValueError, AttributeError):
+        return None, None
+
+
+# ---------------------------------------------------------------------------
+# Listing parsing
+# ---------------------------------------------------------------------------
+
+
+def _parse_listing(product: Tag, fetched_at: datetime) -> RawListing | None:
+    """Parse a single ML product card into a RawListing."""
+    try:
+        link_tag = product.select_one("a.poly-component__title")
+        if not link_tag:
             return None
 
-        raw_condition = item.get("condition")
-        condition = None
-        if raw_condition:
-            try:
-                condition = Condition(raw_condition)
-            except ValueError:
-                # unknown condition value, store as None rather than crash
-                pass
+        title = link_tag.get_text(strip=True)
+        href = link_tag.get("href")
+
+        if not title or not isinstance(href, str):
+            return None
+
+        # Strip tracking params
+        url = href.split("?")[0] if "?" in href else href
+
+        price, currency = _parse_price(product)
+        if price is None or currency is None:
+            logger.warning("Could not parse price (title=%r)", title)
+            return None
 
         return RawListing(
             source=Source.MERCADOLIBRE,
-            url=item["permalink"], # always present in ML search results
+            url=url,
             timestamp=fetched_at,
-            title=item["title"],
-            price=float(item["price"]),
+            title=title,
+            price=price,
             currency=currency,
-            seller=item.get("seller", {}).get("nickname", "unknown"),
-            item_id=item.get("id"),
-            condition=condition,
-            available_quantity=item.get("available_quantity"),
-            base_price=float(item["base_price"]) if item.get("base_price") else None,
+            seller="mercadolibre",
+            item_id=None,
+            condition=Condition.NEW,
+            available_quantity=None,
+            base_price=None,
         )
 
-    except (KeyError, ValueError, TypeError) as exc:
-        # Log and skip rather than propagate. One bad listing should not
-        # abort an entire scrape run of 200 items.
-        logger.warning("Failed to parse item %s: %s", item.get("id"), exc)
+    except Exception as exc:
+        logger.warning("Failed to parse ML listing: %s", exc)
         return None
 
 
@@ -113,80 +171,74 @@ def _parse_listing(item: dict, fetched_at: datetime) -> RawListing | None:
 
 
 def fetch_mercadolibre_listings(
-    query: str | None = None,
-    category_id: str | None = None,
-    max_results: int = 200,
+    queries: list[str],
+    page: Page,
+    delay: float = REQUEST_DELAY_DEFAULT,
+    max_offsets_per_query: int = 20,
+    offset_step: int = OFFSET_STEP,
 ) -> list[RawListing]:
     """
-    Fetch listings from MercadoLibre Uruguay.
+    Scrape MercadoLibre Uruguay listing pages using Playwright.
 
     Args:
-        query: Free-text search query (e.g. "rtx 4070").
-        category_id: ML category identifier (e.g. "MLU1700"). Takes
-                    precedence over query for catalog coverage.
-        max_results: Maximum total listings to return. The API caps
-                    at ~1000 results per query regardless of this value.
+        queries:               Search terms (e.g. ["rtx 4070", "rx 7800 xt"]).
+        page:                  Playwright Page instance. Caller manages lifecycle.
+        delay:                 Seconds between page navigations.
+        max_offsets_per_query: Safety cap on pagination depth per query.
+        offset_step:           Items per page (default 48, empirically verified).
 
     Returns:
-        List of RawListing objects. May be shorter than max_results
-        if the API returns fewer results or parsing failures occur.
-
-    Raises:
-        ValueError: If neither query nor category_id is provided.
-        requests.HTTPError: If the API returns a non-2xx response.
+        List of RawListing objects across all queries.
     """
-    if query is None and category_id is None:
-        raise ValueError("Provide at least one of: query, category_id")
-
-    search_url = f"{BASE_URL}/sites/{SITE_ID}/search"
-    fetched_at = datetime.now(timezone.utc) # single timestamp for entire run
-
+    fetched_at = datetime.now(timezone.utc)
     listings: list[RawListing] = []
-    offset = 0
+    seen_urls: set[str] = set()
 
-    token = get_valid_access_token()
-    headers = {
-        "Authorization": f"Bearer {token}",
-    }
+    for query in queries:
+        logger.info("Scraping ML query: %r", query)
+        urls = _build_urls(query, max_offsets_per_query, offset_step)
 
-    while len(listings) < max_results:
-        params = _build_params(query, category_id, offset)
+        for url in urls:
+            try:
+                page.goto(url, timeout=30_000)
 
-        # raise_for_status() converts 4xx/5xx into exceptions immediately.
-        # Better to fail loudly than to silently process an error response.
-        response = requests.get(
-            search_url,
-            params=params,
-            headers=headers,
-            timeout=10,
-        )
-        response.raise_for_status()
+                # Wait for product cards, if timeout, page has no results
+                # (captcha, empty query, end of pagination)
+                page.wait_for_selector(PRODUCT_SELECTOR, timeout=SELECTOR_TIMEOUT_MS)
 
-        data = response.json()
-        results = data.get("results", [])
-
-        if not results:
-            # API returned an empty page, we have exhausted the result set
-            break
-
-        for item in results:
-            if len(listings) >= max_results:
+            except PlaywrightTimeoutError:
+                logger.debug("No products rendered at %s — stopping pagination", url)
                 break
-            parsed = _parse_listing(item, fetched_at)
-            if parsed is not None:
+
+            soup = BeautifulSoup(page.content(), "html.parser")
+            products = soup.select(PRODUCT_SELECTOR)
+
+            if not products:
+                break
+
+            new_items = 0
+            for product in products:
+                parsed = _parse_listing(product, fetched_at)
+                if not parsed:
+                    continue
+                if parsed.url in seen_urls:
+                    continue
+                seen_urls.add(parsed.url)
                 listings.append(parsed)
+                new_items += 1
 
-        # We paginate by incrementing the offset by PAGE_SIZE.
-        # If the API returns fewer than PAGE_SIZE, it means we've reached
-        # the end. The break above handles this.
-        offset += PAGE_SIZE
+            if new_items == 0:
+                break
 
-        # be polite: don't hammer the API
-        time.sleep(REQUEST_DELAY)
+            time.sleep(delay)
 
-    logger.info("Fetched %d listings from MercadoLibre (query=%r, category=%r)",
-                len(listings), query, category_id)
+    logger.info(
+        "Fetched %d listings from MercadoLibre (queries=%r)",
+        len(listings),
+        queries,
+    )
     return listings
+
 
 # ---------------------------------------------------------------------------
 # Scraper adapter (Protocol-compliant)
@@ -195,26 +247,30 @@ def fetch_mercadolibre_listings(
 
 class MercadoLibreScraper:
     """
-    Thin adapter to make the functional MercadoLibre scraper compatible
+    Thin adapter making the Playwright ML scraper compatible
     with the Scraper Protocol used by the ingestion pipeline.
 
-    This class holds configuration state (query/category/max_results)
-    and exposes a parameterless .fetch() method as required.
+    The Playwright Page is injected at construction time.
+    The caller (run_ingest.py) owns the browser lifecycle and must
+    close it after all scrapers have run.
     """
 
     def __init__(
         self,
         *,
-        query: str | None = None,
-        category_id: str | None = None,
-        max_results: int = 200,
+        queries: list[str],
+        page: Page,
+        delay: float = REQUEST_DELAY_DEFAULT,
+        max_offsets_per_query: int = 20,
+        offset_step: int = OFFSET_STEP,
     ):
-        if query is None and category_id is None:
-            raise ValueError("Provide at least one of: query, category_id")
-
-        self._query = query
-        self._category_id = category_id
-        self._max_results = max_results
+        if not queries:
+            raise ValueError("queries must not be empty")
+        self._queries = queries
+        self._page = page
+        self._delay = delay
+        self._max_offsets_per_query = max_offsets_per_query
+        self._offset_step = offset_step
 
     @property
     def name(self) -> str:
@@ -222,7 +278,9 @@ class MercadoLibreScraper:
 
     def fetch(self) -> list[RawListing]:
         return fetch_mercadolibre_listings(
-            query=self._query,
-            category_id=self._category_id,
-            max_results=self._max_results,
+            queries=self._queries,
+            page=self._page,
+            delay=self._delay,
+            max_offsets_per_query=self._max_offsets_per_query,
+            offset_step=self._offset_step,
         )

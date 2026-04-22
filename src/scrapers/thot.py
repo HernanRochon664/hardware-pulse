@@ -48,7 +48,7 @@ def _parse_price_and_currency(text: str) -> tuple[float | None, Currency | None]
 
     try:
         if "US$" in raw:
-            value = raw.replace("US$", "").strip()
+            value = raw.replace("US$", "").strip().replace(",", "")
             return float(value), Currency.USD
 
         if "$" in raw:

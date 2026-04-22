@@ -48,18 +48,9 @@ class ScraperDefaults(BaseModel):
 
 class MercadoLibreJob(BaseModel):
     name: str
-    query: str | None = None
-    category_id: str | None = None
-    max_results: int | None = Field(default=None, gt=0)
-
-    @model_validator(mode="after")
-    def query_or_category_required(self) -> MercadoLibreJob:
-        if self.query is None and self.category_id is None:
-            raise ValueError(
-                f"Job '{self.name}': provide at least one of query or category_id"
-            )
-        return self
-
+    queries: list[str] = Field(min_length=1)
+    max_offsets_per_query: int | None = None
+    request_delay: float | None = None
 
 class HTMLScraperJob(BaseModel):
     """Shared job schema for Thot and Banifox (both URL-based)."""
