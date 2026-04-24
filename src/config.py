@@ -46,14 +46,8 @@ class ScraperDefaults(BaseModel):
 # ---------------------------------------------------------------------------
 
 
-class MercadoLibreJob(BaseModel):
-    name: str
-    queries: list[str] = Field(min_length=1)
-    max_offsets_per_query: int | None = None
-    request_delay: float | None = None
-
 class HTMLScraperJob(BaseModel):
-    """Shared job schema for Thot and Banifox (both URL-based)."""
+    """Shared job schema for URL-based scrapers (e.g. Thot)."""
     name: str
     urls: list[str] = Field(min_length=1)
     request_delay: float | None = Field(default=None, gt=0)
@@ -65,12 +59,6 @@ class HTMLScraperJob(BaseModel):
 # ---------------------------------------------------------------------------
 
 
-class MercadoLibreConfig(BaseModel):
-    enabled: bool = True
-    defaults: ScraperDefaults = ScraperDefaults()
-    jobs: list[MercadoLibreJob] = []
-
-
 class ThotConfig(BaseModel):
     enabled: bool = True
     defaults: ScraperDefaults = ScraperDefaults()
@@ -78,6 +66,12 @@ class ThotConfig(BaseModel):
 
 
 class BanifoxConfig(BaseModel):
+    enabled: bool = True
+    defaults: ScraperDefaults = ScraperDefaults()
+    jobs: list[HTMLScraperJob] = []
+
+
+class PCCompuConfig(BaseModel):
     enabled: bool = True
     defaults: ScraperDefaults = ScraperDefaults()
     jobs: list[HTMLScraperJob] = []
@@ -99,10 +93,9 @@ class ScrapersConfig(BaseModel):
     """
 
     global_: GlobalConfig = Field(default=GlobalConfig(), alias="global")
-    mercadolibre: MercadoLibreConfig = MercadoLibreConfig()
     thot: ThotConfig = ThotConfig()
     banifox: BanifoxConfig = BanifoxConfig()
-
+    pccompu: PCCompuConfig = PCCompuConfig()
     model_config = {"populate_by_name": True}
 
     # Convenience resolution helpers, callers don't need to implement

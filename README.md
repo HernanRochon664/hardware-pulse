@@ -39,11 +39,13 @@ The project focuses on four component categories:
 The system collects listings from:
 
 ### Marketplaces
-- MercadoLibre
+- MercadoLibre *(excluded from MVP, see docs/decisions.md)*
 
 ### Local retailers
 - Thot Computación
-- PC Store Uruguay
+- Banifox
+- PCCompu
+- PC Store Uruguay *(excluded from MVP, see docs/decisions.md)*
 
 Each listing contains:
 
@@ -128,12 +130,11 @@ Python
 
 - requests
 - beautifulsoup
-- playwright
 
 ### Data
 
 - pandas
-- PostgreSQL
+- SQLite
 
 ### ML / NLP
 

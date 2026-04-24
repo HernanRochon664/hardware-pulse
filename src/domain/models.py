@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel, HttpUrl, field_validator
+from pydantic import BaseModel, field_validator
 
 
 # ---------------------------------------------------------------------------
@@ -20,10 +20,9 @@ class Condition(str, Enum):
 
 
 class Source(str, Enum):
-    MERCADOLIBRE = "mercadolibre"
     THOT = "thot"
     BANIFOX = "banifox"
-    PCSTORE = "pcstore"
+    PCCOMPU = "pccompu"
 
 
 # ---------------------------------------------------------------------------
@@ -45,7 +44,7 @@ class RawListing(BaseModel):
     currency: Currency
     seller: str
 
-    # --- MercadoLibre-specific (optional) ---
+    # --- Optional fields ---
     item_id: str | None = None
     condition: Condition | None = None
     available_quantity: int | None = None
@@ -76,7 +75,7 @@ class RawListing(BaseModel):
 class PriceSnapshot(BaseModel):
     # --- Traceability ---
     source: Source
-    listing_id: str        # item_id for ML, url-derived hash for retailers
+    listing_id: str
     timestamp: datetime
 
     # --- Resolved identity ---

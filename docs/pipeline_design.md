@@ -12,19 +12,19 @@ Each raw listing contains:
 | seller               | str      | all          | seller name or store                            |
 | url                  | str      | all          | canonical product URL                           |
 | timestamp            | datetime | system       | scrape time                                     |
-| source               | str      | system       | e.g. "mercadolibre", "thot"                     |
-| item_id              | str      | mercadolibre | MercadoLibre item identifier (MLU...)           |
+| source               | str      | system       | e.g. "thot", "banifox", "pccompu"               |
+| item_id              | str      | some sources | unique listing identifier (when available)      |
 | sku_guess            | str      | pipeline     | extracted GPU model (e.g. RTX 4070)             |
 | brand                | str      | pipeline     | extracted brand (Asus, MSI, Gigabyte, etc.)     |
 | model_variant        | str      | pipeline     | optional AIB model (e.g. TUF, Gaming X, Ventus) |
-| condition            | str      | mercadolibre | new / used (when available)                     |
-| available_quantity   | int      | mercadolibre | listing stock                                   |
-| base_price           | float    | mercadolibre | price before discounts (if present)             |
+| condition            | str      | some sources | new / used (when available)                     |
+| available_quantity   | int      | some sources | listing stock (when available)                  |
+| base_price           | float    | some sources | price before discounts (when available)         |
 | normalized_price_usd | float    | pipeline     | converted price in USD for comparison           |
 
 Notes:
 
-- Some fields are only available from certain sources (e.g., item_id from MercadoLibre).
+- Some fields are only available from certain sources (e.g., item_id from some sources).
 - Fields such as sku_guess, brand, and model_variant are extracted during normalization.
 
 ---
@@ -39,33 +39,11 @@ The pipeline collects listings from multiple sources.
 
 Sources include:
 
-- MercadoLibre API
 - Thot Computación
 - Banifox
-- PC Store
+- PCcompu
 
-For MercadoLibre:
-
-1. Query the search endpoint:
-
-GET https://api.mercadolibre.com/sites/MLU/search?q=rtx+4070
-
-2. Extract listing IDs and metadata.
-
-3. Fetch detailed item data:
-
-GET https://api.mercadolibre.com/items/{ITEM_ID}
-
-Important fields returned include:
-
-- price
-- base_price
-- currency_id
-- available_quantity
-
-Because the API does not provide historical prices, the system captures periodic snapshots.
-
-For retail stores (Thot, Banifox, PC Store):
+For retail stores (Thot, Banifox, PCcompu):
 
 - HTTP requests using requests
 - HTML parsing with BeautifulSoup
@@ -188,7 +166,7 @@ normalized_price_usd =
 
 ### Duplicate listings
 
-MercadoLibre provides a stable listing identifier (item_id).
+Some sources provide a stable listing identifier (item_id).
 
 Primary deduplication strategy:
 
@@ -313,26 +291,22 @@ Example:
 
 ## 5. Source Inventory
 
-| source       | tool                     | js_required | approx_listings | difficulty | status     |
-| ------------ | ------------------------ | ----------- | --------------- | ---------- | ---------- |
-| MercadoLibre | — | — | — | Excluded: API geo-blocked + bot detection |
-| Thot         | requests + BeautifulSoup | No          | ~15–30          | Very Low   | ✅ MVP     |
-| Banifox      | requests + JSON endpoint | No          | ~46             | Low        | ✅ MVP     |
-| PC Store     | requests.Session         | Partial     | ~65             | High       | ⏸ Post-MVP |
+| source       | tool                     | js_required | approx_listings | difficulty                                | status |
+| ------------ | ------------------------ | ----------- | --------------- | ----------------------------------------- | ------ |
+| MercadoLibre | —                        | —           | —               | Excluded: API geo-blocked + bot detection |
+| Thot         | requests + BeautifulSoup | No          | ~15–30          | Very Low                                  | ✅ MVP |
+| Banifox      | requests + JSON endpoint | No          | ~46             | Low                                       | ✅ MVP |
+| PCcompu      | requests + BeautifulSoup | No          | ~34             | Low                                       | ✅ MVP |
 
 Notes:
 
-MercadoLibre uses the public API:
-
-/sites/MLU/search?q=rtx+4070
-
-Requires pagination handling and contains both new and used listings.
+MercadoLibre is excluded due to geo-blocking and bot detection.
 
 Thot uses WooCommerce and static HTML with pagination like /shop/page/N.
 
 Banifox pages are server-rendered HTML categories.
 
-PC Store has a slightly larger catalog and may include used items.
+PCcompu uses server-rendered HTML with pagination via query parameter ?pagina=N.
 
 ---
 

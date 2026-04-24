@@ -11,25 +11,6 @@ global:
     request_delay: 1.0
     timeout: 10
 
-mercadolibre:
-  enabled: true
-
-  defaults:
-    max_offsets_per_query: 10
-    request_delay: 2.0
-
-  jobs:
-    - name: nvidia_gpus
-      queries:
-        - "rtx 4070"
-        - "rtx 4060"
-        - "rtx 4080"
-
-    - name: amd_gpus
-      queries:
-        - "rx 7800 xt"
-        - "rx 7900 xt"
-
 thot:
     enabled: true
 
@@ -56,8 +37,20 @@ banifox:
     jobs:
         - name: gpu_category
           urls:
-            - https://www.banifox.com/tarjetas-de-video/n2-14/
+              - https://www.banifox.com/tarjetas-de-video/n2-14/
 
         - name: cpu_category
           urls:
               - https://www.banifox.com/procesadores/n2-11/
+
+pccompu:
+    enabled: true
+
+    defaults:
+        request_delay: 1.5
+        max_pages_per_url: 20
+
+    jobs:
+        - name: gpu_category
+          urls:
+              - "https://www.pccompu.com.uy/productos/productos.php?path=0.20262.20276&secc=productos&order=7&mo=1&pagina=0"
