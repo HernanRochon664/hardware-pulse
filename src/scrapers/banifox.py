@@ -51,8 +51,8 @@ def _parse_price(text: str) -> tuple[float | None, Currency | None]:
     raw = match.group(1)
 
     try:
-        # Normalize both "1,234.56" and "1234.56"
-        normalized = raw.replace(",", ".")
+        # Normalize "1.234,56"
+        normalized = raw.replace(".", "").replace(",", ".")
         return float(normalized), Currency.USD
     except ValueError:
         return None, None
@@ -99,9 +99,14 @@ def _parse_listing(product: Tag, fetched_at: datetime) -> RawListing | None:
 
         url = urljoin(BASE_URL, href)
 
-        # Price (regex over entire card text)
-        text_blob = product.get_text(" ", strip=True)
-        price, currency = _parse_price(text_blob)
+        # Price
+        price_container = product.select_one("div.precio")
+        if not price_container:
+            return None
+
+        texts = [t.strip() for t in price_container.find_all(string=True, recursive=False)]
+        price_text = " ".join(t for t in texts if t)
+        price, currency = _parse_price(price_text)
 
         if price is None or currency is None:
             logger.warning("Could not parse price (title=%r)", title)
