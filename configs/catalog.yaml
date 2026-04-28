@@ -1,0 +1,109 @@
+# Canonical GPU Catalog
+# Each entry represents a GPU model tracked by the system.
+#
+# Fields:
+# - sku: Canonical product identifier (e.g., "RTX 4070")
+# - brand_family: Manufacturer family (NVIDIA, AMD, Intel)
+# - release_year: Launch year
+# - notes: Optional metadata for disambiguation
+#
+# Format:
+# - SKUs use standard spacing: "RTX 4070" not "RTX4070"
+# - All SKUs are case-insensitive during matching
+# - This catalog is the source of truth for entity resolution
+
+canonical_products:
+    # NVIDIA GeForce RTX (Blackwell)
+    - sku: "RTX 5090"
+      brand_family: "NVIDIA"
+      release_year: 2025
+      notes: "Blackwell architecture, flagship"
+
+    - sku: "RTX 5080"
+      brand_family: "NVIDIA"
+      release_year: 2025
+
+    - sku: "RTX 5070"
+      brand_family: "NVIDIA"
+      release_year: 2025
+
+    - sku: "RTX 5060"
+      brand_family: "NVIDIA"
+      release_year: 2025
+
+    - sku: "RTX 5050"
+      brand_family: "NVIDIA"
+      release_year: 2025
+
+    # NVIDIA GeForce RTX (Hopper)
+    - sku: "RTX 4090"
+      brand_family: "NVIDIA"
+      release_year: 2022
+
+    - sku: "RTX 4080"
+      brand_family: "NVIDIA"
+      release_year: 2022
+
+    - sku: "RTX 4070 Ti"
+      brand_family: "NVIDIA"
+      release_year: 2023
+
+    - sku: "RTX 4070"
+      brand_family: "NVIDIA"
+      release_year: 2023
+
+    - sku: "RTX 4060 Ti"
+      brand_family: "NVIDIA"
+      release_year: 2023
+
+    - sku: "RTX 4060"
+      brand_family: "NVIDIA"
+      release_year: 2023
+
+    # NVIDIA GeForce RTX (Ampere)
+    - sku: "RTX 3060"
+      brand_family: "NVIDIA"
+      release_year: 2021
+
+    - sku: "RTX 3050"
+      brand_family: "NVIDIA"
+      release_year: 2021
+
+    # AMD Radeon RX (RDNA 3.5/4)
+    - sku: "RX 9070 XT"
+      brand_family: "AMD"
+      release_year: 2025
+
+    - sku: "RX 9070"
+      brand_family: "AMD"
+      release_year: 2025
+
+    - sku: "RX 9060 XT"
+      brand_family: "AMD"
+      release_year: 2025
+
+    # AMD Radeon RX (RDNA 3)
+    - sku: "RX 7900 XT"
+      brand_family: "AMD"
+      release_year: 2022
+
+    - sku: "RX 7800 XT"
+      brand_family: "AMD"
+      release_year: 2023
+
+    - sku: "RX 7600"
+      brand_family: "AMD"
+      release_year: 2023
+
+    # Intel Arc
+    - sku: "Arc B580"
+      brand_family: "Intel"
+      release_year: 2024
+
+    - sku: "Arc B570"
+      brand_family: "Intel"
+      release_year: 2024
+
+    - sku: "Arc A580"
+      brand_family: "Intel"
+      release_year: 2022

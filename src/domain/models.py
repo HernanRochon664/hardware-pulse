@@ -66,6 +66,41 @@ class RawListing(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Resolved listing
+# Represents a listing that has been matched to a canonical product.
+# Used by the entity resolution pipeline before price snapshot creation.
+# ---------------------------------------------------------------------------
+
+
+class ResolvedListing(BaseModel):
+    # --- Traceability ---
+    source: Source
+    url: str
+    timestamp: datetime
+
+    # --- Core fields ---
+    title: str
+    price: float
+    currency: Currency
+    seller: str
+
+    # --- Optional raw traceability ---
+    item_id: str | None = None
+    condition: Condition | None = None
+    available_quantity: int | None = None
+    base_price: float | None = None
+
+    # --- Resolution result ---
+    canonical_product_id: str | None = None
+    confidence_score: float = 0.0
+    matched_by: str | None = None
+
+    # --- Enrichment ---
+    brand: str | None = None
+    variant: str | None = None
+
+
+# ---------------------------------------------------------------------------
 # Price snapshot
 # Represents a normalized, enriched record ready for storage and analysis.
 # Produced by the pipeline after entity resolution and currency conversion.
@@ -79,13 +114,13 @@ class PriceSnapshot(BaseModel):
     timestamp: datetime
 
     # --- Resolved identity ---
-    canonical_product_id: str   # e.g. "RTX 4070"
+    canonical_product_id: str  # e.g. "RTX 4070"
     seller: str
 
     # --- Normalized price ---
     price: float
     currency: Currency
-    price_usd: float            # always present after normalization
+    price_usd: float  # always present after normalization
 
     # --- Optional context ---
     availability: int | None = None
