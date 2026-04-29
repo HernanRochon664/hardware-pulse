@@ -63,6 +63,33 @@ CREATE INDEX IF NOT EXISTS idx_raw_listings_source_timestamp
     ON raw_listings (source, timestamp);
 """
 
+CREATE_PRICE_SNAPSHOT_INDEXES = """
+CREATE INDEX IF NOT EXISTS idx_price_snapshots_product
+    ON price_snapshots (canonical_product_id);
+
+CREATE INDEX IF NOT EXISTS idx_price_snapshots_timestamp
+    ON price_snapshots (timestamp);
+
+CREATE INDEX IF NOT EXISTS idx_price_snapshots_product_timestamp
+    ON price_snapshots (canonical_product_id, timestamp);
+"""
+
+CREATE_PRICE_SNAPSHOTS = """
+CREATE TABLE IF NOT EXISTS price_snapshots (
+    id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp             TEXT NOT NULL,
+    canonical_product_id  TEXT NOT NULL,
+    source                TEXT NOT NULL,
+    seller                TEXT NOT NULL,
+    listing_id            TEXT,
+    price                 REAL NOT NULL,
+    currency              TEXT NOT NULL,
+    price_usd             REAL NOT NULL,
+    availability          INTEGER,
+    created_at            TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+"""
+
 
 # ---------------------------------------------------------------------------
 # Initialization
@@ -89,14 +116,16 @@ def init_db(db_path: Path) -> sqlite3.Connection:
     db_path.parent.mkdir(parents=True, exist_ok=True)
 
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row   # rows behave like dicts: row["title"]
+    conn.row_factory = sqlite3.Row  # rows behave like dicts: row["title"]
 
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA foreign_keys=ON;")
 
     # Apply schema
     conn.executescript(CREATE_RAW_LISTINGS)
+    conn.executescript(CREATE_PRICE_SNAPSHOTS)
     conn.executescript(CREATE_INDEXES)
+    conn.executescript(CREATE_PRICE_SNAPSHOT_INDEXES)
     conn.commit()
 
     return conn

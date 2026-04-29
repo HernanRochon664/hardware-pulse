@@ -18,7 +18,7 @@ import sqlite3
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-from src.domain.models import RawListing
+from src.domain.models import RawListing, ResolvedListing
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,9 @@ def _compute_listing_key(listing: RawListing) -> str:
     For retailers, the URL is the only stable identifier we have.
     """
     source = listing.source.value
-    identifier = listing.item_id if listing.item_id else _normalize_url(str(listing.url))
+    identifier = (
+        listing.item_id if listing.item_id else _normalize_url(str(listing.url))
+    )
     raw = f"{source}:{identifier}"
     return hashlib.sha256(raw.encode()).hexdigest()
 
@@ -113,7 +115,7 @@ def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertR
     listing_key = _compute_listing_key(listing)
     now = datetime.now(timezone.utc).isoformat()
 
-    with conn:   # context manager → auto commit or rollback
+    with conn:  # context manager → auto commit or rollback
         existing = conn.execute(
             "SELECT id, price FROM raw_listings WHERE listing_key = ?",
             (listing_key,),
@@ -150,7 +152,9 @@ def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertR
                     "now": now,
                 },
             )
-            logger.debug("Inserted listing_key=%s title=%r", listing_key[:8], listing.title)
+            logger.debug(
+                "Inserted listing_key=%s title=%r", listing_key[:8], listing.title
+            )
             row_id = cursor.lastrowid
             if row_id is None:
                 raise RuntimeError("Invariant violated: lastrowid is None after INSERT")
@@ -171,12 +175,54 @@ def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertR
             )
             logger.debug(
                 "Updated price for listing_key=%s: %.2f → %.2f",
-                listing_key[:8], existing_price, listing.price,
+                listing_key[:8],
+                existing_price,
+                listing.price,
             )
             return UpsertResult(id=existing_id, inserted=False, updated=True)
 
         # No-op
         return UpsertResult(id=existing_id, inserted=False, updated=False)
+
+
+def insert_price_snapshot(resolved: ResolvedListing, conn: sqlite3.Connection) -> int:
+    """Insert a resolved listing as a price snapshot. Returns the new row id."""
+    if not resolved.canonical_product_id:
+        raise ValueError(
+            "ResolvedListing must have canonical_product_id before inserting a price snapshot."
+        )
+
+    with conn:  # context manager → auto commit or rollback
+        cursor = conn.execute(
+            """
+            INSERT INTO price_snapshots (
+                timestamp, canonical_product_id, source, seller,
+                listing_id, price, currency, price_usd, availability
+            ) VALUES (
+                :timestamp, :canonical_product_id, :source, :seller,
+                :listing_id, :price, :currency, :price_usd, :availability
+            )
+            """,
+            {
+                "timestamp": resolved.timestamp.isoformat(),
+                "canonical_product_id": resolved.canonical_product_id,
+                "source": resolved.source.value,
+                "seller": resolved.seller,
+                "listing_id": resolved.item_id,
+                "price": resolved.price,
+                "currency": resolved.currency.value,
+                "price_usd": resolved.price,
+                "availability": resolved.available_quantity,
+            },
+        )
+
+        row_id = cursor.lastrowid
+    if row_id is None:
+        raise RuntimeError(
+            "Invariant violated: lastrowid is None after inserting price snapshot"
+        )
+
+    return row_id
 
 
 # ---------------------------------------------------------------------------
