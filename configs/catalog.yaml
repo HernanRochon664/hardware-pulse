@@ -1,9 +1,10 @@
-# Canonical GPU Catalog
-# Each entry represents a GPU model tracked by the system.
+# Canonical product catalog
+# Each entry represents a product model tracked by the system.
 #
 # Fields:
-# - sku: Canonical product identifier (e.g., "RTX 4070")
+# - sku: Canonical product identifier (e.g., "RTX 4070", "i5 12400F")
 # - brand_family: Manufacturer family (NVIDIA, AMD, Intel)
+# - category: Product category ("GPU" or "CPU")
 # - release_year: Launch year
 # - notes: Optional metadata for disambiguation
 #
@@ -16,94 +17,230 @@ canonical_products:
     # NVIDIA GeForce RTX (Blackwell)
     - sku: "RTX 5090"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2025
       notes: "Blackwell architecture, flagship"
 
     - sku: "RTX 5080"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2025
 
     - sku: "RTX 5070"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2025
 
     - sku: "RTX 5060"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2025
 
     - sku: "RTX 5050"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2025
 
     # NVIDIA GeForce RTX (Hopper)
     - sku: "RTX 4090"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2022
 
     - sku: "RTX 4080"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2022
 
     - sku: "RTX 4070 Ti"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2023
 
     - sku: "RTX 4070"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2023
 
     - sku: "RTX 4060 Ti"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2023
 
     - sku: "RTX 4060"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2023
 
     # NVIDIA GeForce RTX (Ampere)
     - sku: "RTX 3060"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2021
 
     - sku: "RTX 3050"
       brand_family: "NVIDIA"
+      category: "GPU"
       release_year: 2021
 
     # AMD Radeon RX (RDNA 3.5/4)
     - sku: "RX 9070 XT"
       brand_family: "AMD"
+      category: "GPU"
       release_year: 2025
 
     - sku: "RX 9070"
       brand_family: "AMD"
+      category: "GPU"
       release_year: 2025
 
     - sku: "RX 9060 XT"
       brand_family: "AMD"
+      category: "GPU"
       release_year: 2025
 
     # AMD Radeon RX (RDNA 3)
     - sku: "RX 7900 XT"
       brand_family: "AMD"
+      category: "GPU"
       release_year: 2022
 
     - sku: "RX 7800 XT"
       brand_family: "AMD"
+      category: "GPU"
       release_year: 2023
 
     - sku: "RX 7600"
       brand_family: "AMD"
+      category: "GPU"
       release_year: 2023
 
     # Intel Arc
     - sku: "Arc B580"
       brand_family: "Intel"
+      category: "GPU"
       release_year: 2024
 
     - sku: "Arc B570"
       brand_family: "Intel"
+      category: "GPU"
       release_year: 2024
 
     - sku: "Arc A580"
       brand_family: "Intel"
+      category: "GPU"
       release_year: 2022
+
+    # Intel CPUs
+    - sku: "Intel Core i3 12100F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Intel Core i5 12400F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Intel Core i5 12600KF"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Intel Core i7 12700"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2021
+
+    - sku: "Intel Core i7 12700F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2021
+
+    # AMD CPUs / APUs
+    - sku: "AMD Athlon 3000G"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2019
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 5 3400G"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2019
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 5 4500"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2020
+
+    - sku: "Ryzen 5 5600GT"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 5 7600X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2023
+
+    - sku: "Ryzen 5 8500G"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 5 8600G"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 7 5700G"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2021
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 7 7700"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2023
+
+    - sku: "Ryzen 7 7700X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2023
+
+    - sku: "Ryzen 7 7800X3D"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 7 8700G"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+      notes: "APU with integrated Radeon graphics"
+
+    - sku: "Ryzen 9 7900"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Ryzen 9 7900X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2023
+
+    - sku: "Ryzen 9 7950X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Ryzen 9 9950X3D"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
