@@ -90,6 +90,32 @@ CREATE TABLE IF NOT EXISTS price_snapshots (
 );
 """
 
+CREATE_FEATURE_SNAPSHOTS = """
+CREATE TABLE IF NOT EXISTS feature_snapshots (
+    id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    week_start            TEXT NOT NULL,
+    canonical_product_id  TEXT NOT NULL,
+    run_at                TEXT NOT NULL,
+    precio_lag_1          REAL,
+    precio_lag_2          REAL,
+    mediana_movil         REAL,
+    dispersion_precios    REAL,
+    usd_uyu_rate          REAL,
+    UNIQUE (week_start, canonical_product_id)
+);
+"""
+
+CREATE_FEATURE_SNAPSHOT_INDEXES = """
+CREATE INDEX IF NOT EXISTS idx_feature_snapshots_product
+    ON feature_snapshots (canonical_product_id);
+
+CREATE INDEX IF NOT EXISTS idx_feature_snapshots_week_start
+    ON feature_snapshots (week_start);
+
+CREATE INDEX IF NOT EXISTS idx_feature_snapshots_product_week_start
+    ON feature_snapshots (canonical_product_id, week_start);
+"""
+
 
 # ---------------------------------------------------------------------------
 # Initialization
@@ -124,8 +150,10 @@ def init_db(db_path: Path) -> sqlite3.Connection:
     # Apply schema
     conn.executescript(CREATE_RAW_LISTINGS)
     conn.executescript(CREATE_PRICE_SNAPSHOTS)
+    conn.executescript(CREATE_FEATURE_SNAPSHOTS)
     conn.executescript(CREATE_INDEXES)
     conn.executescript(CREATE_PRICE_SNAPSHOT_INDEXES)
+    conn.executescript(CREATE_FEATURE_SNAPSHOT_INDEXES)
     conn.commit()
 
     return conn
