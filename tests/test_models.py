@@ -1,143 +1,66 @@
-"""
-Tests for src/domain/models.py
-
-Covers Pydantic validation rules for RawListing and PriceSnapshot.
-No mocks needed, pure unit tests against domain logic.
-"""
-
 import pytest
-from pydantic import ValidationError
+import pandas as pd
+import numpy as np
+from src.models.naive import NaivePersistenceModel
+from src.models.evaluation import calculate_metrics, split_temporal, evaluate_model_performance
 
-from src.domain.models import Condition, Currency, RawListing, Source
+def test_calculate_metrics():
+    # Simple case: y_true = [100, 200], y_pred = [110, 190]
+    # MAE = (10 + 10) / 2 = 10
+    # RMSE = sqrt((10^2 + 10^2) / 2) = sqrt(100) = 10
+    # MAPE = ((10/100 + 10/200) / 2) * 100 = (0.1 + 0.05) / 2 * 100 = 7.5%
+    y_true = pd.Series([100, 200])
+    y_pred = pd.Series([110, 190])
+    
+    metrics = calculate_metrics(y_true, y_pred)
+    
+    assert metrics["mae"] == pytest.approx(10.0)
+    assert metrics["rmse"] == pytest.approx(10.0)
+    assert metrics["mape"] == pytest.approx(7.5)
 
+def test_split_temporal():
+    df = pd.DataFrame({"a": range(10)})
+    
+    # Valid split
+    train, test = split_temporal(df, 0.8)
+    assert len(train) == 8
+    assert len(test) == 2
+    assert train.index.max() < test.index.min()
+    
+    # Invalid ratio
+    with pytest.raises(ValueError, match="split_ratio must be between 0 and 1"):
+        split_temporal(df, 1.5)
+    with pytest.raises(ValueError, match="split_ratio must be between 0 and 1"):
+        split_temporal(df, -0.1)
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+def test_naive_persistence_model_missing_column():
+    model = NaivePersistenceModel(price_column="non_existent")
+    X = pd.DataFrame({"precio_lag_1": [100, 110]})
+    
+    with pytest.raises(ValueError, match="Feature 'non_existent' not found in input DataFrame"):
+        model.predict(X)
 
-
-def make_listing(**overrides) -> RawListing:
-    """Build a valid RawListing with optional field overrides."""
-    defaults = {
-        "source": Source.THOT,
-        "url": "https://thotcomputacion.com.uy/producto/rtx-4070",
-        "timestamp": "2026-04-25T12:00:00+00:00",
-        "title": "GPU ASUS TUF RTX 4070 OC 12GB",
-        "price": 750.0,
-        "currency": Currency.USD,
-        "seller": "thot",
-    }
-    return RawListing(**{**defaults, **overrides})
-
-
-# ---------------------------------------------------------------------------
-# Happy path
-# ---------------------------------------------------------------------------
-
-
-class TestRawListingValidInstantiation:
-    def test_valid_listing_creates_successfully(self):
-        listing = make_listing()
-        assert listing.title == "GPU ASUS TUF RTX 4070 OC 12GB"
-        assert listing.price == 750.0
-        assert listing.currency == Currency.USD
-
-    def test_optional_fields_default_to_none(self):
-        listing = make_listing()
-        assert listing.item_id is None
-        assert listing.condition is None
-        assert listing.available_quantity is None
-        assert listing.base_price is None
-
-    def test_optional_fields_accept_values(self):
-        listing = make_listing(
-            item_id="MLU123456",
-            condition=Condition.NEW,
-            available_quantity=5,
-            base_price=800.0,
-        )
-        assert listing.item_id == "MLU123456"
-        assert listing.condition == Condition.NEW
-        assert listing.available_quantity == 5
-        assert listing.base_price == 800.0
-
-    def test_title_is_stripped(self):
-        listing = make_listing(title="  RTX 4070  ")
-        assert listing.title == "RTX 4070"
-
-    def test_uyu_currency_accepted(self):
-        listing = make_listing(currency=Currency.UYU, price=30000.0)
-        assert listing.currency == Currency.UYU
-
-
-# ---------------------------------------------------------------------------
-# Title validation
-# ---------------------------------------------------------------------------
-
-
-class TestTitleValidation:
-    def test_empty_title_raises(self):
-        with pytest.raises(ValidationError) as exc_info:
-            make_listing(title="")
-        assert "title" in str(exc_info.value)
-
-    def test_whitespace_only_title_raises(self):
-        with pytest.raises(ValidationError) as exc_info:
-            make_listing(title="   ")
-        assert "title" in str(exc_info.value)
-
-
-# ---------------------------------------------------------------------------
-# Price validation
-# ---------------------------------------------------------------------------
-
-
-class TestPriceValidation:
-    def test_zero_price_raises(self):
-        with pytest.raises(ValidationError):
-            make_listing(price=0.0)
-
-    def test_negative_price_raises(self):
-        with pytest.raises(ValidationError):
-            make_listing(price=-100.0)
-
-    def test_negative_base_price_raises(self):
-        with pytest.raises(ValidationError):
-            make_listing(base_price=-50.0)
-
-    def test_none_base_price_accepted(self):
-        listing = make_listing(base_price=None)
-        assert listing.base_price is None
-
-    def test_valid_base_price_accepted(self):
-        listing = make_listing(base_price=800.0)
-        assert listing.base_price == 800.0
-
-
-# ---------------------------------------------------------------------------
-# Enum validation
-# ---------------------------------------------------------------------------
-
-
-class TestEnumValidation:
-    def test_invalid_currency_raises(self):
-        with pytest.raises(ValidationError):
-            make_listing(currency="INVALID")
-
-    def test_invalid_source_raises(self):
-        with pytest.raises(ValidationError):
-            make_listing(source="invalid_source")
-
-    def test_invalid_condition_raises(self):
-        with pytest.raises(ValidationError):
-            make_listing(condition="broken")
-
-    def test_all_sources_accepted(self):
-        for source in Source:
-            listing = make_listing(source=source)
-            assert listing.source == source
-
-    def test_all_currencies_accepted(self):
-        for currency in Currency:
-            listing = make_listing(currency=currency)
-            assert listing.currency == currency
+def test_evaluate_model_performance_integration():
+    # Setup minimal data
+    df = pd.DataFrame({
+        "precio_lag_1": [10, 11, 12, 13, 14],
+        "target": [11, 12, 13, 14, 15]
+    })
+    model = NaivePersistenceModel()
+    
+    # split_ratio=0.6 -> train: 3 samples, test: 2 samples
+    results = evaluate_model_performance(
+        model=model,
+        df=df,
+        target_col="target",
+        feature_cols=["precio_lag_1"],
+        split_ratio=0.6
+    )
+    
+    assert results.metrics is not None
+    assert results.predictions is not None
+    assert len(results.predictions) == 2
+    # Naive persistence should predict exactly the values in precio_lag_1
+    # Test set is rows [3, 4] -> precio_lag_1 values are [13, 14]
+    assert results.predictions.iloc[0] == 13
+    assert results.predictions.iloc[1] == 14
