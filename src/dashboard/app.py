@@ -66,9 +66,8 @@ with tab_summary:
             st.subheader("🔥 Best Deals")
             for item in deals:
                 st.markdown(
-                    f"**{item['sku']}** — ${item['current_price']:.2f} "
-                    f"(median: ${item['median_price']:.2f}, "
-                    f"{item['pct_diff']:+.1f}%)"
+                    f"**{item['sku']}** — `${item['current_price']:.2f}` "
+                    f"vs `${item['median_price']:.2f}` median ({item['pct_diff']:+.1f}%)"
                 )
 
 with tab_product:
