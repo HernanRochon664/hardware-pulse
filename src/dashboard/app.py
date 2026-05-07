@@ -28,8 +28,19 @@ with tab_summary:
             item["signal"] = detect_signal(item["current_price"], item["median_price"])
             item["signal_info"] = format_signal(item["signal"], item["pct_diff"])
 
+        display_df = [
+            {
+                "SKU": item["sku"],
+                "Current Price": f"${item['current_price']:.2f}",
+                "Median": f"${item['median_price']:.2f}",
+                "vs Median": f"{item['pct_diff']:+.1f}%",
+                "Signal": item["signal_info"]["emoji"],
+                "Last Updated": item.get("latest_timestamp", "N/A"),
+            }
+            for item in summary
+        ]
         st.dataframe(
-            data=summary,
+            data=display_df,
             use_container_width=True,
             hide_index=True,
         )
@@ -85,7 +96,10 @@ with tab_product:
             if current_prices:
                 st.subheader("Current Prices by Store")
                 for p in current_prices:
-                    st.markdown(f"**{p['source']}** ({p['seller']}): ${p['price_usd']:.2f}")
+                    ts = p["timestamp"][:16]
+                    st.markdown(f"**{p['source']}** ({p['seller']}): ${p['price_usd']:.2f} — {ts}")
+            else:
+                st.warning("No prices in the last 48 hours.")
 
             if history:
                 current_min = min(p["price_usd"] for p in current_prices)

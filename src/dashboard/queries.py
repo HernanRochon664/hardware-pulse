@@ -21,16 +21,17 @@ def get_all_skus(conn: Connection) -> list[str]:
     return [row[0] for row in cursor.fetchall()]
 
 
-def get_current_prices(conn: Connection, sku: str) -> list[dict]:
+def get_current_prices(conn: Connection, sku: str, hours: int = 48) -> list[dict]:
     cursor = conn.execute(
         """
         SELECT source, seller, price_usd, timestamp
         FROM price_snapshots
         WHERE canonical_product_id = ?
+          AND timestamp >= datetime('now', '-' || ? || ' hours')
         ORDER BY timestamp DESC
         LIMIT 10
         """,
-        (sku,),
+        (sku, hours),
     )
     rows = cursor.fetchall()
     seen_sources = set()
@@ -73,42 +74,70 @@ def _median(values: list[float]) -> float:
     return sorted_vals[mid]
 
 
-def get_market_summary(conn: Connection) -> list[dict]:
+def get_market_summary(conn: Connection, hours: int = 48) -> list[dict]:
     cursor = conn.execute(
         """
+        WITH latest_per_source AS (
+            -- Get the most recent price per source within the time window
+            SELECT
+                canonical_product_id,
+                source,
+                price_usd,
+                timestamp,
+                ROW_NUMBER() OVER (
+                    PARTITION BY canonical_product_id, source
+                    ORDER BY timestamp DESC
+                ) AS rn
+            FROM price_snapshots
+            WHERE timestamp >= datetime('now', '-' || ? || ' hours')
+        )
         SELECT
-            canonical_product_id,
-            price_usd,
-            timestamp
-        FROM price_snapshots
-        ORDER BY canonical_product_id, timestamp DESC
-        """
+            canonical_product_id AS sku,
+            MIN(price_usd) AS current_price,
+            timestamp AS latest_timestamp
+        FROM latest_per_source
+        WHERE rn = 1
+        GROUP BY canonical_product_id
+        """,
+        (hours,),
     )
-    rows = cursor.fetchall()
+    latest_rows = {
+        row["sku"]: (row["current_price"], row["latest_timestamp"]) for row in cursor.fetchall()
+    }
+
+    skus = list(latest_rows.keys())
+    if not skus:
+        return []
+
+    placeholders = ",".join("?" * len(skus))
+    cursor = conn.execute(
+        f"""
+        SELECT canonical_product_id, price_usd
+        FROM price_snapshots
+        WHERE canonical_product_id IN ({placeholders})
+        """,
+        skus,
+    )
 
     by_sku: dict[str, list[float]] = {}
-    latest_by_sku: dict[str, float] = {}
-
-    for row in rows:
+    for row in cursor.fetchall():
         sku = row["canonical_product_id"]
-        price = row["price_usd"]
-
         if sku not in by_sku:
             by_sku[sku] = []
-            latest_by_sku[sku] = price
-
-        by_sku[sku].append(price)
+        by_sku[sku].append(row["price_usd"])
 
     result = []
-    for sku, prices in by_sku.items():
-        current_price = latest_by_sku[sku]
-        median_price = _median(prices)
+    for sku in skus:
+        current_price, latest_timestamp = latest_rows[sku]
+        historical_prices = by_sku.get(sku, [])
+        median_price = _median(historical_prices)
         pct_diff = ((current_price - median_price) / median_price) * 100 if median_price else 0
 
         result.append(
             {
                 "sku": sku,
                 "current_price": current_price,
+                "latest_timestamp": latest_timestamp,
                 "median_price": round(median_price, 2),
                 "pct_diff": round(pct_diff, 1),
             }
