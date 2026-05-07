@@ -15,8 +15,8 @@ from pathlib import Path
 
 import streamlit as st
 
-from .queries import get_connection, get_current_prices, get_market_summary, get_price_history
-from .signals import detect_signal, format_signal
+from src.dashboard.queries import get_connection, get_current_prices, get_market_summary, get_price_history
+from src.dashboard.signals import detect_signal, format_signal
 
 st.set_page_config(page_title="Hardware Pulse", layout="wide")
 st.title("Hardware Pulse 💸")
