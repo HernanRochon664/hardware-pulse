@@ -6,7 +6,7 @@ Responsibilities:
 - Compute weekly median prices per canonical SKU
 - Compute lag features and rolling median (time-series features)
 - Compute price dispersion across sources per week/SKU
-- Fetch weekly USD/UYU exchange rate from Frankfurter API
+- Fetch weekly USD/UYU exchange rate
 - Persist results to feature_snapshots table
 
 Does NOT:
@@ -35,9 +35,14 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-FRANKFURTER_URL = "https://api.frankfurter.app/{date}?from=USD&to=UYU"
-ROLLING_WINDOW = 4  # weeks for rolling median
-REQUEST_TIMEOUT = 10  # seconds for Frankfurter API calls
+FX_API_URL = (
+    "https://cdn.jsdelivr.net/npm/"
+    "@fawazahmed0/currency-api@{date}/"
+    "v1/currencies/usd.json"
+)
+
+ROLLING_WINDOW = 4
+REQUEST_TIMEOUT = 10
 
 # ---------------------------------------------------------------------------
 # Result type
@@ -65,43 +70,58 @@ class FeatureResult:
 # ---------------------------------------------------------------------------
 
 
-def _fetch_usd_uyu_rate(date_str: str) -> float | None:
-    """
-    Fetch the USD/UYU exchange rate for a given date from Frankfurter API.
-
-    Args:
-        date_str: Date in YYYY-MM-DD format (Monday of the target week).
-
-    Returns:
-        Exchange rate as float, or None if the request fails.
-    """
-    url = FRANKFURTER_URL.format(date=date_str)
-    try:
-        response = requests.get(url, timeout=REQUEST_TIMEOUT)
-        response.raise_for_status()
-        data = response.json()
-        rate = data["rates"]["UYU"]
-        logger.debug("FX rate for %s: %.4f", date_str, rate)
-        return float(rate)
-    except Exception as exc:
-        logger.warning("Failed to fetch FX rate for %s: %s", date_str, exc)
-        return None
-
-
 def _fetch_fx_rates(week_starts: list[str]) -> dict[str, float | None]:
     """
-    Fetch USD/UYU rates for all unique week_start dates.
+    Fetch USD/UYU FX rates for all requested dates.
 
     Args:
-        week_starts: List of date strings (YYYY-MM-DD), one per unique week.
+        week_starts:
+            List of ISO dates (YYYY-MM-DD)
 
     Returns:
-        Dict mapping date string → exchange rate (or None on failure).
+        Dict mapping date -> USD/UYU rate
     """
-    rates: dict[str, float | None] = {}
-    for date_str in sorted(set(week_starts)):
-        rates[date_str] = _fetch_usd_uyu_rate(date_str)
-    return rates
+    results: dict[str, float | None] = {}
+
+    unique_dates = sorted(set(week_starts))
+
+    for date_str in unique_dates:
+        url = FX_API_URL.format(date=date_str)
+
+        try:
+            response = requests.get(url, timeout=REQUEST_TIMEOUT)
+            response.raise_for_status()
+
+            data = response.json()
+
+            usd_rates = data.get("usd", {})
+            rate = usd_rates.get("uyu")
+
+            if rate is None:
+                logger.warning(
+                    "No USD/UYU FX rate found for %s",
+                    date_str,
+                )
+                results[date_str] = None
+                continue
+
+            results[date_str] = float(rate)
+
+            logger.debug(
+                "Fetched USD/UYU FX rate | date=%s | rate=%.4f",
+                date_str,
+                results[date_str],
+            )
+
+        except Exception as exc:
+            logger.warning(
+                "Failed to fetch FX rate for %s: %s",
+                date_str,
+                exc,
+            )
+            results[date_str] = None
+
+    return results
 
 
 # ---------------------------------------------------------------------------
@@ -114,19 +134,31 @@ def _load_price_snapshots(
     since: datetime | None,
 ) -> pd.DataFrame:
     """
-    Load price_snapshots from the database into a DataFrame.
+    Load price snapshots from the database.
 
     Args:
-        conn:  Open SQLite connection.
-        since: If provided, only load snapshots at or after this timestamp.
+        conn:
+            Open SQLite connection.
+
+        since:
+            Optional lower bound timestamp.
 
     Returns:
-        DataFrame with columns: timestamp, canonical_product_id, price_usd, source.
+        DataFrame with:
+            - timestamp
+            - canonical_product_id
+            - price_usd
+            - source
     """
     query = """
-        SELECT timestamp, canonical_product_id, price_usd, source
+        SELECT
+            timestamp,
+            canonical_product_id,
+            price_usd,
+            source
         FROM price_snapshots
     """
+
     params: tuple[Any, ...] = ()
 
     if since is not None:
@@ -134,48 +166,64 @@ def _load_price_snapshots(
         params = (since.isoformat(),)
 
     df = pd.read_sql_query(query, conn, params=params)
+
     df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True)
+
     return df
 
 
 def _compute_weekly_features(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Compute weekly features from price snapshot data.
+    Compute weekly price features.
 
     Steps:
-    1. Derive week_start (Monday) from each timestamp
-    2. Compute weekly median price per (week_start, SKU)
-    3. Compute price dispersion (std) per (week_start, SKU) across sources
-    4. Sort by (SKU, week_start) and compute lag_1, lag_2, rolling median
-       — no forward fill: NaN where there is no prior observation
+    1. Derive week_start (Monday UTC)
+    2. Aggregate median/std price per SKU/week
+    3. Compute lag features
+    4. Compute rolling median
 
     Args:
-        df: Raw price snapshots with columns: timestamp, canonical_product_id,
-            price_usd, source.
+        df:
+            Raw price snapshot dataframe.
 
     Returns:
-        DataFrame with one row per (week_start, canonical_product_id) and
-        feature columns: mediana_semanal, dispersion_precios,
-        precio_lag_1, precio_lag_2, mediana_movil.
+        Weekly feature dataframe.
     """
     if df.empty:
         return pd.DataFrame()
 
-    # Step 1: derive week_start (normalize to Monday 00:00 UTC)
     df = df.copy()
+
+    # -----------------------------------------------------------------------
+    # Week normalization (Monday 00:00 UTC)
+    # -----------------------------------------------------------------------
+
     df["week_start"] = df["timestamp"].dt.normalize() - pd.to_timedelta(
         df["timestamp"].dt.weekday, unit="D"
     )
 
-    # Step 2: weekly median and dispersion per SKU
+    # -----------------------------------------------------------------------
+    # Weekly aggregation
+    # -----------------------------------------------------------------------
+
     weekly = (
         df.groupby(["week_start", "canonical_product_id"])["price_usd"]
-        .agg(mediana_semanal="median", dispersion_precios="std")
+        .agg(
+            mediana_semanal="median",
+            dispersion_precios="std",
+        )
         .reset_index()
     )
 
-    # Step 3: sort and compute lag/rolling features per SKU group
+    # -----------------------------------------------------------------------
+    # Sort for time-series operations
+    # -----------------------------------------------------------------------
+
     weekly = weekly.sort_values(["canonical_product_id", "week_start"])
+
+    # -----------------------------------------------------------------------
+    # Lag features
+    # -----------------------------------------------------------------------
 
     weekly["precio_lag_1"] = weekly.groupby("canonical_product_id")[
         "mediana_semanal"
@@ -185,11 +233,23 @@ def _compute_weekly_features(df: pd.DataFrame) -> pd.DataFrame:
         "mediana_semanal"
     ].shift(2)
 
+    # -----------------------------------------------------------------------
+    # Rolling median
+    # -----------------------------------------------------------------------
+
     weekly["mediana_movil"] = weekly.groupby("canonical_product_id")[
         "mediana_semanal"
-    ].transform(lambda s: s.rolling(window=ROLLING_WINDOW, min_periods=1).median())
+    ].transform(
+        lambda s: s.rolling(
+            window=ROLLING_WINDOW,
+            min_periods=1,
+        ).median()
+    )
 
-    # Format week_start as ISO date string for SQLite storage
+    # -----------------------------------------------------------------------
+    # SQLite-friendly formatting
+    # -----------------------------------------------------------------------
+
     weekly["week_start"] = weekly["week_start"].dt.strftime("%Y-%m-%d")
 
     return weekly.reset_index(drop=True)
@@ -205,25 +265,29 @@ def _upsert_feature_snapshot(
     conn: sqlite3.Connection,
 ) -> None:
     """
-    Insert or replace a single feature snapshot row.
-
-    Uses INSERT OR REPLACE to handle the UNIQUE (week_start, canonical_product_id)
-    constraint — on conflict, the existing row is replaced with new values.
-
-    Args:
-        row:  Dict with all feature_snapshots columns.
-        conn: Open SQLite connection (caller manages transaction).
+    Insert or replace a feature snapshot row.
     """
     conn.execute(
         """
         INSERT OR REPLACE INTO feature_snapshots (
-            week_start, canonical_product_id, run_at,
-            precio_lag_1, precio_lag_2, mediana_movil,
-            dispersion_precios, usd_uyu_rate
-        ) VALUES (
-            :week_start, :canonical_product_id, :run_at,
-            :precio_lag_1, :precio_lag_2, :mediana_movil,
-            :dispersion_precios, :usd_uyu_rate
+            week_start,
+            canonical_product_id,
+            run_at,
+            precio_lag_1,
+            precio_lag_2,
+            mediana_movil,
+            dispersion_precios,
+            usd_uyu_rate
+        )
+        VALUES (
+            :week_start,
+            :canonical_product_id,
+            :run_at,
+            :precio_lag_1,
+            :precio_lag_2,
+            :mediana_movil,
+            :dispersion_precios,
+            :usd_uyu_rate
         )
         """,
         row,
@@ -241,32 +305,42 @@ def build_features(
     run_at: datetime | None = None,
 ) -> FeatureResult:
     """
-    Run the full feature engineering pipeline.
-
-    Reads resolved price snapshots, computes weekly features per SKU,
-    fetches USD/UYU exchange rates, and persists results to feature_snapshots.
+    Run the feature engineering pipeline.
 
     Args:
-        conn:   Open SQLite connection (from storage.schema.init_db).
-        since:  If provided, only process snapshots at or after this datetime.
-                Useful for incremental re-runs.
-        run_at: Timestamp for this pipeline run. Defaults to now (UTC).
+        conn:
+            Open SQLite connection.
+
+        since:
+            Optional lower timestamp bound.
+
+        run_at:
+            Pipeline execution timestamp.
 
     Returns:
-        FeatureResult with run statistics and any errors encountered.
+        FeatureResult
     """
     if run_at is None:
         run_at = datetime.now(timezone.utc)
 
     run_at_str = run_at.isoformat()
+
     errors: list[str] = []
 
-    # --- Load data ---
-    logger.info("Loading price snapshots (since=%s)", since)
+    # -----------------------------------------------------------------------
+    # Load data
+    # -----------------------------------------------------------------------
+
+    logger.info(
+        "Loading price snapshots (since=%s)",
+        since,
+    )
+
     df = _load_price_snapshots(conn, since)
 
     if df.empty:
         logger.warning("No price snapshots found — nothing to compute")
+
         return FeatureResult(
             run_at=run_at_str,
             weeks_processed=0,
@@ -275,12 +349,21 @@ def build_features(
             fx_rates_fetched=0,
         )
 
-    # --- Compute features ---
-    logger.info("Computing weekly features for %d snapshots", len(df))
+    # -----------------------------------------------------------------------
+    # Compute features
+    # -----------------------------------------------------------------------
+
+    logger.info(
+        "Computing weekly features for %d snapshots",
+        len(df),
+    )
+
     weekly = _compute_weekly_features(df)
 
     weeks_processed = weekly["week_start"].nunique()
+
     skus_processed = weekly["canonical_product_id"].nunique()
+
     logger.info(
         "Computed features: %d weeks × %d SKUs = %d rows",
         weeks_processed,
@@ -288,16 +371,29 @@ def build_features(
         len(weekly),
     )
 
-    # --- Fetch exchange rates ---
+    # -----------------------------------------------------------------------
+    # Fetch FX rates
+    # -----------------------------------------------------------------------
+
     unique_weeks = weekly["week_start"].tolist()
-    logger.info("Fetching FX rates for %d unique weeks", len(set(unique_weeks)))
+
+    logger.info(
+        "Fetching FX rates for %d unique weeks",
+        len(set(unique_weeks)),
+    )
+
     fx_rates = _fetch_fx_rates(unique_weeks)
+
     fx_rates_fetched = sum(1 for v in fx_rates.values() if v is not None)
 
     weekly["usd_uyu_rate"] = weekly["week_start"].map(fx_rates)
 
-    # --- Persist ---
+    # -----------------------------------------------------------------------
+    # Persist
+    # -----------------------------------------------------------------------
+
     rows_written = 0
+
     with conn:
         for _, row in weekly.iterrows():
             try:
@@ -328,22 +424,34 @@ def build_features(
                         ),
                         "usd_uyu_rate": (
                             None
-                            if pd.isna(row.get("usd_uyu_rate"))
+                            if pd.isna(row["usd_uyu_rate"])
                             else float(row["usd_uyu_rate"])
                         ),
                     },
                     conn,
                 )
+
                 rows_written += 1
+
             except Exception as exc:
                 msg = (
                     f"Failed to write feature row "
-                    f"({row['week_start']}, {row['canonical_product_id']}): {exc}"
+                    f"({row['week_start']}, "
+                    f"{row['canonical_product_id']}): {exc}"
                 )
+
                 logger.error(msg)
+
                 errors.append(msg)
 
-    logger.info("Feature pipeline complete: %d rows written", rows_written)
+    # -----------------------------------------------------------------------
+    # Final summary
+    # -----------------------------------------------------------------------
+
+    logger.info(
+        "Feature pipeline complete: %d rows written",
+        rows_written,
+    )
 
     return FeatureResult(
         run_at=run_at_str,
