@@ -1,3 +1,15 @@
+"""
+SQL queries for the Hardware Pulse dashboard.
+
+Responsibilities:
+- Provide data access layer for price snapshots
+- Support summary views and product-specific queries
+
+Does NOT:
+- Contain business logic (see signals.py)
+- Handle UI rendering (see app.py)
+"""
+
 from pathlib import Path
 from sqlite3 import Connection
 

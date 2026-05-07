@@ -1,3 +1,16 @@
+"""
+Streamlit dashboard for Hardware Pulse.
+
+Responsibilities:
+- Display market summary with deal signals
+- Show product-specific price history and store prices
+- Visualize price trends with Plotly charts
+
+Does NOT:
+- Define business logic (see signals.py)
+- Access database directly (see queries.py)
+"""
+
 from pathlib import Path
 
 import streamlit as st

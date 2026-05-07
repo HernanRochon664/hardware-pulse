@@ -1,3 +1,15 @@
+"""
+Deal detection signals for the Hardware Pulse dashboard.
+
+Responsibilities:
+- Classify price opportunities as deal/fair/expensive
+- Format signals for UI display
+
+Does NOT:
+- Access the database directly (see queries.py)
+- Handle UI rendering (see app.py)
+"""
+
 DEAL_THRESHOLD_PCT = 10.0
 
 

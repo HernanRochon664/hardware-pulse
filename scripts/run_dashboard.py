@@ -1,3 +1,12 @@
+"""
+Entry point script to run the Hardware Pulse dashboard.
+
+Usage:
+    python scripts/run_dashboard.py
+    # or
+    streamlit run src/dashboard/app.py
+"""
+
 import sys
 from pathlib import Path
 
