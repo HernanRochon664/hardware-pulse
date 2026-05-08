@@ -48,6 +48,7 @@ uv.lock
 *.json
 *.db
 *.npy
+!data/hardware_pulse.db
 
 # ---------------------------
 # Models
@@ -118,7 +119,6 @@ credentials.json
 # FastAPI / Temp Files
 # ---------------------------
 *.sqlite3
-*.db
 logs/
 temp/
 tmp/
