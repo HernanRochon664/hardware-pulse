@@ -9,7 +9,7 @@ dependencies = [
     "matplotlib>=3.10.9",
     "numpy>=2.4.3",
     "pandas>=3.0.1",
-    "playwright>=1.58.0",
+
     "plotly>=6.7.0",
     "pydantic>=2.12.5",
     "python-dotenv>=1.2.2",

@@ -88,9 +88,8 @@ To resolve duplicates, the system extracts:
   Matching pipeline:
 
 1. Normalize text
-2. Extract GPU/CPU model
-3. Generate embeddings
-4. Nearest-neighbor matching
+2. Extract GPU/CPU model via regex
+3. Exact match → regex match → fuzzy matching
    This produces a **canonical product graph**.
 
 ---
@@ -138,7 +137,7 @@ Python
 
 ### ML / NLP
 
-- sentence-transformers
+- rapidfuzz
 - scikit-learn
 
 ### Visualization
