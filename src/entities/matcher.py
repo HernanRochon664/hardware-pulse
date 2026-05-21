@@ -95,12 +95,29 @@ _GPU_PATTERNS: list[re.Pattern] = [
     re.compile(r"\bGTX\s*(\d{3,4})\b", re.IGNORECASE),
 ]
 
+# Pre-compiled patterns for CPU model formats
+_CPU_PATTERNS: list[re.Pattern] = [
+    # AMD Ryzen with tier (3/5/7/9), number, and optional suffix (G, X, X3D)
+    re.compile(r"\bRyzen\s*([3579])\s*(\d{4})([A-Z0-9]*)\b", re.IGNORECASE),
+    # AMD Ryzen compact (e.g., "R57600GT" → "Ryzen 5 5600GT")
+    # Also allows standalone at start of string (no word boundary needed)
+    re.compile(r"(?:^|[\s/])R([3579])(\d{4})([A-Z]*)(?:[\s/]|$)", re.IGNORECASE),
+    # AMD Athlon (with optional trailing text)
+    re.compile(r"\bAthlon\s*(\d{4})G\b", re.IGNORECASE),
+    # Intel Core i3/i5/i7/i9 with dash or space (12xxx, 13xxx, 14xxx) and optional suffix
+    # Also allows trailing text like "Processor" or "Desktop"
+    re.compile(r"\bIntel\s*Core\s*i([3579])[- ]?(\d{4,5})([A-Za-z]*)\b", re.IGNORECASE),
+    # Intel Core compact (e.g., "i512400F" → "Intel Core i5 12400F")
+    re.compile(r"\bi([3579])(\d{4,5})([A-Z]*)\b", re.IGNORECASE),
+]
+
 
 def _reconstruct_sku_from_match(match: re.Match) -> str:
     """
     Reconstruct a normalized SKU string from a regex match.
 
-    Handles NVIDIA RTX, AMD RX, AMD Radeon (without RX), Intel Arc, and GTX patterns.
+    Handles NVIDIA RTX, AMD RX, AMD Radeon (without RX), Intel Arc, GTX,
+    AMD Ryzen, Intel Core, and Athlon patterns.
     """
     full = match.group(0).upper().strip()
 
@@ -124,6 +141,33 @@ def _reconstruct_sku_from_match(match: re.Match) -> str:
         elif code == "907":
             full = "RX 9070 XT"
 
+    # Handle AMD Ryzen compact (R57600GT → Ryzen 5 5600GT)
+    ryzen_match = re.match(r"^R([3579])(\d{4})([A-Z]*)$", full)
+    if ryzen_match:
+        tier, number, suffix = ryzen_match.groups()
+        tier_map = {"3": "3", "5": "5", "7": "7", "9": "9"}
+        full = f"Ryzen {tier_map.get(tier, tier)} {number}{suffix}"
+
+    # Handle Intel Core compact (i512400F → Intel Core i5 12400F)
+    core_match = re.match(r"^I([3579])(\d{4,5})([A-Z]*)$", full)
+    if core_match:
+        tier, number, suffix = core_match.groups()
+        full = f"Intel Core i{tier} {number}{suffix}"
+
+    # Fix Intel Core dash (i5-12400F → Intel Core i5 12400F)
+    full = re.sub(
+        r"^INTEL\s*CORE\s*I([3579])[-](\d{4,5})([A-Za-z0-9]*)$",
+        r"Intel Core i\1 \2\3",
+        full,
+    )
+
+    # Fix Intel Core with trailing text like "Processor"
+    # (INTEL CORE I5 12600KFPROCESSOR → INTEL CORE I5 12600KF)
+    full = re.sub(r"^(INTEL CORE I[3579] \d{4,5})[A-Z].*$", r"\1", full)
+
+    # Handle AMD Athlon (add AMD prefix to match catalog)
+    full = re.sub(r"^ATHLON\s*(\d{4})G\b", r"AMD Athlon \1G", full, flags=re.IGNORECASE)
+
     # Ensure space between prefix and number
     full = re.sub(r"(RTX|RX|GTX|Arc)(\d)", r"\1 \2", full)
 
@@ -135,10 +179,10 @@ def _reconstruct_sku_from_match(match: re.Match) -> str:
 
 def regex_match(title: str, catalog: Catalog) -> MatchResult:
     """
-    Extract GPU model using regex patterns and validate against catalog.
+    Extract product model using regex patterns and validate against catalog.
 
     Strategy:
-    1. Apply each GPU pattern to the title
+    1. Apply each GPU and CPU pattern to the title
     2. Reconstruct candidate SKU from match
     3. Check if candidate matches any catalog SKU (normalized)
 
@@ -149,7 +193,9 @@ def regex_match(title: str, catalog: Catalog) -> MatchResult:
     Returns:
         (sku, 0.9) if regex match found in catalog, (None, 0.0) otherwise.
     """
-    for pattern in _GPU_PATTERNS:
+    all_patterns = _GPU_PATTERNS + _CPU_PATTERNS
+
+    for pattern in all_patterns:
         match = pattern.search(title)
         if not match:
             continue

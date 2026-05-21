@@ -47,6 +47,8 @@ uv.lock
 *.xls
 *.json
 *.db
+*.db-shm
+*.db-wal
 *.npy
 !data/hardware_pulse.db
 

@@ -33,7 +33,7 @@ def get_all_skus(conn: Connection) -> list[str]:
     return [row[0] for row in cursor.fetchall()]
 
 
-def get_current_prices(conn: Connection, sku: str, hours: int = 48) -> list[dict]:
+def get_current_prices(conn: Connection, sku: str, hours: int = 720) -> list[dict]:
     cursor = conn.execute(
         """
         SELECT source, seller, price_usd, timestamp
@@ -86,7 +86,7 @@ def _median(values: list[float]) -> float:
     return sorted_vals[mid]
 
 
-def get_market_summary(conn: Connection, hours: int = 48) -> list[dict]:
+def get_market_summary(conn: Connection, hours: int = 720) -> list[dict]:
     cursor = conn.execute(
         """
         WITH latest_per_source AS (
