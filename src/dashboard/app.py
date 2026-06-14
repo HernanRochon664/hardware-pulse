@@ -18,8 +18,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import streamlit as st
 
-from src.dashboard.queries import get_connection, get_current_prices, get_market_summary, get_price_history
+from src.dashboard.queries import (
+    get_connection,
+    get_current_prices,
+    get_market_summary,
+    get_price_history,
+)
 from src.dashboard.signals import detect_signal, format_signal
+from src.entities.catalog import load_catalog
 
 st.set_page_config(page_title="Hardware Pulse", layout="wide")
 st.title("Hardware Pulse 💸")
@@ -31,21 +37,41 @@ if not db_path.exists():
 
 conn = get_connection(db_path)
 
+catalog = load_catalog()
+
+summary = get_market_summary(conn)
+
+if summary:
+    for item in summary:
+        meta = catalog.get(item["sku"], {})
+        item["category"] = meta.get("category", "Unknown")
+        item["brand_family"] = meta.get("brand_family", "Unknown")
+        item["signal"] = detect_signal(item["current_price"], item["median_price"])
+        item["signal_info"] = format_signal(item["signal"], item["pct_diff"])
+
+    categories = sorted({item["category"] for item in summary})
+    selected_cats = st.multiselect(
+        "Filter by category",
+        categories,
+        default=categories,
+    )
+    filtered = [x for x in summary if x["category"] in selected_cats]
+else:
+    filtered = []
+
 tab_summary, tab_product = st.tabs(["📊 Resumen", "🔎 Producto"])
 
 with tab_summary:
     st.header("Market Summary")
-    summary = get_market_summary(conn)
 
     if not summary:
         st.warning("No data available.")
+    elif not filtered:
+        st.warning("No products match the selected categories.")
     else:
-        for item in summary:
-            item["signal"] = detect_signal(item["current_price"], item["median_price"])
-            item["signal_info"] = format_signal(item["signal"], item["pct_diff"])
-
         display_df = [
             {
+                "Category": item["category"],
                 "SKU": item["sku"],
                 "Current Price": f"${item['current_price']:.2f}",
                 "Median": f"${item['median_price']:.2f}",
@@ -53,7 +79,7 @@ with tab_summary:
                 "Signal": item["signal_info"]["emoji"],
                 "Last Updated": item.get("latest_timestamp", "N/A"),
             }
-            for item in summary
+            for item in filtered
         ]
         st.dataframe(
             data=display_df,
@@ -61,7 +87,7 @@ with tab_summary:
             hide_index=True,
         )
 
-        deals = [x for x in summary if x["signal"] == "deal"]
+        deals = [x for x in filtered if x["signal"] == "deal"]
         if deals:
             st.subheader("🔥 Best Deals")
             for item in deals:
@@ -71,11 +97,10 @@ with tab_summary:
                 )
 
 with tab_product:
-    skus = [r["sku"] for r in get_market_summary(conn)]
-    if not skus:
+    if not filtered:
         st.warning("No SKUs available.")
     else:
-        selected = st.selectbox("Select SKU", skus)
+        selected = st.selectbox("Select SKU", [r["sku"] for r in filtered])
 
         if selected:
             history = get_price_history(conn, selected)
