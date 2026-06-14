@@ -186,6 +186,11 @@ canonical_products:
       category: "CPU"
       release_year: 2023
 
+    - sku: "Ryzen 5 7600"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2023
+
     - sku: "Ryzen 5 8500G"
       brand_family: "AMD"
       category: "CPU"
@@ -244,3 +249,239 @@ canonical_products:
       brand_family: "AMD"
       category: "CPU"
       release_year: 2024
+
+    # AMD Ryzen 9000 series (Granite Ridge, Zen 5)
+    - sku: "Ryzen 5 9600X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 5 9600"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 7 9700X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 7 9800X3D"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 9 9900X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 9 9900X3D"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 9 9950X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    # AMD Ryzen 8000 series (Hawk Point APUs / Phoenix)
+    - sku: "Ryzen 5 8400F"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 7 8700F"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    # AMD Ryzen 5000 refresh
+    - sku: "Ryzen 5 5600XT"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 5 5500"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Ryzen 5 5500X3D"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 7 5700"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Ryzen 7 5700X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Ryzen 7 5800XT"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 9 5900X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2020
+
+    - sku: "Ryzen 9 5900XT"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Ryzen 9 5950X"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2020
+
+    - sku: "Ryzen 9 7950X3D"
+      brand_family: "AMD"
+      category: "CPU"
+      release_year: 2023
+
+    # Intel Core 13th gen (Raptor Lake)
+    - sku: "Intel Core i5 13600K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Intel Core i7 13700"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Intel Core i7 13700K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    - sku: "Intel Core i9 13900K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2022
+
+    # Intel Core 14th gen (Raptor Lake refresh)
+    - sku: "Intel Core i5 14400"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i5 14400F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i5 14600K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i5 14600KF"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i7 14700"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i7 14700F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i7 14700K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i7 14700KF"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i9 14900"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i9 14900F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i9 14900K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core i9 14900KF"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    # Intel Core Ultra 200S (Arrow Lake)
+    - sku: "Intel Core Ultra 9 285K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core Ultra 7 265K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core Ultra 7 265KF"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core Ultra 5 245K"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core Ultra 5 245KF"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    # Intel Core Ultra 200S non-K and F variants
+    - sku: "Intel Core Ultra 9 285"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+      notes: "Non-K variant, lower TDP than 285K"
+
+    - sku: "Intel Core Ultra 7 265"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+      notes: "Non-K variant"
+
+    - sku: "Intel Core Ultra 7 265F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+      notes: "F = no integrated graphics"
+
+    - sku: "Intel Core Ultra 5 225"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+
+    - sku: "Intel Core Ultra 5 225F"
+      brand_family: "Intel"
+      category: "CPU"
+      release_year: 2024
+      notes: "F = no integrated graphics"
