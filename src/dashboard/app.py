@@ -27,7 +27,7 @@ from src.dashboard.queries import (
 from src.dashboard.signals import detect_signal, format_signal
 from src.entities.catalog import load_catalog
 
-st.set_page_config(page_title="Hardware Pulse", layout="wide")
+st.set_page_config(page_title="Hardware Pulse", page_icon="💾", layout="wide")
 st.title("Hardware Pulse 💸")
 
 db_path = Path("data/hardware_pulse.db")
