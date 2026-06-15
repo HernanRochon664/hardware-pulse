@@ -485,3 +485,231 @@ canonical_products:
       category: "CPU"
       release_year: 2024
       notes: "F = no integrated graphics"
+
+    # ── RAM ──────────────────────────────────────────────────────────────
+    # SKU format: "DDR{gen} {capacity}GB {speed}"
+    # Matches via substring in normalized titles after reorder normalization.
+
+    # DDR3
+    - sku: "DDR3 4GB 1333"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2010
+    - sku: "DDR3 4GB 1600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2010
+    - sku: "DDR3 8GB 1333"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2010
+    - sku: "DDR3 8GB 1600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2010
+
+    # DDR4
+    - sku: "DDR4 8GB 2133"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2014
+    - sku: "DDR4 8GB 2666"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2018
+    - sku: "DDR4 8GB 3200"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2017
+    - sku: "DDR4 16GB 2666"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2018
+    - sku: "DDR4 16GB 3200"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2017
+    - sku: "DDR4 32GB 3200"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2019
+    - sku: "DDR4 32GB 3600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2019
+
+    # DDR5
+    - sku: "DDR5 8GB 4800"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2021
+    - sku: "DDR5 8GB 5200"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2022
+    - sku: "DDR5 8GB 5600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2022
+    - sku: "DDR5 16GB 4800"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2021
+    - sku: "DDR5 16GB 5200"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2022
+    - sku: "DDR5 16GB 5600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2022
+    - sku: "DDR5 16GB 6000"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2023
+    - sku: "DDR5 16GB 6800"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2023
+    - sku: "DDR5 24GB 5600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2024
+    - sku: "DDR5 32GB 4800"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2021
+    - sku: "DDR5 32GB 5200"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2022
+    - sku: "DDR5 32GB 5600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2022
+    - sku: "DDR5 32GB 6000"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2023
+    - sku: "DDR5 32GB 6400"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2023
+    - sku: "DDR5 48GB 5600"
+      brand_family: "Generic"
+      category: "RAM"
+      release_year: 2024
+
+    # ── SSD ──────────────────────────────────────────────────────────────
+    # SKU format: "{Brand} {Model} {Capacity}"
+    # Brand+Model+Capacity must be contiguous in normalized title.
+    #
+    # Some titles (e.g. Banifox Corsair with "1TB MP600" order, or
+    # KingDian 1024GB as 1TB) won't match via exact_match — noted inline.
+
+    # Kingston
+    - sku: "Kingston NV3 500GB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2024
+    - sku: "Kingston NV3 1TB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2024
+    - sku: "Kingston NV3 2TB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2024
+    - sku: "Kingston A400 240GB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2020
+    - sku: "Kingston A400 480GB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2020
+    - sku: "Kingston A400 960GB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2020
+    - sku: "Kingston SA400S37 480GB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2020
+    - sku: "Kingston XS1000 1TB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2023
+    - sku: "Kingston XS1000 2TB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2023
+    - sku: "Kingston FURY Renegade 1TB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2024
+    - sku: "Kingston FURY Renegade 2TB"
+      brand_family: "Kingston"
+      category: "SSD"
+      release_year: 2024
+
+    # ADATA
+    - sku: "Adata Legend 710 2TB"
+      brand_family: "ADATA"
+      category: "SSD"
+      release_year: 2023
+
+    # KingDian
+    - sku: "KingDian G38 512GB"
+      brand_family: "KingDian"
+      category: "SSD"
+      release_year: 2023
+    - sku: "KingDian G38 1TB"
+      brand_family: "KingDian"
+      category: "SSD"
+      release_year: 2023
+    - sku: "KingDian S370 256GB"
+      brand_family: "KingDian"
+      category: "SSD"
+      release_year: 2022
+    - sku: "KingDian S370 512GB"
+      brand_family: "KingDian"
+      category: "SSD"
+      release_year: 2022
+
+    # Hiksemi
+    - sku: "Hiksemi Wave 240GB"
+      brand_family: "Hiksemi"
+      category: "SSD"
+      release_year: 2023
+    - sku: "Hiksemi Wave 480GB"
+      brand_family: "Hiksemi"
+      category: "SSD"
+      release_year: 2023
+    - sku: "Hiksemi Wave 512GB"
+      brand_family: "Hiksemi"
+      category: "SSD"
+      release_year: 2023
+    - sku: "Hiksemi Wave 1024GB"
+      brand_family: "Hiksemi"
+      category: "SSD"
+      release_year: 2023
+
+    # Corsair (Banifox only — capacity-before-model order won't exact_match)
+    - sku: "Corsair MP600 1TB"
+      brand_family: "Corsair"
+      category: "SSD"
+      release_year: 2023
+      notes: "Banifox titles list capacity before model — may need fuzzy fallback"
+    - sku: "Corsair MP600 2TB"
+      brand_family: "Corsair"
+      category: "SSD"
+      release_year: 2023
+    - sku: "Corsair MP700 1TB"
+      brand_family: "Corsair"
+      category: "SSD"
+      release_year: 2024
+    - sku: "Corsair MP700 2TB"
+      brand_family: "Corsair"
+      category: "SSD"
+      release_year: 2024

@@ -33,7 +33,8 @@ _WHITESPACE_PATTERN = re.compile(r"\s+")
 _NOISE_WORDS = {
     "gpu", "tarjeta", "video", "placa", "de",
     "pcie", "pci", "express",
-    "gddr6x", "gddr6", "gddr5x", "gddr5", "gddr4", "ddr5", "ddr4", "ddr3",
+    "ssd", "nvme", "disco", "solido", "m2", "gen", "4x4",
+    "gddr6x", "gddr6", "gddr5x", "gddr5", "gddr4",
     "gb", "tb", "bit", "bits",
     "hdmi", "displayport", "dport", "vga", "dvi",
     "gaming", "edition", "series",
@@ -66,6 +67,26 @@ _SKU_NORMALIZATIONS: list[tuple[re.Pattern, str]] = [
     # GT legacy (e.g. G210, GT710)
     (re.compile(r"\bG\s*(\d{3})\b", re.IGNORECASE),           r"GT \1"),
     (re.compile(r"\bGT\s*(\d{3})\b", re.IGNORECASE),          r"GT \1"),
+
+    # RAM: normalize PCxxxx speed notation (e.g. PC4800 → 4800MHz)
+    (re.compile(r"\bPC\s*(\d{3,5})\b", re.IGNORECASE),        r"\1MHz"),
+
+    # SSD/Generic: remove PCIe generation info (e.g. "PCIe 4 0" → "")
+    (re.compile(r"\bPCIe\s+\d\s+0\b", re.IGNORECASE),           r""),
+    # SSD/Generic: remove Gen lane info (e.g. "Gen 4x4", "Gen3 x4" → "")
+    (re.compile(r"\bGen\s*\d+\s*x\s*\d+\b", re.IGNORECASE),     r""),
+    # SSD: normalize M.2 to a single token so noise can catch it
+    (re.compile(r"\bM\s*\.?\s*2\b", re.IGNORECASE),             r"m2"),
+
+    # SSD: join capacity number with GB/TB unit when separated by space (e.g. "256 GB" → "256GB")
+    (re.compile(r"\b(\d+)\s+GB\b", re.IGNORECASE),               r"\1GB"),
+    (re.compile(r"\b(\d+)\s+TB\b", re.IGNORECASE),               r"\1TB"),
+
+    # RAM: normalize capacity-first order to DDR-first (e.g. "16GB DDR5 6000Mhz" → "DDR5 16GB 6000MHz")
+    (re.compile(
+        r"\b(\d+)\s*GB\s+(DDR[345])\s+(\d{3,5})(?:\s*MHz)?\b",
+        re.IGNORECASE,
+    ),                                                          r"\2 \1GB \3MHz"),
 ]
 
 # ---------------------------------------------------------------------------
