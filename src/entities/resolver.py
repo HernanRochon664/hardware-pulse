@@ -15,12 +15,11 @@ Does NOT:
 from __future__ import annotations
 
 import logging
-from typing import Any
 
-from src.domain.models import ResolvedListing, RawListing
+from src.domain.models import RawListing, ResolvedListing
 from src.entities.catalog import Catalog
 from src.entities.matcher import exact_match, fuzzy_match, regex_match
-from src.entities.normalizer import extract_brand
+from src.entities.normalizer import extract_brand, extract_variant
 
 logger = logging.getLogger(__name__)
 
@@ -119,6 +118,7 @@ def _build_resolved(
     The chip manufacturer comes from the catalog via brand_family.
     """
     brand = extract_brand(listing.title)
+    variant = extract_variant(listing.title, brand)
 
     return ResolvedListing(
         # Traceability fields from RawListing
@@ -139,5 +139,5 @@ def _build_resolved(
         matched_by=matched_by,
         # Optional enrichment
         brand=brand,
-        variant=None,  # reserved for future extraction
+        variant=variant,
     )
