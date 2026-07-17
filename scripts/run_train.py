@@ -25,7 +25,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.models.elasticnet import ElasticNetPriceModel
-from src.models.evaluation import calculate_metrics, evaluate_model_performance, walk_forward_cv
+from src.models.evaluation import evaluate_model_performance
 from src.models.naive import NaivePersistenceModel
 from src.storage.schema import init_db
 

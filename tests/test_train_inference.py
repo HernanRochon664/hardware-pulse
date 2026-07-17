@@ -1,10 +1,17 @@
 """Smoke tests for training and inference scripts."""
 
 import pandas as pd
-import pytest
 
 from src.models.elasticnet import ElasticNetPriceModel
 from src.models.evaluation import evaluate_model_performance
+
+FULL_FEATURE_COLS: list[str] = [
+    "precio_lag_1",
+    "precio_lag_2",
+    "mediana_movil",
+    "dispersion_precios",
+    "usd_uyu_rate",
+]
 
 
 def test_walk_forward_cv_with_elasticnet():
@@ -23,7 +30,7 @@ def test_walk_forward_cv_with_elasticnet():
         model_factory=ElasticNetPriceModel,
         df=df,
         target_col="target",
-        feature_cols=["precio_lag_1", "precio_lag_2", "mediana_movil", "dispersion_precios", "usd_uyu_rate"],
+        feature_cols=FULL_FEATURE_COLS,
         n_splits=4,
     )
 

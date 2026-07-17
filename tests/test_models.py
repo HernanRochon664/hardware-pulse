@@ -1,7 +1,6 @@
 import pandas as pd
 import pytest
 
-from src.models.base import PriceModel
 from src.models.evaluation import (
     calculate_metrics,
     evaluate_model_performance,
@@ -149,7 +148,7 @@ def test_walk_forward_cv_no_state_leak():
         }
     )
 
-    results = evaluate_model_performance(
+    evaluate_model_performance(
         model_factory=factory,
         df=df,
         target_col="target",
