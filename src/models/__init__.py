@@ -1,14 +1,21 @@
 from .base import PriceModel
-from .naive import NaivePersistenceModel
 from .elasticnet import ElasticNetPriceModel
-from .evaluation import calculate_metrics, split_temporal, evaluate_model_performance, EvaluationResult
+from .evaluation import (
+    CrossValidationResult,
+    EvaluationResult,
+    calculate_metrics,
+    evaluate_model_performance,
+    walk_forward_cv,
+)
+from .naive import NaivePersistenceModel
 
 __all__ = [
     "PriceModel",
     "NaivePersistenceModel",
     "ElasticNetPriceModel",
     "calculate_metrics",
-    "split_temporal",
+    "walk_forward_cv",
     "evaluate_model_performance",
-    "EvaluationResult"
+    "EvaluationResult",
+    "CrossValidationResult",
 ]

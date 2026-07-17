@@ -166,7 +166,7 @@ class ElasticNetPriceModel:
         joblib.dump(self, path)
 
     @classmethod
-    def load(cls, path: Path) -> "ElasticNetPriceModel":
+    def load(cls, path: Path) -> ElasticNetPriceModel:
         """
         Load a persisted ElasticNetPriceModel from disk.
 
