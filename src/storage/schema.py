@@ -116,6 +116,28 @@ CREATE INDEX IF NOT EXISTS idx_feature_snapshots_product_week_start
     ON feature_snapshots (canonical_product_id, week_start);
 """
 
+CREATE_PREDICTIONS = """
+CREATE TABLE IF NOT EXISTS predictions (
+    id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    week_start            TEXT NOT NULL,
+    canonical_product_id  TEXT NOT NULL,
+    predicted_price_usd   REAL NOT NULL,
+    lower_bound           REAL,
+    upper_bound           REAL,
+    model_id              TEXT NOT NULL,
+    run_at                TEXT NOT NULL,
+    UNIQUE (week_start, canonical_product_id)
+);
+"""
+
+CREATE_PREDICTIONS_INDEXES = """
+CREATE INDEX IF NOT EXISTS idx_predictions_product
+    ON predictions (canonical_product_id);
+
+CREATE INDEX IF NOT EXISTS idx_predictions_week_start
+    ON predictions (week_start);
+"""
+
 
 # ---------------------------------------------------------------------------
 # Initialization
@@ -151,9 +173,11 @@ def init_db(db_path: Path) -> sqlite3.Connection:
     conn.executescript(CREATE_RAW_LISTINGS)
     conn.executescript(CREATE_PRICE_SNAPSHOTS)
     conn.executescript(CREATE_FEATURE_SNAPSHOTS)
+    conn.executescript(CREATE_PREDICTIONS)
     conn.executescript(CREATE_INDEXES)
     conn.executescript(CREATE_PRICE_SNAPSHOT_INDEXES)
     conn.executescript(CREATE_FEATURE_SNAPSHOT_INDEXES)
+    conn.executescript(CREATE_PREDICTIONS_INDEXES)
     conn.commit()
 
     return conn
