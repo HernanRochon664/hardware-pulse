@@ -18,7 +18,6 @@ from typing import Any
 
 import yaml
 
-
 # ---------------------------------------------------------------------------
 # Types
 # ---------------------------------------------------------------------------
@@ -109,6 +108,7 @@ def get_skus_by_brand(catalog: Catalog, brand_family: str) -> list[str]:
         List of SKUs belonging to that brand family.
     """
     return [
-        sku for sku, meta in catalog.items()
+        sku
+        for sku, meta in catalog.items()
         if meta.get("brand_family", "").upper() == brand_family.upper()
     ]
