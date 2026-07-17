@@ -17,8 +17,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field, model_validator
-
+from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
 # Global settings
@@ -48,6 +47,7 @@ class ScraperDefaults(BaseModel):
 
 class HTMLScraperJob(BaseModel):
     """Shared job schema for URL-based scrapers (e.g. Thot)."""
+
     name: str
     urls: list[str] = Field(min_length=1)
     request_delay: float | None = Field(default=None, gt=0)
@@ -107,11 +107,7 @@ class ScrapersConfig(BaseModel):
         job_override: float | None = None,
     ) -> float:
         """Resolve request_delay following job > defaults > global precedence."""
-        return (
-            job_override
-            or scraper_defaults.request_delay
-            or self.global_.request_delay
-        )
+        return job_override or scraper_defaults.request_delay or self.global_.request_delay
 
     def resolve_max_results(
         self,
@@ -120,9 +116,7 @@ class ScrapersConfig(BaseModel):
     ) -> int:
         """Resolve max_results following job > defaults > global precedence."""
         return (
-            job_override
-            or scraper_defaults.max_results
-            or 200  # fallback default
+            job_override or scraper_defaults.max_results or 200  # fallback default
         )
 
     def resolve_max_pages(
@@ -132,9 +126,7 @@ class ScrapersConfig(BaseModel):
     ) -> int:
         """Resolve max_pages_per_url following job > defaults > global precedence."""
         return (
-            job_override
-            or scraper_defaults.max_pages_per_url
-            or 20  # fallback default
+            job_override or scraper_defaults.max_pages_per_url or 20  # fallback default
         )
 
 

@@ -10,7 +10,6 @@ import pytest
 from src.domain.models import Condition, Currency, RawListing, Source
 from src.storage.schema import init_db
 
-
 # ---------------------------------------------------------------------------
 # Database fixtures
 # ---------------------------------------------------------------------------

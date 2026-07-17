@@ -6,17 +6,14 @@ GPU SKUs through various matching strategies (exact, regex, fuzzy).
 """
 
 # Types
-from .catalog import Catalog, CatalogEntry
-from .matcher import MatchResult
-
 # Catalog management
-from .catalog import get_all_skus, get_skus_by_brand, load_catalog
+from .catalog import Catalog, CatalogEntry, get_all_skus, get_skus_by_brand, load_catalog
+
+# Matching strategies
+from .matcher import MatchResult, exact_match, fuzzy_match, regex_match
 
 # Text normalization
 from .normalizer import extract_brand, normalize_sku, normalize_title
-
-# Matching strategies
-from .matcher import exact_match, fuzzy_match, regex_match
 
 # Resolution pipeline
 from .resolver import resolve, resolve_batch

@@ -1,14 +1,17 @@
 import logging
 import re
 from datetime import datetime
-from bs4 import BeautifulSoup, Tag
 from urllib.parse import urljoin
 
+from bs4 import BeautifulSoup, Tag
+
 from src.domain.models import Condition, Currency, RawListing, Source
+
 from .base import BaseHTMLScraper
 
 logger = logging.getLogger(__name__)
 PRICE_REGEX = re.compile(r"USD\s?([\d\.,]+)", re.IGNORECASE)
+
 
 class BanifoxScraper(BaseHTMLScraper):
     """Scraper for Banifox website that extracts hardware product listings."""
@@ -60,22 +63,27 @@ class BanifoxScraper(BaseHTMLScraper):
         title = "Unknown"
         try:
             link_tag = product.select_one("a[title]")
-            if not link_tag: return None
+            if not link_tag:
+                return None
 
             title_raw = link_tag.get("title")
             href = link_tag.get("href")
-            if not title_raw or not href: return None
+            if not title_raw or not href:
+                return None
             title = str(title_raw)
 
             price_container = product.select_one("div.precio")
-            if not price_container: return None
+            if not price_container:
+                return None
 
             texts = [t.strip() for t in price_container.find_all(string=True, recursive=False)]
             price_text = " ".join(t for t in texts if t)
 
             match = PRICE_REGEX.search(price_text)
             if not match:
-                logger.debug("Banifox: No se encontró precio para '%s' en texto: '%s'", title, price_text)
+                logger.debug(
+                    "Banifox: No se encontró precio para '%s' en texto: '%s'", title, price_text
+                )
                 return None
 
             price = float(match.group(1).replace(".", "").replace(",", "."))

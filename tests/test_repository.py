@@ -4,11 +4,11 @@ Tests for src/storage/repository.py
 Covers upsert semantics, deduplication logic, and key derivation.
 Uses an in-memory SQLite connection via the db_conn fixture.
 """
+
 from datetime import datetime
 
 from src.domain.models import Currency, RawListing, Source
 from src.storage.repository import _compute_listing_key, upsert_raw_listing
-
 
 # ---------------------------------------------------------------------------
 # Upsert - insert path
