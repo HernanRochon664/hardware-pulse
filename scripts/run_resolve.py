@@ -20,7 +20,6 @@ from pathlib import Path
 # Add the project root to sys.path to enable imports from src
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.config import load_config
 from src.entities.catalog import load_catalog
 from src.pipelines.resolve import resolve
 from src.storage.schema import init_db
@@ -41,9 +40,6 @@ def main() -> None:
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S",
     )
-
-    logger.info("Loading configuration...")
-    config = load_config()
 
     logger.info("Loading canonical catalog...")
     catalog = load_catalog()

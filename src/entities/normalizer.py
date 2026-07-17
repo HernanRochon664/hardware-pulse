@@ -17,7 +17,6 @@ from __future__ import annotations
 import re
 import unicodedata
 
-
 # ---------------------------------------------------------------------------
 # Noise patterns
 # ---------------------------------------------------------------------------
@@ -31,13 +30,38 @@ _WHITESPACE_PATTERN = re.compile(r"\s+")
 # Generic noise words that don't contribute to SKU identification
 # OC is intentionally excluded, it's part of variant, not noise
 _NOISE_WORDS = {
-    "gpu", "tarjeta", "video", "placa", "de",
-    "pcie", "pci", "express",
-    "ssd", "nvme", "disco", "solido", "m2", "gen", "4x4",
-    "gddr6x", "gddr6", "gddr5x", "gddr5", "gddr4",
-    "gb", "tb", "bit", "bits",
-    "hdmi", "displayport", "dport", "vga", "dvi",
-    "gaming", "edition", "series",
+    "gpu",
+    "tarjeta",
+    "video",
+    "placa",
+    "de",
+    "pcie",
+    "pci",
+    "express",
+    "ssd",
+    "nvme",
+    "disco",
+    "solido",
+    "m2",
+    "gen",
+    "4x4",
+    "gddr6x",
+    "gddr6",
+    "gddr5x",
+    "gddr5",
+    "gddr4",
+    "gb",
+    "tb",
+    "bit",
+    "bits",
+    "hdmi",
+    "displayport",
+    "dport",
+    "vga",
+    "dvi",
+    "gaming",
+    "edition",
+    "series",
 }
 
 # ---------------------------------------------------------------------------
@@ -48,45 +72,43 @@ _NOISE_WORDS = {
 # Order matters — more specific patterns first
 _SKU_NORMALIZATIONS: list[tuple[re.Pattern, str]] = [
     # NVIDIA RTX series — handle Ti/Super/Ultra suffixes
-    (re.compile(r"\bRTX\s*(\d{4})\s*Ti\b", re.IGNORECASE),   r"RTX \1 Ti"),
+    (re.compile(r"\bRTX\s*(\d{4})\s*Ti\b", re.IGNORECASE), r"RTX \1 Ti"),
     (re.compile(r"\bRTX\s*(\d{4})\s*Super\b", re.IGNORECASE), r"RTX \1 Super"),
-    (re.compile(r"\bRTX\s*(\d{4})\b", re.IGNORECASE),         r"RTX \1"),
-
+    (re.compile(r"\bRTX\s*(\d{4})\b", re.IGNORECASE), r"RTX \1"),
     # AMD RX series — handle XT suffix and compact forms
     # "R9070XT" → "RX 9070 XT" (missing RX prefix)
-    (re.compile(r"\bR\s*(\d{4})\s*XT\b", re.IGNORECASE),      r"RX \1 XT"),
-    (re.compile(r"\bRX\s*(\d{4})\s*XT\b", re.IGNORECASE),     r"RX \1 XT"),
-    (re.compile(r"\bRX\s*(\d{4})\b", re.IGNORECASE),          r"RX \1"),
-
+    (re.compile(r"\bR\s*(\d{4})\s*XT\b", re.IGNORECASE), r"RX \1 XT"),
+    (re.compile(r"\bRX\s*(\d{4})\s*XT\b", re.IGNORECASE), r"RX \1 XT"),
+    (re.compile(r"\bRX\s*(\d{4})\b", re.IGNORECASE), r"RX \1"),
     # Intel Arc series
-    (re.compile(r"\bArc\s*([AB]\d{3})\b", re.IGNORECASE),     r"Arc \1"),
-
+    (re.compile(r"\bArc\s*([AB]\d{3})\b", re.IGNORECASE), r"Arc \1"),
     # GTX legacy
-    (re.compile(r"\bGTX\s*(\d{3,4})\b", re.IGNORECASE),       r"GTX \1"),
-
+    (re.compile(r"\bGTX\s*(\d{3,4})\b", re.IGNORECASE), r"GTX \1"),
     # GT legacy (e.g. G210, GT710)
-    (re.compile(r"\bG\s*(\d{3})\b", re.IGNORECASE),           r"GT \1"),
-    (re.compile(r"\bGT\s*(\d{3})\b", re.IGNORECASE),          r"GT \1"),
-
+    (re.compile(r"\bG\s*(\d{3})\b", re.IGNORECASE), r"GT \1"),
+    (re.compile(r"\bGT\s*(\d{3})\b", re.IGNORECASE), r"GT \1"),
     # RAM: normalize PCxxxx speed notation (e.g. PC4800 → 4800MHz)
-    (re.compile(r"\bPC\s*(\d{3,5})\b", re.IGNORECASE),        r"\1MHz"),
-
+    (re.compile(r"\bPC\s*(\d{3,5})\b", re.IGNORECASE), r"\1MHz"),
+    # RAM: normalize PC{gen}{speed} (e.g. PC5-48000 → 48000MHz)
+    (re.compile(r"\bPC([345])\s*(\d{3,5})\b", re.IGNORECASE), r"\2MHz"),
     # SSD/Generic: remove PCIe generation info (e.g. "PCIe 4 0" → "")
-    (re.compile(r"\bPCIe\s+\d\s+0\b", re.IGNORECASE),           r""),
+    (re.compile(r"\bPCIe\s+\d\s+0\b", re.IGNORECASE), r""),
     # SSD/Generic: remove Gen lane info (e.g. "Gen 4x4", "Gen3 x4" → "")
-    (re.compile(r"\bGen\s*\d+\s*x\s*\d+\b", re.IGNORECASE),     r""),
+    (re.compile(r"\bGen\s*\d+\s*x\s*\d+\b", re.IGNORECASE), r""),
     # SSD: normalize M.2 to a single token so noise can catch it
-    (re.compile(r"\bM\s*\.?\s*2\b", re.IGNORECASE),             r"m2"),
-
+    (re.compile(r"\bM\s*\.?\s*2\b", re.IGNORECASE), r"m2"),
     # SSD: join capacity number with GB/TB unit when separated by space (e.g. "256 GB" → "256GB")
-    (re.compile(r"\b(\d+)\s+GB\b", re.IGNORECASE),               r"\1GB"),
-    (re.compile(r"\b(\d+)\s+TB\b", re.IGNORECASE),               r"\1TB"),
-
-    # RAM: normalize capacity-first order to DDR-first (e.g. "16GB DDR5 6000Mhz" → "DDR5 16GB 6000MHz")
-    (re.compile(
-        r"\b(\d+)\s*GB\s+(DDR[345])\s+(\d{3,5})(?:\s*MHz)?\b",
-        re.IGNORECASE,
-    ),                                                          r"\2 \1GB \3MHz"),
+    (re.compile(r"\b(\d+)\s+GB\b", re.IGNORECASE), r"\1GB"),
+    (re.compile(r"\b(\d+)\s+TB\b", re.IGNORECASE), r"\1TB"),
+    # RAM: normalize capacity-first order to DDR-first
+    # e.g. "16GB DDR5 6000Mhz" → "DDR5 16GB 6000MHz"
+    (
+        re.compile(
+            r"\b(\d+)\s*GB\s+(DDR[345])\s+(\d{3,5})(?:\s*MHz)?\b",
+            re.IGNORECASE,
+        ),
+        r"\2 \1GB \3MHz",
+    ),
 ]
 
 # ---------------------------------------------------------------------------
@@ -95,18 +117,94 @@ _SKU_NORMALIZATIONS: list[tuple[re.Pattern, str]] = [
 
 # ④ Brand detection uses token matching — longest match wins
 _BRAND_TOKENS: dict[str, list[str]] = {
-    "ASUS":     ["asus", "rog", "tuf", "dual", "prime"],
-    "MSI":      ["msi"],
+    "ASUS": ["asus", "rog", "tuf", "dual", "prime"],
+    "MSI": ["msi"],
     "Gigabyte": ["gigabyte", "aorus", "windforce", "eagle"],
-    "Palit":    ["palit", "stormx", "gamerock", "gamingpro"],
-    "Zotac":    ["zotac", "twin", "amp"],
-    "ASRock":   ["asrock"],
-    "XFX":      ["xfx", "swift", "speedster"],
-    "Biostar":  ["biostar"],
+    "Palit": ["palit", "stormx", "gamerock", "gamingpro"],
+    "Zotac": ["zotac", "twin", "amp"],
+    "ASRock": ["asrock"],
+    "XFX": ["xfx", "swift", "speedster"],
+    "Biostar": ["biostar"],
     "Sapphire": ["sapphire", "pulse", "nitro"],
     "PowerColor": ["powercolor", "hellhound", "fighter"],
-    "PNY":      ["pny"],
-    "Arktek":   ["arktek"],
+    "PNY": ["pny"],
+    "Arktek": ["arktek"],
+}
+
+# ---------------------------------------------------------------------------
+# Variant dictionaries
+# ---------------------------------------------------------------------------
+
+_VARIANT_TOKENS: dict[str, list[str]] = {
+    "ASUS": [
+        "rog strix",
+        "tuf gaming",
+        "tuf",
+        "dual",
+        "prime",
+        "proart",
+        "cerberus",
+        "phoenix",
+    ],
+    "MSI": [
+        "gaming x trio",
+        "gaming x",
+        "gaming",
+        "ventus",
+        "suprim",
+        "mech",
+        "aero",
+    ],
+    "Gigabyte": [
+        "aorus",
+        "windforce",
+        "eagle",
+        "gaming oc",
+        "gaming",
+        "vision",
+        "master",
+        "xtreme",
+    ],
+    "Palit": [
+        "stormx",
+        "gamerock",
+        "gamingpro oc",
+        "gamingpro",
+        "jetstream",
+        "dual",
+    ],
+    "Zotac": [
+        "twin edge oc",
+        "twin edge",
+        "amp extreme",
+        "amp",
+        "gaming",
+    ],
+    "Sapphire": [
+        "nitro+",
+        "nitro",
+        "pulse",
+        "pure",
+    ],
+    "PowerColor": [
+        "hellhound",
+        "fighter",
+        "red devil",
+        "red dragon",
+    ],
+    "XFX": [
+        "speedster",
+        "swift",
+        "merc",
+        "qick",
+    ],
+    "ASRock": [
+        "challenger",
+        "phantom gaming",
+        "taichi",
+        "steel legend",
+        "creator",
+    ],
 }
 
 
@@ -207,4 +305,31 @@ def extract_brand(title: str) -> str | None:
     for brand, tokens in _BRAND_TOKENS.items():
         if any(token in lower for token in tokens):
             return brand
+    return None
+
+
+def extract_variant(title: str, brand: str | None) -> str | None:
+    """
+    Extract AIB model variant from a product title.
+
+    Uses brand-specific variant token matching — returns the first
+    variant whose tokens appear in the lowercased title. More specific
+    variants are listed first so "rog strix" matches before "tuf".
+
+    Args:
+        title: Raw product title.
+        brand: Detected brand (from extract_brand), or None.
+
+    Returns:
+        Variant name (e.g. "TUF Gaming", "Ventus") or None.
+    """
+    if brand is None:
+        return None
+
+    lower = title.lower()
+    variants = _VARIANT_TOKENS.get(brand, [])
+
+    for variant in variants:
+        if variant in lower:
+            return variant.title()
     return None
