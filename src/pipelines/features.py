@@ -23,11 +23,12 @@ from __future__ import annotations
 import logging
 import sqlite3
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pandas as pd
-import requests
+
+from src.pipelines.fx import fetch_fx_rates
 
 logger = logging.getLogger(__name__)
 
@@ -35,14 +36,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-FX_API_URL = (
-    "https://cdn.jsdelivr.net/npm/"
-    "@fawazahmed0/currency-api@{date}/"
-    "v1/currencies/usd.json"
-)
-
 ROLLING_WINDOW = 4
-REQUEST_TIMEOUT = 10
 
 # ---------------------------------------------------------------------------
 # Result type
@@ -63,65 +57,6 @@ class FeatureResult:
     @property
     def success(self) -> bool:
         return len(self.errors) == 0
-
-
-# ---------------------------------------------------------------------------
-# Exchange rate fetching
-# ---------------------------------------------------------------------------
-
-
-def _fetch_fx_rates(week_starts: list[str]) -> dict[str, float | None]:
-    """
-    Fetch USD/UYU FX rates for all requested dates.
-
-    Args:
-        week_starts:
-            List of ISO dates (YYYY-MM-DD)
-
-    Returns:
-        Dict mapping date -> USD/UYU rate
-    """
-    results: dict[str, float | None] = {}
-
-    unique_dates = sorted(set(week_starts))
-
-    for date_str in unique_dates:
-        url = FX_API_URL.format(date=date_str)
-
-        try:
-            response = requests.get(url, timeout=REQUEST_TIMEOUT)
-            response.raise_for_status()
-
-            data = response.json()
-
-            usd_rates = data.get("usd", {})
-            rate = usd_rates.get("uyu")
-
-            if rate is None:
-                logger.warning(
-                    "No USD/UYU FX rate found for %s",
-                    date_str,
-                )
-                results[date_str] = None
-                continue
-
-            results[date_str] = float(rate)
-
-            logger.debug(
-                "Fetched USD/UYU FX rate | date=%s | rate=%.4f",
-                date_str,
-                results[date_str],
-            )
-
-        except Exception as exc:
-            logger.warning(
-                "Failed to fetch FX rate for %s: %s",
-                date_str,
-                exc,
-            )
-            results[date_str] = None
-
-    return results
 
 
 # ---------------------------------------------------------------------------
@@ -225,21 +160,15 @@ def _compute_weekly_features(df: pd.DataFrame) -> pd.DataFrame:
     # Lag features
     # -----------------------------------------------------------------------
 
-    weekly["precio_lag_1"] = weekly.groupby("canonical_product_id")[
-        "mediana_semanal"
-    ].shift(1)
+    weekly["precio_lag_1"] = weekly.groupby("canonical_product_id")["mediana_semanal"].shift(1)
 
-    weekly["precio_lag_2"] = weekly.groupby("canonical_product_id")[
-        "mediana_semanal"
-    ].shift(2)
+    weekly["precio_lag_2"] = weekly.groupby("canonical_product_id")["mediana_semanal"].shift(2)
 
     # -----------------------------------------------------------------------
     # Rolling median
     # -----------------------------------------------------------------------
 
-    weekly["mediana_movil"] = weekly.groupby("canonical_product_id")[
-        "mediana_semanal"
-    ].transform(
+    weekly["mediana_movil"] = weekly.groupby("canonical_product_id")["mediana_semanal"].transform(
         lambda s: s.rolling(
             window=ROLLING_WINDOW,
             min_periods=1,
@@ -253,45 +182,6 @@ def _compute_weekly_features(df: pd.DataFrame) -> pd.DataFrame:
     weekly["week_start"] = weekly["week_start"].dt.strftime("%Y-%m-%d")
 
     return weekly.reset_index(drop=True)
-
-
-# ---------------------------------------------------------------------------
-# Persistence
-# ---------------------------------------------------------------------------
-
-
-def _upsert_feature_snapshot(
-    row: dict[str, Any],
-    conn: sqlite3.Connection,
-) -> None:
-    """
-    Insert or replace a feature snapshot row.
-    """
-    conn.execute(
-        """
-        INSERT OR REPLACE INTO feature_snapshots (
-            week_start,
-            canonical_product_id,
-            run_at,
-            precio_lag_1,
-            precio_lag_2,
-            mediana_movil,
-            dispersion_precios,
-            usd_uyu_rate
-        )
-        VALUES (
-            :week_start,
-            :canonical_product_id,
-            :run_at,
-            :precio_lag_1,
-            :precio_lag_2,
-            :mediana_movil,
-            :dispersion_precios,
-            :usd_uyu_rate
-        )
-        """,
-        row,
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -321,7 +211,7 @@ def build_features(
         FeatureResult
     """
     if run_at is None:
-        run_at = datetime.now(timezone.utc)
+        run_at = datetime.now(UTC)
 
     run_at_str = run_at.isoformat()
 
@@ -382,7 +272,7 @@ def build_features(
         len(set(unique_weeks)),
     )
 
-    fx_rates = _fetch_fx_rates(unique_weeks)
+    fx_rates = fetch_fx_rates(unique_weeks)
 
     fx_rates_fetched = sum(1 for v in fx_rates.values() if v is not None)
 
@@ -394,55 +284,70 @@ def build_features(
 
     rows_written = 0
 
-    with conn:
-        for _, row in weekly.iterrows():
-            try:
-                _upsert_feature_snapshot(
-                    {
-                        "week_start": row["week_start"],
-                        "canonical_product_id": row["canonical_product_id"],
-                        "run_at": run_at_str,
-                        "precio_lag_1": (
-                            None
-                            if pd.isna(row["precio_lag_1"])
-                            else float(row["precio_lag_1"])
-                        ),
-                        "precio_lag_2": (
-                            None
-                            if pd.isna(row["precio_lag_2"])
-                            else float(row["precio_lag_2"])
-                        ),
-                        "mediana_movil": (
-                            None
-                            if pd.isna(row["mediana_movil"])
-                            else float(row["mediana_movil"])
-                        ),
-                        "dispersion_precios": (
-                            None
-                            if pd.isna(row["dispersion_precios"])
-                            else float(row["dispersion_precios"])
-                        ),
-                        "usd_uyu_rate": (
-                            None
-                            if pd.isna(row["usd_uyu_rate"])
-                            else float(row["usd_uyu_rate"])
-                        ),
-                    },
-                    conn,
+    rows_to_insert = []
+    for _, row in weekly.iterrows():
+        try:
+            rows_to_insert.append(
+                {
+                    "week_start": row["week_start"],
+                    "canonical_product_id": row["canonical_product_id"],
+                    "run_at": run_at_str,
+                    "precio_lag_1": (
+                        None if pd.isna(row["precio_lag_1"]) else float(row["precio_lag_1"])
+                    ),
+                    "precio_lag_2": (
+                        None if pd.isna(row["precio_lag_2"]) else float(row["precio_lag_2"])
+                    ),
+                    "mediana_movil": (
+                        None if pd.isna(row["mediana_movil"]) else float(row["mediana_movil"])
+                    ),
+                    "dispersion_precios": (
+                        None
+                        if pd.isna(row["dispersion_precios"])
+                        else float(row["dispersion_precios"])
+                    ),
+                    "usd_uyu_rate": (
+                        None if pd.isna(row["usd_uyu_rate"]) else float(row["usd_uyu_rate"])
+                    ),
+                }
+            )
+        except Exception as exc:
+            msg = (
+                f"Failed to build feature row "
+                f"({row['week_start']}, "
+                f"{row['canonical_product_id']}): {exc}"
+            )
+            logger.error(msg)
+            errors.append(msg)
+
+    if rows_to_insert:
+        with conn:
+            conn.executemany(
+                """
+                INSERT OR REPLACE INTO feature_snapshots (
+                    week_start,
+                    canonical_product_id,
+                    run_at,
+                    precio_lag_1,
+                    precio_lag_2,
+                    mediana_movil,
+                    dispersion_precios,
+                    usd_uyu_rate
                 )
-
-                rows_written += 1
-
-            except Exception as exc:
-                msg = (
-                    f"Failed to write feature row "
-                    f"({row['week_start']}, "
-                    f"{row['canonical_product_id']}): {exc}"
+                VALUES (
+                    :week_start,
+                    :canonical_product_id,
+                    :run_at,
+                    :precio_lag_1,
+                    :precio_lag_2,
+                    :mediana_movil,
+                    :dispersion_precios,
+                    :usd_uyu_rate
                 )
-
-                logger.error(msg)
-
-                errors.append(msg)
+                """,
+                rows_to_insert,
+            )
+        rows_written = len(rows_to_insert)
 
     # -----------------------------------------------------------------------
     # Final summary

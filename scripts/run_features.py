@@ -14,7 +14,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 # Make src importable when running from project root
@@ -40,7 +40,7 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=None,
         help="Only process snapshots at or after this date (YYYY-MM-DD). "
-             "If omitted, processes all available data.",
+        "If omitted, processes all available data.",
     )
     return parser.parse_args()
 
@@ -51,7 +51,7 @@ def main() -> None:
     since: datetime | None = None
     if args.since:
         try:
-            since = datetime.fromisoformat(args.since).replace(tzinfo=timezone.utc)
+            since = datetime.fromisoformat(args.since).replace(tzinfo=UTC)
         except ValueError:
             logger.error("Invalid --since format. Expected YYYY-MM-DD, got: %s", args.since)
             sys.exit(1)

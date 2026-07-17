@@ -13,7 +13,7 @@ and PCCompu scrapers.
 import logging
 import time
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -112,7 +112,7 @@ class BaseHTMLScraper(ABC):
         fetched_at is set once per fetch() call so all listings from
         the same run share a consistent timestamp.
         """
-        fetched_at = datetime.now(timezone.utc)  # ①
+        fetched_at = datetime.now(UTC)  # ①
         listings: list[RawListing] = []
         seen_urls: set[str] = set()
 

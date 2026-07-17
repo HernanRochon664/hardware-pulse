@@ -39,6 +39,15 @@ conn = get_connection(db_path)
 
 catalog = load_catalog()
 
+deal_threshold_pct = st.sidebar.slider(
+    "Deal threshold (%)",
+    min_value=1.0,
+    max_value=50.0,
+    value=10.0,
+    step=1.0,
+    help="Percentage below median to classify as a deal.",
+)
+
 summary = get_market_summary(conn)
 
 if summary:
@@ -46,7 +55,9 @@ if summary:
         meta = catalog.get(item["sku"], {})
         item["category"] = meta.get("category", "Unknown")
         item["brand_family"] = meta.get("brand_family", "Unknown")
-        item["signal"] = detect_signal(item["current_price"], item["median_price"])
+        item["signal"] = detect_signal(
+            item["current_price"], item["median_price"], deal_threshold_pct
+        )
         item["signal_info"] = format_signal(item["signal"], item["pct_diff"])
 
     categories = sorted({item["category"] for item in summary})
@@ -143,7 +154,7 @@ with tab_product:
 
             if history:
                 current_min = min(p["price_usd"] for p in current_prices)
-                signal = detect_signal(current_min, median)
+                signal = detect_signal(current_min, median, deal_threshold_pct)
                 signal_info = format_signal(signal, ((current_min - median) / median) * 100)
 
                 st.markdown(

@@ -4,12 +4,12 @@ Tests for src/entities/catalog.py
 Covers catalog loading, validation, and query helpers.
 """
 
-import pytest
-import yaml
 from pathlib import Path
 
-from src.entities.catalog import load_catalog, get_all_skus, get_skus_by_brand
+import pytest
+import yaml
 
+from src.entities.catalog import get_all_skus, get_skus_by_brand, load_catalog
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -109,8 +109,9 @@ class TestCatalogHelpers:
         assert "RX 7800 XT" not in nvidia
 
     def test_get_skus_by_brand_case_insensitive(self, minimal_catalog):
-        assert get_skus_by_brand(minimal_catalog, "nvidia") == \
-               get_skus_by_brand(minimal_catalog, "NVIDIA")
+        assert get_skus_by_brand(minimal_catalog, "nvidia") == get_skus_by_brand(
+            minimal_catalog, "NVIDIA"
+        )
 
     def test_get_skus_by_brand_unknown(self, minimal_catalog):
         assert get_skus_by_brand(minimal_catalog, "Unknown") == []

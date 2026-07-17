@@ -2,20 +2,24 @@
 Tests for src/entities/resolver.py
 
 Covers the full resolution pipeline: strategy priority, result structure,
-batch processing, and unmatched listing handling.
+batch processing, gold set evaluation, and unmatched listing handling.
 """
 
-from datetime import datetime, timezone
+import json
+from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 
 from src.domain.models import Condition, Currency, RawListing, ResolvedListing, Source
+from src.entities.catalog import load_catalog
 from src.entities.resolver import resolve, resolve_batch
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
+
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
 @pytest.fixture
@@ -33,7 +37,7 @@ def make_listing(title: str, price: float = 500.0) -> RawListing:
     return RawListing(
         source=Source.THOT,
         url=f"https://thot.uy/{title.replace(' ', '-').lower()}",
-        timestamp=datetime.now(timezone.utc),
+        timestamp=datetime.now(UTC),
         title=title,
         price=price,
         currency=Currency.USD,
@@ -92,6 +96,16 @@ class TestResolve:
         listing = make_listing("GPU UnknownBrand RTX 3050")
         result = resolve(listing, catalog)
         assert result.brand is None
+
+    def test_variant_extracted(self, catalog):
+        listing = make_listing("GPU ASUS TUF RTX 4070 OC 12GB")
+        result = resolve(listing, catalog)
+        assert result.variant == "Tuf"
+
+    def test_variant_none_when_unknown(self, catalog):
+        listing = make_listing("GPU ASUS RTX 4070")
+        result = resolve(listing, catalog)
+        assert result.variant is None
 
     # Strategy priority
     def test_exact_takes_priority_over_regex(self, catalog):
@@ -164,3 +178,75 @@ class TestResolveBatch:
         unmatched = [r for r in results if r.canonical_product_id is None]
         assert len(matched) == 1
         assert len(unmatched) == 2
+
+
+# ---------------------------------------------------------------------------
+# Gold set evaluation
+# ---------------------------------------------------------------------------
+
+
+class TestGoldSet:
+    """Measures precision and recall against a labeled gold set.
+
+    The gold set is a JSON file with 30+ real-world listing titles
+    and their expected canonical SKUs. Precision and recall are computed
+    against the resolver output.
+
+    Thresholds:
+        precision >= 0.95
+        recall    >= 0.90
+    """
+
+    @pytest.fixture(scope="class")
+    def gold_set(self) -> list[dict]:
+        path = FIXTURES_DIR / "gold_set.json"
+        if not path.exists():
+            pytest.skip("Gold set not found — skipping end-to-end evaluation")
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    @pytest.fixture(scope="class")
+    def full_catalog(self) -> dict:
+        return load_catalog()
+
+    def test_gold_set_precision_and_recall(self, gold_set, full_catalog):
+        true_positives = 0
+        false_positives = 0
+        false_negatives = 0
+
+        for entry in gold_set:
+            title = entry["title"]
+            expected = entry["expected_sku"]
+
+            listing = RawListing(
+                source=Source.THOT,
+                url=f"https://test.uy/{title.replace(' ', '-').lower()}",
+                timestamp=datetime.now(UTC),
+                title=title,
+                price=500.0,
+                currency=Currency.USD,
+                seller="test",
+                condition=Condition.NEW,
+            )
+
+            result = resolve(listing, full_catalog)
+
+            if expected and result.canonical_product_id == expected:
+                true_positives += 1
+            elif expected and result.canonical_product_id != expected:
+                if result.canonical_product_id is not None:
+                    false_positives += 1
+                else:
+                    false_negatives += 1
+            elif not expected and result.canonical_product_id is not None:
+                false_positives += 1
+
+        total_positive = sum(1 for e in gold_set if e["expected_sku"])
+        predicted_positive = true_positives + false_positives
+
+        precision = true_positives / predicted_positive if predicted_positive > 0 else 0.0
+        recall = true_positives / total_positive if total_positive > 0 else 0.0
+
+        assert precision >= 0.95, (
+            f"Precision {precision:.3f} < 0.95 ({true_positives}/{predicted_positive})"
+        )
+        assert recall >= 0.90, f"Recall {recall:.3f} < 0.90 ({true_positives}/{total_positive})"

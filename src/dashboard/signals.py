@@ -10,18 +10,20 @@ Does NOT:
 - Handle UI rendering (see app.py)
 """
 
-DEAL_THRESHOLD_PCT = 10.0
+DEFAULT_DEAL_THRESHOLD_PCT = 10.0
 
 
-def detect_signal(current_price: float, median_price: float) -> str:
+def detect_signal(
+    current_price: float, median_price: float, threshold_pct: float = DEFAULT_DEAL_THRESHOLD_PCT
+) -> str:
     if median_price == 0:
         return "fair"
 
     pct_diff = ((current_price - median_price) / median_price) * 100
 
-    if pct_diff <= -DEAL_THRESHOLD_PCT:
+    if pct_diff <= -threshold_pct:
         return "deal"
-    elif pct_diff >= DEAL_THRESHOLD_PCT:
+    elif pct_diff >= threshold_pct:
         return "expensive"
     else:
         return "fair"

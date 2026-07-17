@@ -2,12 +2,16 @@
 Master pipeline entrypoint that runs all three stages sequentially:
     ingest → resolve → features
 
+Optionally runs training and inference after feature engineering.
+
 If any stage fails, the pipeline stops immediately with a non-zero exit code
 so Windows Task Scheduler (or any caller) can detect the failure.
 
 Usage:
     uv run scripts/run_pipeline.py
     uv run scripts/run_pipeline.py --since 2026-04-01
+    uv run scripts/run_pipeline.py --with-train
+    uv run scripts/run_pipeline.py --with-train --with-inference
 
 This replaces the three separate Task Scheduler entries at 17:00 / 17:15 / 17:30
 with a single scheduled task.
@@ -17,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -37,6 +42,7 @@ logger = logging.getLogger(__name__)
 
 DB_PATH = Path("data/hardware_pulse.db")
 LOG_PATH = Path("logs/scheduler.log")
+ALERTS_PATH = Path("logs/alerts.log")
 
 
 def setup_logging() -> None:
@@ -123,7 +129,19 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=None,
         help="Only process snapshots at or after this date (YYYY-MM-DD). "
-             "Passed through to the feature-engineering stage.",
+        "Passed through to the feature-engineering stage.",
+    )
+    parser.add_argument(
+        "--with-train",
+        action="store_true",
+        default=False,
+        help="Run model training after feature engineering.",
+    )
+    parser.add_argument(
+        "--with-inference",
+        action="store_true",
+        default=False,
+        help="Run inference after training (or after features if --with-train is not set).",
     )
     return parser.parse_args()
 
@@ -161,6 +179,20 @@ def main() -> None:
         if ingest_result.errors:
             logger.error("Ingestion failed with %d error(s)", ingest_result.errors)
             sys.exit(1)
+
+        for scraper_name, count in ingest_result.per_scraper.items():
+            if count == 0:
+                ALERTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+                with open(ALERTS_PATH, "a") as f:
+                    f.write(
+                        f"{datetime.now(UTC).isoformat()} [CRITICAL] "
+                        f"Scraper '{scraper_name}' returned 0 rows\n"
+                    )
+                logger.critical(
+                    "Scraper '%s' returned 0 rows — alert written to %s",
+                    scraper_name,
+                    ALERTS_PATH,
+                )
 
     conn.close()
 
@@ -201,6 +233,34 @@ def main() -> None:
         sys.exit(1)
 
     conn.close()
+
+    # -----------------------------------------------------------------------
+    # Stage 4 — Training (optional)
+    # -----------------------------------------------------------------------
+    if args.with_train:
+        logger.info("--- Stage 4/5: Training ---")
+        train_script = Path(__file__).parent / "run_train.py"
+        result = subprocess.run(
+            [sys.executable, str(train_script)],
+        )
+        if result.returncode != 0:
+            logger.error("Training failed with exit code %d", result.returncode)
+            sys.exit(1)
+        logger.info("Training complete.")
+
+    # -----------------------------------------------------------------------
+    # Stage 5 — Inference (optional)
+    # -----------------------------------------------------------------------
+    if args.with_inference:
+        logger.info("--- Stage 5/5: Inference ---")
+        inference_script = Path(__file__).parent / "run_inference.py"
+        result = subprocess.run(
+            [sys.executable, str(inference_script)],
+        )
+        if result.returncode != 0:
+            logger.error("Inference failed with exit code %d", result.returncode)
+            sys.exit(1)
+        logger.info("Inference complete.")
 
     logger.info("=== Pipeline complete at %s ===", datetime.now(UTC).isoformat())
 

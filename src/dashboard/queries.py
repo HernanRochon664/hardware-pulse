@@ -13,6 +13,8 @@ Does NOT:
 from pathlib import Path
 from sqlite3 import Connection
 
+import streamlit as st
+
 
 def get_connection(db_path: Path = Path("data/hardware_pulse.db")) -> Connection:
     import sqlite3
@@ -33,6 +35,7 @@ def get_all_skus(conn: Connection) -> list[str]:
     return [row[0] for row in cursor.fetchall()]
 
 
+@st.cache_data(ttl=300, hash_funcs={Connection: lambda _: None})
 def get_current_prices(conn: Connection, sku: str, hours: int = 720) -> list[dict]:
     cursor = conn.execute(
         """
@@ -62,6 +65,7 @@ def get_current_prices(conn: Connection, sku: str, hours: int = 720) -> list[dic
     return result
 
 
+@st.cache_data(ttl=300, hash_funcs={Connection: lambda _: None})
 def get_price_history(conn: Connection, sku: str) -> list[dict]:
     cursor = conn.execute(
         """
@@ -86,11 +90,11 @@ def _median(values: list[float]) -> float:
     return sorted_vals[mid]
 
 
+@st.cache_data(ttl=300, hash_funcs={Connection: lambda _: None})
 def get_market_summary(conn: Connection, hours: int = 720) -> list[dict]:
     cursor = conn.execute(
         """
         WITH latest_per_source AS (
-            -- Get the most recent price per source within the time window
             SELECT
                 canonical_product_id,
                 source,
@@ -102,14 +106,25 @@ def get_market_summary(conn: Connection, hours: int = 720) -> list[dict]:
                 ) AS rn
             FROM price_snapshots
             WHERE timestamp >= datetime('now', '-' || ? || ' hours')
+        ),
+        latest_global AS (
+            SELECT
+                canonical_product_id,
+                price_usd AS current_price,
+                timestamp AS latest_timestamp,
+                ROW_NUMBER() OVER (
+                    PARTITION BY canonical_product_id
+                    ORDER BY timestamp DESC
+                ) AS rn
+            FROM latest_per_source
+            WHERE rn = 1
         )
         SELECT
             canonical_product_id AS sku,
-            MIN(price_usd) AS current_price,
-            timestamp AS latest_timestamp
-        FROM latest_per_source
+            current_price,
+            latest_timestamp
+        FROM latest_global
         WHERE rn = 1
-        GROUP BY canonical_product_id
         """,
         (hours,),
     )

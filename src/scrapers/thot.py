@@ -1,12 +1,15 @@
 import logging
 from datetime import datetime
-from bs4 import BeautifulSoup, Tag
 from urllib.parse import urljoin
 
+from bs4 import BeautifulSoup, Tag
+
 from src.domain.models import Condition, Currency, RawListing, Source
+
 from .base import BaseHTMLScraper
 
 logger = logging.getLogger(__name__)
+
 
 class ThotScraper(BaseHTMLScraper):
     """Scraper for Thot website that extracts hardware product listings."""
@@ -59,11 +62,12 @@ class ThotScraper(BaseHTMLScraper):
         try:
             price_tag = product.select_one(".price")
             link_tag = product.select_one("a.product-loop-title")
-            if not price_tag or not link_tag: return None
+            if not price_tag or not link_tag:
+                return None
 
             title = link_tag.get_text(strip=True)
             href = link_tag.get("href")
-            
+
             raw_price = price_tag.get_text(separator=" ").strip()
             if "US$" in raw_price:
                 val = raw_price.replace("US$", "").strip().replace(",", "")

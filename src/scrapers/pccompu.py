@@ -1,12 +1,15 @@
 import logging
 from datetime import datetime
-from urllib.parse import urlparse, urlencode, parse_qs, urlunparse, urljoin
+from urllib.parse import parse_qs, urlencode, urljoin, urlparse, urlunparse
+
 from bs4 import BeautifulSoup, Tag
 
 from src.domain.models import Condition, Currency, RawListing, Source
+
 from .base import BaseHTMLScraper
 
 logger = logging.getLogger(__name__)
+
 
 class PCCompuScraper(BaseHTMLScraper):
     """Scraper for PCCompu website that extracts hardware product listings."""

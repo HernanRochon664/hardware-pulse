@@ -18,11 +18,12 @@ from __future__ import annotations
 import logging
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from src.domain.models import Condition, Currency, RawListing, Source
 from src.entities.catalog import Catalog
 from src.entities.resolver import resolve_batch
+from src.pipelines.fx import compute_week_start, fetch_fx_rates, normalize_to_usd
 from src.storage.repository import insert_price_snapshot
 
 logger = logging.getLogger(__name__)
@@ -35,10 +36,10 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ResolveResult:
-    processed: int = 0   # total raw listings read
-    resolved: int = 0    # successfully matched to canonical SKU
-    skipped: int = 0     # unmatched (canonical_product_id is None)
-    errors: int = 0      # exceptions during insert
+    processed: int = 0  # total raw listings read
+    resolved: int = 0  # successfully matched to canonical SKU
+    skipped: int = 0  # unmatched (canonical_product_id is None)
+    errors: int = 0  # exceptions during insert
 
     @property
     def total(self) -> int:
@@ -151,7 +152,7 @@ def resolve(
     Returns:
         ResolveResult with counts of processed, resolved, skipped, errors.
     """
-    run_at = run_at or datetime.now(timezone.utc)
+    run_at = run_at or datetime.now(UTC)
     result = ResolveResult()
 
     logger.info(
@@ -175,12 +176,45 @@ def resolve(
     # Step 3: Resolve batch against catalog
     resolved_listings = resolve_batch(listings, catalog)
 
+    # Step 3a: Collect week starts for UYU listings for batch FX fetch
+    uyu_weeks = set()
+    for resolved in resolved_listings:
+        if resolved.canonical_product_id is not None and resolved.currency == Currency.UYU:
+            uyu_weeks.add(compute_week_start(resolved.timestamp))
+
+    # Step 3b: Batch fetch FX rates if needed
+    fx_rates: dict[str, float | None] = {}
+    if uyu_weeks:
+        fx_rates = fetch_fx_rates(list(uyu_weeks))
+
     # Step 4: Insert resolved listings as price_snapshots
     for resolved in resolved_listings:
         if resolved.canonical_product_id is None:
             # Step 4a: Unmatched listings are skipped, not inserted into price_snapshots
             result.skipped += 1
             continue
+
+        # Fase 1.3: Skip USED/None condition listings
+        if resolved.condition != Condition.NEW:
+            result.skipped += 1
+            continue
+
+        # Fase 1.1: Normalize price to USD
+        if resolved.currency == Currency.UYU:
+            week_start = compute_week_start(resolved.timestamp)
+            fx_rate = fx_rates.get(week_start)
+            price_usd = normalize_to_usd(resolved.price, "UYU", fx_rate)
+            if price_usd is None:
+                logger.warning(
+                    "Skipping %r: no FX rate for %s",
+                    resolved.title,
+                    week_start,
+                )
+                result.skipped += 1
+                continue
+            resolved.price_usd = price_usd
+        else:
+            resolved.price_usd = resolved.price
 
         try:
             insert_price_snapshot(resolved, conn)

@@ -15,7 +15,6 @@ from bs4 import BeautifulSoup, Tag
 from src.domain.models import Condition, Currency, RawListing, Source
 from src.scrapers.base import BaseHTMLScraper
 
-
 # ---------------------------------------------------------------------------
 # Concrete subclass for testing
 # ---------------------------------------------------------------------------
@@ -91,9 +90,7 @@ def make_mock_response(html: str, status_code: int = 200) -> MagicMock:
 class TestFetchBasic:
     @patch("src.scrapers.base.requests.get")
     def test_single_page_single_product(self, mock_get):
-        mock_get.return_value = make_mock_response(
-            make_html_page("https://thot.uy/a")
-        )
+        mock_get.return_value = make_mock_response(make_html_page("https://thot.uy/a"))
         scraper = StubScraper(
             product_tags=[],
             urls=["https://thot.uy/gpus/"],

@@ -4,9 +4,7 @@ Tests for src/entities/normalizer.py
 Covers title normalization, SKU token normalization, and brand extraction.
 """
 
-import pytest
-
-from src.entities.normalizer import extract_brand, normalize_sku, normalize_title
+from src.entities.normalizer import extract_brand, extract_variant, normalize_sku, normalize_title
 
 # ---------------------------------------------------------------------------
 # normalize_title
@@ -68,6 +66,51 @@ class TestNormalizeTitle:
         """RTX 4070 Ti should not be collapsed to RTX 4070."""
         result = normalize_title("RTX 4070 Ti Gaming")
         assert "rtx 4070 ti" in result
+
+    # RAM normalization
+    def test_ram_ddr_generation_normalized(self):
+        result = normalize_title("Memoria Kingston DDR5 16GB 6000MHz")
+        assert "ddr5 16gb" in result
+
+    def test_ram_capacity_first_reordered(self):
+        """16GB DDR5 6000 should be reordered to DDR5 16GB 6000."""
+        result = normalize_title("Kingston Fury Beast 16GB DDR5 6000MHz")
+        assert "ddr5 16gb 6000mhz" in result
+
+    def test_ram_noise_words_removed(self):
+        result = normalize_title("Memoria RAM DDR4 8GB 3200MHz")
+        assert "memoria" in result
+
+    def test_ram_pc_speed_normalized(self):
+        result = normalize_title("DDR4 16GB PC4-25600")
+        assert "25600mhz" in result or "pc4" not in result
+
+    def test_ram_pc_gen_speed_normalized(self):
+        result = normalize_title("DDR5 32GB PC5-48000")
+        assert "48000mhz" in result
+
+    # SSD normalization
+    def test_ssd_capacity_joined(self):
+        result = normalize_title("SSD Kingston NV3 1TB NVMe PCIe 4.0")
+        assert "kingston nv3 1tb" in result
+
+    def test_ssd_noise_words_removed(self):
+        result = normalize_title("Disco SSD NVMe M.2 1TB")
+        assert not any(w in result for w in ["nvme", "ssd", "disco", "solido"])
+
+    def test_ssd_m2_format_normalized(self):
+        """M.2 is normalized to m2 but then removed as noise."""
+        result = normalize_title("M.2 Corsair MP600 1TB")
+        assert "m2" not in result
+        assert "corsair mp600 1tb" in result
+
+    def test_ssd_pcie_info_removed(self):
+        result = normalize_title("Kingston NV3 1TB PCIe 4.0 NVMe")
+        assert "pcie" not in result
+
+    def test_ssd_gen_info_removed(self):
+        result = normalize_title("Corsair MP600 2TB Gen 4x4")
+        assert "gen" not in result
 
 
 class TestNormalizeSku:
@@ -138,3 +181,32 @@ class TestExtractBrand:
 
     def test_case_insensitive(self):
         assert extract_brand("asus rtx 4070") == "ASUS"
+
+
+class TestExtractVariant:
+    def test_asus_tuf(self):
+        assert extract_variant("ASUS TUF RTX 4070 OC 12GB", "ASUS") == "Tuf"
+
+    def test_asus_rog_strix(self):
+        assert extract_variant("ASUS ROG STRIX RTX 4090 24GB", "ASUS") == "Rog Strix"
+
+    def test_msi_ventus(self):
+        assert extract_variant("MSI GeForce RTX 3050 Ventus OC", "MSI") == "Ventus"
+
+    def test_msi_gaming_x_trio(self):
+        assert extract_variant("MSI RTX 4070 Gaming X Trio 12GB", "MSI") == "Gaming X Trio"
+
+    def test_gigabyte_aorus(self):
+        assert extract_variant("AORUS RTX 4090 Master 24GB", "Gigabyte") == "Aorus"
+
+    def test_palit_stormx(self):
+        assert extract_variant("Palit StormX RTX 3050 6GB", "Palit") == "Stormx"
+
+    def test_returns_none_no_brand(self):
+        assert extract_variant("Generic GPU RTX 4070", None) is None
+
+    def test_returns_none_unknown_variant(self):
+        assert extract_variant("ASUS UnknownModel RTX 4070", "ASUS") is None
+
+    def test_case_insensitive(self):
+        assert extract_variant("asus tuf rtx 4070", "ASUS") == "Tuf"
