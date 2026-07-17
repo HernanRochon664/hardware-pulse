@@ -11,7 +11,6 @@ import pytest
 
 from src.entities.matcher import exact_match, fuzzy_match, regex_match
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -30,6 +29,20 @@ def catalog() -> dict:
         "RX 9060 XT": {"brand_family": "AMD", "release_year": 2025},
         "RX 7600": {"brand_family": "AMD", "release_year": 2023},
         "Arc B580": {"brand_family": "Intel", "release_year": 2024},
+        # RAM
+        "DDR5 16GB 6000": {"brand_family": "Generic", "category": "RAM", "release_year": 2023},
+        "DDR4 8GB 3200": {"brand_family": "Generic", "category": "RAM", "release_year": 2017},
+        "DDR4 16GB 3200": {"brand_family": "Generic", "category": "RAM", "release_year": 2017},
+        "DDR5 32GB 5600": {"brand_family": "Generic", "category": "RAM", "release_year": 2022},
+        # SSD
+        "Kingston NV3 1TB": {"brand_family": "Kingston", "category": "SSD", "release_year": 2024},
+        "Kingston NV2 500GB": {"brand_family": "Kingston", "category": "SSD", "release_year": 2023},
+        "Kingston A400 480GB": {
+            "brand_family": "Kingston",
+            "category": "SSD",
+            "release_year": 2020,
+        },
+        "SSD 1TB": {"brand_family": "Generic", "category": "SSD", "release_year": 2023},
     }
 
 
@@ -69,15 +82,11 @@ class TestExactMatch:
 
     def test_rx_compact_format_matches(self, catalog):
         """R9070XT (Banifox format) should match 'RX 9070 XT'."""
-        sku, score = exact_match(
-            "GIGABYTE AMD RADEON R9070XT GV-R907XGAMINGOCICE-16GD", catalog
-        )
+        sku, score = exact_match("GIGABYTE AMD RADEON R9070XT GV-R907XGAMINGOCICE-16GD", catalog)
         assert sku == "RX 9070 XT"
 
     def test_arc_matches(self, catalog):
-        sku, score = exact_match(
-            "Tarjeta de Video ASRock Intel ARC B580 Challenger OC", catalog
-        )
+        sku, score = exact_match("Tarjeta de Video ASRock Intel ARC B580 Challenger OC", catalog)
         assert sku == "Arc B580"
 
     def test_returns_tuple(self, catalog):
@@ -176,3 +185,67 @@ class TestCrossStrategyConsistency:
         sku_regex, _ = regex_match(title, catalog)
         assert sku_exact == "RTX 4070 Ti"
         assert sku_regex == "RTX 4070 Ti"
+
+
+# ---------------------------------------------------------------------------
+# RAM matching
+# ---------------------------------------------------------------------------
+
+
+class TestRAMExactMatch:
+    def test_ram_ddr_format_matches(self, catalog):
+        sku, score = exact_match("Memoria Kingston DDR5 16GB 6000MHz", catalog)
+        assert sku == "DDR5 16GB 6000"
+        assert score == 1.0
+
+    def test_ram_capacity_first_format_matches(self, catalog):
+        sku, score = exact_match("Kingston Fury 16GB DDR4 3200MHz", catalog)
+        assert sku == "DDR4 16GB 3200"
+
+    def test_ram_no_match_for_incomplete(self, catalog):
+        sku, score = exact_match("Generic 4GB RAM", catalog)
+        assert sku is None
+
+
+class TestRAMRegexMatch:
+    def test_ram_ddr_regex_matches(self, catalog):
+        sku, score = regex_match("Memoria DDR4 8GB 3200MHz Kingston", catalog)
+        assert sku == "DDR4 8GB 3200"
+        assert score == 0.9
+
+    def test_ram_no_match_for_invalid_speed(self, catalog):
+        sku, score = regex_match("DDR4 16GB 9999MHz", catalog)
+        assert sku is None
+
+    def test_ram_capacity_first_regex_matches(self, catalog):
+        sku, score = regex_match("16GB DDR5 6000 Kingston", catalog)
+        assert sku == "DDR5 16GB 6000"
+
+    def test_ram_exact_and_regex_agree(self, catalog):
+        title = "Memoria Kingston DDR5 32GB 5600MHz"
+        sku_exact, _ = exact_match(title, catalog)
+        sku_regex, _ = regex_match(title, catalog)
+        assert sku_exact == "DDR5 32GB 5600"
+        assert sku_regex == "DDR5 32GB 5600"
+
+
+# ---------------------------------------------------------------------------
+# SSD matching
+# ---------------------------------------------------------------------------
+
+
+class TestSSDRegexMatch:
+    def test_ssd_nv3_regex_matches(self, catalog):
+        sku, score = regex_match("Disco SSD Kingston NV3 1TB M2 NVMe PCIe", catalog)
+        assert sku == "Kingston NV3 1TB"
+        assert score == 0.9
+
+    def test_ssd_a400_regex_matches(self, catalog):
+        sku, score = regex_match("Kingston A400 480GB SSD", catalog)
+        assert sku == "Kingston A400 480GB"
+        assert score == 0.9
+
+    def test_ssd_generic_regex_matches(self, catalog):
+        sku, score = regex_match("SSD 1TB NVMe PCIe Gen4x4", catalog)
+        assert sku == "SSD 1TB"
+        assert score == 0.9

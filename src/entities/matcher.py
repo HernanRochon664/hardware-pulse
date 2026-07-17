@@ -15,8 +15,9 @@ Does NOT:
 from __future__ import annotations
 
 import re
-from difflib import SequenceMatcher
 from typing import Any
+
+from rapidfuzz import fuzz
 
 from src.entities.normalizer import normalize_sku, normalize_title
 
@@ -95,6 +96,26 @@ _GPU_PATTERNS: list[re.Pattern] = [
     re.compile(r"\bGTX\s*(\d{3,4})\b", re.IGNORECASE),
 ]
 
+# Pre-compiled patterns for RAM model formats
+_RAM_PATTERNS: list[re.Pattern] = [
+    # DDR generation + capacity + speed (e.g., "DDR5 16GB 6000")
+    re.compile(r"\b(DDR[345])\s*(\d+)\s*GB\s*(\d{3,5})(?!\d)", re.IGNORECASE),
+    # Capacity + DDR generation + speed (e.g., "16GB DDR5 6000")
+    re.compile(r"\b(\d+)\s*GB\s*(DDR[345])\s*(\d{3,5})(?!\d)", re.IGNORECASE),
+    # DDR generation + capacity without speed (e.g., "DDR4 16GB")
+    re.compile(r"\b(DDR[345])\s*(\d+)\s*GB\b", re.IGNORECASE),
+]
+
+# Pre-compiled patterns for SSD model formats
+_SSD_PATTERNS: list[re.Pattern] = [
+    # Kingston NV2/NV3 series (e.g., "KINGSTON NV2 500GB", "KINGSTON NV3 1TB")
+    re.compile(r"\bKINGSTON\s+(NV[23])\s+(\d+)(GB|TB)\b", re.IGNORECASE),
+    # Kingston A400 series (e.g., "KINGSTON A400 480GB")
+    re.compile(r"\bKINGSTON\s+(A400)\s+(\d+)(GB|TB)\b", re.IGNORECASE),
+    # Generic SSD (e.g., "SSD 1TB", "SSD 256GB")
+    re.compile(r"\bSSD\s+(\d+)(GB|TB)\b", re.IGNORECASE),
+]
+
 # Pre-compiled patterns for CPU model formats
 _CPU_PATTERNS: list[re.Pattern] = [
     # AMD Ryzen with tier (3/5/7/9), number, and optional suffix (G, X, X3D)
@@ -117,7 +138,7 @@ def _reconstruct_sku_from_match(match: re.Match) -> str:
     Reconstruct a normalized SKU string from a regex match.
 
     Handles NVIDIA RTX, AMD RX, AMD Radeon (without RX), Intel Arc, GTX,
-    AMD Ryzen, Intel Core, and Athlon patterns.
+    AMD Ryzen, Intel Core, Athlon, and RAM patterns.
     """
     full = match.group(0).upper().strip()
 
@@ -168,6 +189,13 @@ def _reconstruct_sku_from_match(match: re.Match) -> str:
     # Handle AMD Athlon (add AMD prefix to match catalog)
     full = re.sub(r"^ATHLON\s*(\d{4})G\b", r"AMD Athlon \1G", full, flags=re.IGNORECASE)
 
+    # Handle RAM: reorder "16GB DDR5 6000" → "DDR5 16GB 6000"
+    full = re.sub(
+        r"^(\d+)GB (DDR[345]) (\d{3,5})$",
+        r"\2 \1GB \3",
+        full,
+    )
+
     # Ensure space between prefix and number
     full = re.sub(r"(RTX|RX|GTX|Arc)(\d)", r"\1 \2", full)
 
@@ -175,6 +203,23 @@ def _reconstruct_sku_from_match(match: re.Match) -> str:
     full = re.sub(r"(\d)(Ti|XT|Super|Ultra)$", r"\1 \2", full, flags=re.IGNORECASE)
 
     return full.strip()
+
+
+def _reconstruct_ssd_sku(match: re.Match) -> str:
+    """Reconstruct a canonical SSD SKU from a regex match."""
+    full = match.group(0).upper().strip()
+    full = re.sub(r"\s+", " ", full)
+
+    if full.startswith("KINGSTON NV"):
+        # "KINGSTON NV2 500GB" → "Kingston NV2 500GB"
+        return full.title()
+    if full.startswith("KINGSTON A"):
+        # "KINGSTON A400 480GB" → "Kingston A400 480GB"
+        return full.title()
+    if full.startswith("SSD"):
+        # "SSD 1TB" → keep generic form
+        return full
+    return full
 
 
 def regex_match(title: str, catalog: Catalog) -> MatchResult:
@@ -193,14 +238,17 @@ def regex_match(title: str, catalog: Catalog) -> MatchResult:
     Returns:
         (sku, 0.9) if regex match found in catalog, (None, 0.0) otherwise.
     """
-    all_patterns = _GPU_PATTERNS + _CPU_PATTERNS
+    all_patterns = _GPU_PATTERNS + _CPU_PATTERNS + _RAM_PATTERNS + _SSD_PATTERNS
 
     for pattern in all_patterns:
         match = pattern.search(title)
         if not match:
             continue
 
-        candidate = _reconstruct_sku_from_match(match)
+        if pattern in _SSD_PATTERNS:
+            candidate = _reconstruct_ssd_sku(match)
+        else:
+            candidate = _reconstruct_sku_from_match(match)
         candidate_normalized = normalize_sku(candidate)
 
         # Validate candidate against catalog
@@ -250,10 +298,10 @@ def fuzzy_match(
     for sku in catalog:
         normalized_sku = normalize_sku(sku)
 
-        # Use SequenceMatcher to find similarity
+        # Use rapidfuzz partial_ratio to find similarity
         # We compare the SKU against substrings of the title
         # to handle titles with extra noise around the model name
-        ratio = SequenceMatcher(None, normalized_sku, normalized).ratio()
+        ratio = fuzz.partial_ratio(normalized_sku, normalized) / 100.0
 
         if ratio > best_score:
             best_score = ratio
