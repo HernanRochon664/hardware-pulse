@@ -1,25 +1,24 @@
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, field_validator
-
 
 # ---------------------------------------------------------------------------
 # Enums
 # ---------------------------------------------------------------------------
 
 
-class Currency(str, Enum):
+class Currency(StrEnum):
     UYU = "UYU"
     USD = "USD"
 
 
-class Condition(str, Enum):
+class Condition(StrEnum):
     NEW = "new"
     USED = "used"
 
 
-class Source(str, Enum):
+class Source(StrEnum):
     THOT = "thot"
     BANIFOX = "banifox"
     PCCOMPU = "pccompu"
@@ -98,6 +97,9 @@ class ResolvedListing(BaseModel):
     # --- Enrichment ---
     brand: str | None = None
     variant: str | None = None
+
+    # --- Normalized price (set by pipeline, not by resolution) ---
+    price_usd: float | None = None
 
 
 # ---------------------------------------------------------------------------

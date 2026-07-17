@@ -16,7 +16,7 @@ import hashlib
 import logging
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from src.domain.models import RawListing, ResolvedListing
 
@@ -53,9 +53,7 @@ def _compute_listing_key(listing: RawListing) -> str:
     For retailers, the URL is the only stable identifier we have.
     """
     source = listing.source.value
-    identifier = (
-        listing.item_id if listing.item_id else _normalize_url(str(listing.url))
-    )
+    identifier = listing.item_id if listing.item_id else _normalize_url(str(listing.url))
     raw = f"{source}:{identifier}"
     return hashlib.sha256(raw.encode()).hexdigest()
 
@@ -113,7 +111,7 @@ def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertR
         UpsertResult with the row id and insert/update flags.
     """
     listing_key = _compute_listing_key(listing)
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     with conn:  # context manager → auto commit or rollback
         existing = conn.execute(
@@ -152,9 +150,7 @@ def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertR
                     "now": now,
                 },
             )
-            logger.debug(
-                "Inserted listing_key=%s title=%r", listing_key[:8], listing.title
-            )
+            logger.debug("Inserted listing_key=%s title=%r", listing_key[:8], listing.title)
             row_id = cursor.lastrowid
             if row_id is None:
                 raise RuntimeError("Invariant violated: lastrowid is None after INSERT")
@@ -211,16 +207,16 @@ def insert_price_snapshot(resolved: ResolvedListing, conn: sqlite3.Connection) -
                 "listing_id": resolved.item_id,
                 "price": resolved.price,
                 "currency": resolved.currency.value,
-                "price_usd": resolved.price,
+                "price_usd": resolved.price_usd
+                if resolved.price_usd is not None
+                else resolved.price,
                 "availability": resolved.available_quantity,
             },
         )
 
         row_id = cursor.lastrowid
     if row_id is None:
-        raise RuntimeError(
-            "Invariant violated: lastrowid is None after inserting price snapshot"
-        )
+        raise RuntimeError("Invariant violated: lastrowid is None after inserting price snapshot")
 
     return row_id
 
