@@ -3,7 +3,7 @@
 Covers the weekly aggregation logic in `_compute_weekly_features`.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pandas as pd
 
@@ -12,9 +12,7 @@ from src.pipelines.features import _compute_weekly_features
 
 def test_compute_weekly_features_empty_dataframe() -> None:
     """Return an empty DataFrame when no price snapshots are available."""
-    df = pd.DataFrame(
-        columns=["timestamp", "canonical_product_id", "price_usd", "source"]
-    )
+    df = pd.DataFrame(columns=["timestamp", "canonical_product_id", "price_usd", "source"])
 
     result = _compute_weekly_features(df)
 
@@ -25,7 +23,7 @@ def test_compute_weekly_features_single_week_no_lags() -> None:
     """Compute a single weekly row and ensure lags are NaN."""
     df = pd.DataFrame(
         {
-            "timestamp": [datetime(2026, 4, 6, 12, 0, tzinfo=timezone.utc)],
+            "timestamp": [datetime(2026, 4, 6, 12, 0, tzinfo=UTC)],
             "canonical_product_id": ["sku-1"],
             "price_usd": [100.0],
             "source": ["thot"],
@@ -47,10 +45,10 @@ def test_compute_weekly_features_with_gap_lag_is_previous_existing_week() -> Non
     df = pd.DataFrame(
         {
             "timestamp": [
-                datetime(2026, 4, 6, 10, 0, tzinfo=timezone.utc),
-                datetime(2026, 4, 6, 11, 0, tzinfo=timezone.utc),
-                datetime(2026, 4, 20, 10, 0, tzinfo=timezone.utc),
-                datetime(2026, 4, 20, 11, 0, tzinfo=timezone.utc),
+                datetime(2026, 4, 6, 10, 0, tzinfo=UTC),
+                datetime(2026, 4, 6, 11, 0, tzinfo=UTC),
+                datetime(2026, 4, 20, 10, 0, tzinfo=UTC),
+                datetime(2026, 4, 20, 11, 0, tzinfo=UTC),
             ],
             "canonical_product_id": ["sku-1", "sku-1", "sku-1", "sku-1"],
             "price_usd": [100.0, 120.0, 110.0, 130.0],

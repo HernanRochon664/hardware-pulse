@@ -14,9 +14,10 @@ Does NOT:
 
 import logging
 import sqlite3
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Iterable, Protocol
+from collections.abc import Iterable
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from typing import Protocol
 
 from src.domain.models import RawListing
 from src.storage.repository import upsert_raw_listing
@@ -59,6 +60,7 @@ class IngestResult:
     updated: int = 0
     unchanged: int = 0
     errors: int = 0
+    per_scraper: dict[str, int] = field(default_factory=dict)
 
     @property
     def total_processed(self) -> int:
@@ -106,7 +108,7 @@ def ingest(
     Returns:
         IngestResult aggregating outcomes across all scrapers.
     """
-    run_at = run_at or datetime.now(timezone.utc)
+    run_at = run_at or datetime.now(UTC)
     result = IngestResult()
 
     logger.info("Starting ingestion run at %s", run_at.isoformat())
@@ -118,11 +120,13 @@ def ingest(
         try:
             listings = list(scraper.fetch())
             logger.info("  %s → fetched %d listings", scraper_name, len(listings))
+            result.per_scraper[scraper_name] = len(listings)
         except Exception as exc:
             # Fetch failure: entire scraper is down. Count all as errors
             # but continue with remaining scrapers.
             logger.error("  %s → fetch failed: %s", scraper_name, exc)
             result.errors += 1
+            result.per_scraper[scraper_name] = 0
             continue
 
         for listing in listings:

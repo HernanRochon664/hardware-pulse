@@ -6,13 +6,11 @@ error handling, and upsert delegation.
 Uses MagicMock for scrapers and in-memory SQLite for storage.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock
-
 
 from src.domain.models import Condition, Currency, RawListing, Source
 from src.pipelines.ingest import IngestResult, ingest
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -39,7 +37,7 @@ def make_listing(url: str, price: float = 500.0) -> RawListing:
     return RawListing(
         source=Source.THOT,
         url=url,
-        timestamp=datetime.now(timezone.utc),
+        timestamp=datetime.now(UTC),
         title=f"Product at {url}",
         price=price,
         currency=Currency.USD,
@@ -69,13 +67,19 @@ class TestIngestHappyPath:
         assert result.errors == 0
 
     def test_multiple_scrapers_aggregate_results(self, db_conn):
-        scraper1 = make_scraper("thot", [
-            make_listing("https://thot.uy/a"),
-            make_listing("https://thot.uy/b"),
-        ])
-        scraper2 = make_scraper("banifox", [
-            make_listing("https://banifox.com/x"),
-        ])
+        scraper1 = make_scraper(
+            "thot",
+            [
+                make_listing("https://thot.uy/a"),
+                make_listing("https://thot.uy/b"),
+            ],
+        )
+        scraper2 = make_scraper(
+            "banifox",
+            [
+                make_listing("https://banifox.com/x"),
+            ],
+        )
         result = ingest(conn=db_conn, scrapers=[scraper1, scraper2])
 
         assert result.inserted == 3
@@ -91,7 +95,7 @@ class TestIngestHappyPath:
     def test_custom_run_at_is_accepted(self, db_conn):
         """run_at should be accepted without error."""
         scraper = make_scraper("thot", [make_listing("https://thot.uy/a")])
-        fixed_time = datetime(2026, 4, 25, 12, 0, 0, tzinfo=timezone.utc)
+        fixed_time = datetime(2026, 4, 25, 12, 0, 0, tzinfo=UTC)
 
         result = ingest(conn=db_conn, scrapers=[scraper], run_at=fixed_time)
         assert result.inserted == 1
