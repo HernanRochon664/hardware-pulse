@@ -28,6 +28,14 @@ class CrossValidationResult:
     metrics: dict[str, float]
     fold_results: list[EvaluationResult] = field(default_factory=list)
 
+    @property
+    def predictions(self) -> pd.Series:
+        return pd.concat([r.predictions for r in self.fold_results])
+
+    @property
+    def actuals(self) -> pd.Series:
+        return pd.concat([r.actuals for r in self.fold_results])
+
 
 def calculate_metrics(y_true: pd.Series, y_pred: pd.Series) -> dict[str, float]:
     mask = y_true != 0
