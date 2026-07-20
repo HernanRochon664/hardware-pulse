@@ -1,19 +1,12 @@
 # Known Issues
 
-## Playwright E2E Tests Fail with Missing System Libraries
+## Playwright E2E Tests (Resolved)
 
-**Symptoms:** `tests/e2e/test_dashboard.py` tests fail with:
-```
-error while loading shared libraries: libnspr4.so: cannot open shared object file
-```
+**History:** `tests/e2e/test_dashboard.py` initially failed due to missing system libraries (`libnspr4`, `libnss3`, etc.) and incorrect selectors for Streamlit 1.57+ (slider uses `stSlider` div, not `input[type="range"]`; DataFrame uses `stDataFrame`, not `stTable`).
 
-**Cause:** The Chromium browser installed by Playwright requires `libnspr4` and other system-level shared libraries. These are not installed by pip/uv and must be provided by the OS.
+**Resolution:** System dependencies installed and selectors updated. All 11 E2E tests pass.
 
-**Workaround:** Install system dependencies:
-- Debian/Ubuntu: `sudo apt-get install libnspr4 libnss3 libatk-bridge2.0-0 libdrm2 libxkbcommon0 libgbm1`
-- The E2E tests are structurally verified; they can be run locally or in CI where these libraries are available.
-
-**Status:** Environment-specific. Not a code defect.
+**Relevant commits:** `7523b9b`
 
 ## Hardcoded ±10% Confidence Intervals
 
