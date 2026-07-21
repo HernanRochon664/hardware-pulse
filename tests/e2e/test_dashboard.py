@@ -108,7 +108,8 @@ class TestDashboardLoads:
         assert multiselect.is_visible()
 
     def test_two_tabs_rendered(self, page):
-        tabs = page.locator('button[data-baseweb="tab"]')
+        page.wait_for_selector('button[role="tab"]', timeout=10000)
+        tabs = page.locator('button[role="tab"]')
         count = tabs.count()
         assert count == 2, f"Expected 2 tabs, got {count}"
 
@@ -134,7 +135,7 @@ class TestDashboardFilter:
 
 class TestDashboardProductTab:
     def test_product_tab_switch(self, page):
-        tabs = page.locator('button[data-baseweb="tab"]')
+        tabs = page.locator('button[role="tab"]')
         if tabs.count() >= 2:
             tabs.nth(1).click()
             page.wait_for_timeout(1000)
@@ -142,7 +143,7 @@ class TestDashboardProductTab:
             assert select.is_visible()
 
     def test_price_chart_renders(self, page):
-        tabs = page.locator('button[data-baseweb="tab"]')
+        tabs = page.locator('button[role="tab"]')
         if tabs.count() >= 2:
             tabs.nth(1).click()
             page.wait_for_timeout(2000)
