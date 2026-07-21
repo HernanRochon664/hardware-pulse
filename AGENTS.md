@@ -2,6 +2,7 @@
 
 ## Developer Commands
 - **Full Pipeline** (recommended): `uv run scripts/run_pipeline.py`
+- **CI**: `.github/workflows/ci.yml` runs ruff, pyright, unit tests, and E2E tests
 - **Ingestion** (standalone): `uv run scripts/run_ingest.py`
 - **Entity Resolution** (standalone): `uv run scripts/run_resolve.py`
 - **Feature Engineering** (standalone): `uv run scripts/run_features.py --since YYYY-MM-DD`
