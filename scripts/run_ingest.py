@@ -55,6 +55,7 @@ def build_scrapers(config):
                         config.thot.defaults,
                         job.max_pages_per_url,
                     ),
+                    timeout=config.global_.timeout,
                 )
             )
 
@@ -71,6 +72,7 @@ def build_scrapers(config):
                         config.banifox.defaults,
                         job.max_pages_per_url,
                     ),
+                    timeout=config.global_.timeout,
                 )
             )
 
@@ -87,6 +89,7 @@ def build_scrapers(config):
                         config.pccompu.defaults,
                         job.max_pages_per_url,
                     ),
+                    timeout=config.global_.timeout,
                 )
             )
 

@@ -38,12 +38,14 @@ class BaseHTMLScraper(ABC):
         urls: list[str],
         delay: float = 1.5,
         max_pages_per_url: int = 20,
+        timeout: int = 10,
     ) -> None:
         if not urls:
             raise ValueError(f"{self.__class__.__name__}: urls must not be empty")
         self._urls = urls
         self._delay = delay
         self._max_pages_per_url = max_pages_per_url
+        self._timeout = timeout
 
     # ---------------------------------------------------------------------------
     # Abstract interface, subclasses must implement these
@@ -122,7 +124,7 @@ class BaseHTMLScraper(ABC):
             while page <= self._start_page + self._max_pages_per_url - 1:
                 url = self._build_page_url(base_url, page)
 
-                response = requests.get(url, timeout=10)
+                response = requests.get(url, timeout=self._timeout)
 
                 # 404 signals end of pagination, not a fatal error
                 if response.status_code == 404:
