@@ -53,6 +53,8 @@ jobs:
           python-version: "3.11"
           enable-cache: true
       - run: uv sync --dev
+      - name: Install Playwright browsers
+        run: uv run python -m playwright install chromium
       - name: Install Playwright system deps
         run: |
           sudo apt-get update
