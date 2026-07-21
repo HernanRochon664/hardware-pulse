@@ -21,6 +21,7 @@ Execution order:
 from __future__ import annotations
 
 import logging
+import math
 import sqlite3
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -64,6 +65,17 @@ class FeatureResult:
 # ---------------------------------------------------------------------------
 
 
+def _safe_float(val: Any) -> float | None:
+    """Convert to float or None if null/NaN."""
+    if val is None:
+        return None
+    try:
+        v = float(val)
+        return None if math.isnan(v) else v
+    except (ValueError, TypeError):
+        return None
+
+
 def _load_price_snapshots(
     conn: sqlite3.Connection,
     since: datetime | None,
@@ -94,11 +106,11 @@ def _load_price_snapshots(
         FROM price_snapshots
     """
 
-    params: tuple[Any, ...] = ()
+    params: list[Any] = []
 
     if since is not None:
         query += " WHERE timestamp >= ?"
-        params = (since.isoformat(),)
+        params = [since.isoformat()]
 
     df = pd.read_sql_query(query, conn, params=params)
 
@@ -153,6 +165,29 @@ def _compute_weekly_features(df: pd.DataFrame) -> pd.DataFrame:
     # -----------------------------------------------------------------------
     # Sort for time-series operations
     # -----------------------------------------------------------------------
+
+    weekly = weekly.sort_values(["canonical_product_id", "week_start"])
+
+    # -----------------------------------------------------------------------
+    # Fill missing calendar weeks so shift() is date-aware
+    # -----------------------------------------------------------------------
+
+    all_weeks = pd.date_range(
+        weekly["week_start"].min(),
+        weekly["week_start"].max(),
+        freq="W-MON",
+    )
+
+    def _fill_missing_weeks(group: pd.DataFrame, sku: str) -> pd.DataFrame:
+        group = group.set_index("week_start").reindex(all_weeks)
+        group["canonical_product_id"] = sku
+        return group.reset_index().rename(columns={"index": "week_start"})
+
+    weekly = (
+        weekly.groupby("canonical_product_id", group_keys=False)
+        .apply(lambda g: _fill_missing_weeks(g, g.name))
+        .reset_index(drop=True)
+    )
 
     weekly = weekly.sort_values(["canonical_product_id", "week_start"])
 
@@ -250,9 +285,9 @@ def build_features(
 
     weekly = _compute_weekly_features(df)
 
-    weeks_processed = weekly["week_start"].nunique()
+    weeks_processed: int = int(weekly["week_start"].nunique())  # type: ignore[arg-type]
 
-    skus_processed = weekly["canonical_product_id"].nunique()
+    skus_processed: int = int(weekly["canonical_product_id"].nunique())  # type: ignore[arg-type]
 
     logger.info(
         "Computed features: %d weeks × %d SKUs = %d rows",
@@ -276,7 +311,7 @@ def build_features(
 
     fx_rates_fetched = sum(1 for v in fx_rates.values() if v is not None)
 
-    weekly["usd_uyu_rate"] = weekly["week_start"].map(fx_rates)
+    weekly["usd_uyu_rate"] = weekly["week_start"].map(fx_rates)  # type: ignore
 
     # -----------------------------------------------------------------------
     # Persist
@@ -292,23 +327,11 @@ def build_features(
                     "week_start": row["week_start"],
                     "canonical_product_id": row["canonical_product_id"],
                     "run_at": run_at_str,
-                    "precio_lag_1": (
-                        None if pd.isna(row["precio_lag_1"]) else float(row["precio_lag_1"])
-                    ),
-                    "precio_lag_2": (
-                        None if pd.isna(row["precio_lag_2"]) else float(row["precio_lag_2"])
-                    ),
-                    "mediana_movil": (
-                        None if pd.isna(row["mediana_movil"]) else float(row["mediana_movil"])
-                    ),
-                    "dispersion_precios": (
-                        None
-                        if pd.isna(row["dispersion_precios"])
-                        else float(row["dispersion_precios"])
-                    ),
-                    "usd_uyu_rate": (
-                        None if pd.isna(row["usd_uyu_rate"]) else float(row["usd_uyu_rate"])
-                    ),
+                    "precio_lag_1": _safe_float(row["precio_lag_1"]),
+                    "precio_lag_2": _safe_float(row["precio_lag_2"]),
+                    "mediana_movil": _safe_float(row["mediana_movil"]),
+                    "dispersion_precios": _safe_float(row["dispersion_precios"]),
+                    "usd_uyu_rate": _safe_float(row["usd_uyu_rate"]),
                 }
             )
         except Exception as exc:

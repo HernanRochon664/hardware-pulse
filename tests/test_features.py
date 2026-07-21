@@ -41,7 +41,8 @@ def test_compute_weekly_features_single_week_no_lags() -> None:
     assert pd.isna(result.loc[0, "dispersion_precios"])
 
 
-def test_compute_weekly_features_with_gap_lag_is_previous_existing_week() -> None:
+def test_compute_weekly_features_with_gap_lag_is_nan() -> None:
+    """Gap weeks are filled with NaN so shift() is calendar-date-aware."""
     df = pd.DataFrame(
         {
             "timestamp": [
@@ -58,19 +59,24 @@ def test_compute_weekly_features_with_gap_lag_is_previous_existing_week() -> Non
 
     result = _compute_weekly_features(df)
 
-    assert len(result) == 2
-    assert list(result["week_start"]) == ["2026-04-06", "2026-04-20"]
+    # Gap week 2026-04-13 is now filled with NaN
+    assert len(result) == 3
+    assert list(result["week_start"]) == ["2026-04-06", "2026-04-13", "2026-04-20"]
 
     first_row = result.iloc[0]
-    second_row = result.iloc[1]
+    gap_row = result.iloc[1]
+    last_row = result.iloc[2]
 
     assert first_row["mediana_semanal"] == 110.0
     assert pd.isna(first_row["precio_lag_1"])
     assert pd.isna(first_row["precio_lag_2"])
     assert first_row["mediana_movil"] == 110.0
 
-    assert second_row["mediana_semanal"] == 120.0
-    assert second_row["precio_lag_1"] == 110.0
-    assert pd.isna(second_row["precio_lag_2"])
-    assert second_row["mediana_movil"] == 115.0
-    assert not pd.isna(second_row["dispersion_precios"])
+    assert pd.isna(gap_row["mediana_semanal"])
+    assert gap_row["precio_lag_1"] == 110.0
+    assert pd.isna(gap_row["precio_lag_2"])
+
+    assert last_row["mediana_semanal"] == 120.0
+    assert pd.isna(last_row["precio_lag_1"])
+    assert last_row["precio_lag_2"] == 110.0
+    assert last_row["mediana_movil"] == 115.0
