@@ -112,17 +112,10 @@ class TestDashboardLoads:
         assert multiselect.is_visible()
 
     def test_two_tabs_rendered(self, page):
-        try:
-            page.wait_for_selector('[data-testid="stTab"]', state="attached", timeout=15000)
-        except Exception:
-            page.screenshot(path="/tmp/tab_failure.png", full_page=True)
-            html = page.content()
-            with open("/tmp/tab_failure.html", "w") as f:
-                f.write(html)
-            raise
+        page.wait_for_selector('[data-testid="stTab"]', state="attached", timeout=15000)
         tabs = page.locator('[data-testid="stTab"]')
         count = tabs.count()
-        assert count == 2, f"Expected 2 tabs, got {count}. See /tmp/tab_failure.png"
+        assert count == 2, f"Expected 2 tabs, got {count}"
 
 
 class TestDashboardFilter:
