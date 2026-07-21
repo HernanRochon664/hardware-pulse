@@ -90,95 +90,65 @@ def _normalize_url(url: str) -> str:
 
 
 def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertResult:
-    """
-    Persist a RawListing to the database with upsert semantics.
-
-    Behavior:
-    - If listing_key does not exist → INSERT, return inserted=True
-    - If listing_key exists and price changed → UPDATE, return updated=True
-    - If listing_key exists and nothing changed → no-op, return both False
-
-    We only update when the price changes. Other fields (title, quantity)
-    are treated as immutable after first insert to keep the raw layer
-    faithful to the original capture. Price changes are the signal we care
-    about for time-series analysis.
-
-    Args:
-        listing: RawListing object from any scraper.
-        conn:    Open sqlite3.Connection (caller manages lifecycle).
-
-    Returns:
-        UpsertResult with the row id and insert/update flags.
-    """
     listing_key = _compute_listing_key(listing)
     now = datetime.now(UTC).isoformat()
+    params = {
+        "listing_key": listing_key,
+        "source": listing.source.value,
+        "item_id": listing.item_id,
+        "url": str(listing.url),
+        "timestamp": listing.timestamp.isoformat(),
+        "title": listing.title,
+        "price": listing.price,
+        "currency": listing.currency.value,
+        "seller": listing.seller,
+        "condition": listing.condition.value if listing.condition else None,
+        "available_quantity": listing.available_quantity,
+        "base_price": listing.base_price,
+        "now": now,
+    }
 
-    with conn:  # context manager → auto commit or rollback
+    with conn:
         existing = conn.execute(
             "SELECT id, price FROM raw_listings WHERE listing_key = ?",
             (listing_key,),
         ).fetchone()
 
-        if existing is None:
-            cursor = conn.execute(
-                """
-                INSERT INTO raw_listings (
-                    listing_key, source, item_id, url, timestamp,
-                    title, price, currency, seller,
-                    condition, available_quantity, base_price,
-                    created_at, updated_at
-                ) VALUES (
-                    :listing_key, :source, :item_id, :url, :timestamp,
-                    :title, :price, :currency, :seller,
-                    :condition, :available_quantity, :base_price,
-                    :now, :now
-                )
-                """,
-                {
-                    "listing_key": listing_key,
-                    "source": listing.source.value,
-                    "item_id": listing.item_id,
-                    "url": str(listing.url),
-                    "timestamp": listing.timestamp.isoformat(),
-                    "title": listing.title,
-                    "price": listing.price,
-                    "currency": listing.currency.value,
-                    "seller": listing.seller,
-                    "condition": listing.condition.value if listing.condition else None,
-                    "available_quantity": listing.available_quantity,
-                    "base_price": listing.base_price,
-                    "now": now,
-                },
-            )
-            logger.debug("Inserted listing_key=%s title=%r", listing_key[:8], listing.title)
-            row_id = cursor.lastrowid
-            if row_id is None:
-                raise RuntimeError("Invariant violated: lastrowid is None after INSERT")
+        if existing is not None and existing["price"] == listing.price:
+            return UpsertResult(id=existing["id"], inserted=False, updated=False)
 
-            return UpsertResult(id=row_id, inserted=True, updated=False)
+        cursor = conn.execute(
+            """
+            INSERT INTO raw_listings (
+                listing_key, source, item_id, url, timestamp,
+                title, price, currency, seller,
+                condition, available_quantity, base_price,
+                created_at, updated_at
+            ) VALUES (
+                :listing_key, :source, :item_id, :url, :timestamp,
+                :title, :price, :currency, :seller,
+                :condition, :available_quantity, :base_price,
+                :now, :now
+            ) ON CONFLICT (listing_key) DO UPDATE SET
+                price = excluded.price,
+                updated_at = excluded.updated_at
+            """,
+            params,
+        )
 
-        # Listing exists, check if price changed
-        existing_id, existing_price = existing["id"], existing["price"]
+        row_id = cursor.lastrowid
+        if row_id is None:
+            raise RuntimeError("Invariant violated: lastrowid is None after INSERT")
 
-        if existing_price != listing.price:
-            conn.execute(
-                """
-                UPDATE raw_listings
-                SET price = ?, updated_at = ?
-                WHERE id = ?
-                """,
-                (listing.price, now, existing_id),
-            )
-            logger.debug(
-                "Updated price for listing_key=%s: %.2f → %.2f",
-                listing_key[:8],
-                existing_price,
-                listing.price,
-            )
-            return UpsertResult(id=existing_id, inserted=False, updated=True)
+        inserted = existing is None
+        logger.debug(
+            "%s listing_key=%s title=%r",
+            "Inserted" if inserted else "Updated",
+            listing_key[:8],
+            listing.title,
+        )
 
-        # No-op
-        return UpsertResult(id=existing_id, inserted=False, updated=False)
+        return UpsertResult(id=row_id, inserted=inserted, updated=not inserted)
 
 
 def insert_price_snapshot(resolved: ResolvedListing, conn: sqlite3.Connection) -> int:
