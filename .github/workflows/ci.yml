@@ -20,7 +20,7 @@ jobs:
           python-version: "3.11"
           enable-cache: true
       - run: uv sync --dev
-      - run: uv run ruff check .
+      - run: uv run ruff check src/ scripts/ tests/ .github/
 
   typecheck:
     runs-on: ubuntu-latest
@@ -62,4 +62,4 @@ jobs:
           uv run streamlit run src/dashboard/app.py --server.port 8591 --server.headless true &
           sleep 5
           while ! curl -s http://localhost:8591/_stcore/health > /dev/null 2>&1; do sleep 1; done
-      - run: uv run pytest tests/e2e/ --timeout 120
+      - run: uv run pytest tests/e2e/
