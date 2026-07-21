@@ -74,4 +74,6 @@ class NaivePersistenceModel:
                 f"Feature '{self.price_column}' not found in input DataFrame. "
                 f"Available columns: {list(X.columns)}"
             )
-        return X[self.price_column].copy()
+        result = X[self.price_column].copy()
+        assert isinstance(result, pd.Series)
+        return result

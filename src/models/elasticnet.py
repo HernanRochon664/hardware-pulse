@@ -141,7 +141,7 @@ class ElasticNetPriceModel:
                     f"  Missing columns: {sorted(missing)}\n"
                     f"  Unexpected columns: {sorted(extra)}"
                 )
-            X = X[self.feature_columns_]
+            X = X[self.feature_columns_]  # type: ignore
 
         predictions = self.pipeline.predict(X)
         return pd.Series(predictions, index=X.index, name="predicted_price_usd")

@@ -8,6 +8,7 @@ execute a full evaluation pipeline with averaged metrics across folds.
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -112,13 +113,13 @@ def evaluate_model_performance(
     for train_df, test_df in folds:
         fold_model = model_factory()
 
-        X_train = train_df[feature_cols]
-        y_train = train_df[target_col]
-        X_test = test_df[feature_cols]
-        y_test = test_df[target_col]
+        X_train = cast(pd.DataFrame, train_df[feature_cols])
+        y_train = cast(pd.Series, train_df[target_col])
+        X_test = cast(pd.DataFrame, test_df[feature_cols])
+        y_test = cast(pd.Series, test_df[target_col])
 
         fold_model.fit(X_train, y_train)
-        predictions = fold_model.predict(X_test)
+        predictions: pd.Series = fold_model.predict(X_test)
         metrics = calculate_metrics(y_test, predictions)
 
         fold_results.append(
