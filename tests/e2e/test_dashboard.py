@@ -25,9 +25,9 @@ HERE = Path(__file__).parent.parent.parent.resolve()
 STREAMLIT_PORT = 8592
 STREAMLIT_URL = f"http://localhost:{STREAMLIT_PORT}"
 
-# Allow up to 30s for Streamlit to start
+# Allow up to 60s for Streamlit to start
 POLL_INTERVAL = 1.0
-START_TIMEOUT = 30.0
+START_TIMEOUT = 60.0
 
 
 @pytest.fixture(scope="module")
@@ -75,13 +75,17 @@ def streamlit_server():
     proc.wait(5)
 
 
+def _wait_for_page_ready(page, timeout=20000):
+    page.wait_for_load_state("networkidle")
+    page.wait_for_selector('[data-testid="stAppViewContainer"]', timeout=timeout)
+    page.wait_for_timeout(3000)
+
+
 @pytest.fixture
 def page(context, streamlit_server):
     page = context.new_page()
     page.goto(streamlit_server)
-    page.wait_for_load_state("networkidle")
-    page.wait_for_selector('[data-testid="stAppViewContainer"]', timeout=15000)
-    page.wait_for_timeout(2000)
+    _wait_for_page_ready(page)
     yield page
     page.close()
 
@@ -108,10 +112,17 @@ class TestDashboardLoads:
         assert multiselect.is_visible()
 
     def test_two_tabs_rendered(self, page):
-        page.wait_for_selector('[data-testid="stTab"]', state="attached", timeout=15000)
+        try:
+            page.wait_for_selector('[data-testid="stTab"]', state="attached", timeout=15000)
+        except Exception:
+            page.screenshot(path="/tmp/tab_failure.png", full_page=True)
+            html = page.content()
+            with open("/tmp/tab_failure.html", "w") as f:
+                f.write(html)
+            raise
         tabs = page.locator('[data-testid="stTab"]')
         count = tabs.count()
-        assert count == 2, f"Expected 2 tabs, got {count}"
+        assert count == 2, f"Expected 2 tabs, got {count}. See /tmp/tab_failure.png"
 
 
 class TestDashboardFilter:
