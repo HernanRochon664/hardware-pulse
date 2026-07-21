@@ -160,5 +160,21 @@ def load_config(path: Path | None = None) -> ScrapersConfig:
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
 
-    raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return ScrapersConfig.model_validate(raw)
+    try:
+        raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as e:
+        raise yaml.YAMLError(
+            f"Invalid YAML in {path}: {e}"
+        ) from e
+
+    if not isinstance(raw, dict):
+        raise ValueError(
+            f"Expected a dict at the root of {path}, got {type(raw).__name__}"
+        )
+
+    try:
+        return ScrapersConfig.model_validate(raw)
+    except Exception as e:
+        raise ValueError(
+            f"Invalid configuration in {path}: {e}"
+        ) from e
