@@ -17,10 +17,19 @@ from datetime import UTC, datetime
 
 import requests
 from bs4 import BeautifulSoup, Tag
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from src.domain.models import RawListing, Source
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
+
+RETRYABLE_STATUS_CODES = (500, 502, 503, 504)
 
 
 class BaseHTMLScraper(ABC):
@@ -32,6 +41,8 @@ class BaseHTMLScraper(ABC):
     site-specific URL patterns, selectors, and price parsing.
     """
 
+    _session: requests.Session | None = None
+
     def __init__(
         self,
         *,
@@ -39,13 +50,20 @@ class BaseHTMLScraper(ABC):
         delay: float = 1.5,
         max_pages_per_url: int = 20,
         timeout: int = 10,
+        max_retries: int = 3,
+        retry_backoff: float = 1.0,
     ) -> None:
         if not urls:
             raise ValueError(f"{self.__class__.__name__}: urls must not be empty")
+        if max_retries < 1:
+            raise ValueError(f"{self.__class__.__name__}: max_retries must be >= 1")
         self._urls = urls
         self._delay = delay
         self._max_pages_per_url = max_pages_per_url
         self._timeout = timeout
+        self._max_retries = max_retries
+        self._retry_backoff = retry_backoff
+        self._session = None
 
     # ---------------------------------------------------------------------------
     # Abstract interface, subclasses must implement these
@@ -96,6 +114,80 @@ class BaseHTMLScraper(ABC):
         ...
 
     # ---------------------------------------------------------------------------
+    # HTTP helpers
+    # ---------------------------------------------------------------------------
+
+    def _http_get(self, url: str) -> requests.Response:
+        """
+        GET with retry/backoff on transient failures.
+
+        Retries up to ``max_retries`` total attempts on:
+        - ``requests.exceptions.Timeout``
+        - ``requests.exceptions.ConnectionError``
+        - 5xx responses (500, 502, 503, 504)
+
+        4xx responses are NOT retried; they propagate immediately so
+        the caller can decide (e.g. 404 stops pagination).
+
+        Uses a shared ``requests.Session`` with a stable User-Agent
+        and an HTTPAdapter configured for connection pooling.
+        """
+        session = self._get_session()
+        last_exc: Exception | None = None
+        for attempt in range(1, self._max_retries + 1):
+            try:
+                response = session.get(url, timeout=self._timeout)
+                if response.status_code in RETRYABLE_STATUS_CODES:
+                    if attempt < self._max_retries:
+                        logger.debug(
+                            "  %s → %s on %s (attempt %d/%d), retrying",
+                            self.name,
+                            response.status_code,
+                            url,
+                            attempt,
+                            self._max_retries,
+                        )
+                        time.sleep(self._retry_backoff * (2 ** (attempt - 1)))
+                        continue
+                    response.raise_for_status()
+                return response
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as exc:
+                last_exc = exc
+                if attempt < self._max_retries:
+                    logger.debug(
+                        "  %s → %s on %s (attempt %d/%d), retrying",
+                        self.name,
+                        type(exc).__name__,
+                        url,
+                        attempt,
+                        self._max_retries,
+                    )
+                    time.sleep(self._retry_backoff * (2 ** (attempt - 1)))
+                    continue
+                raise
+        # Should not be reachable; loop either returns or raises.
+        if last_exc is not None:
+            raise last_exc
+        raise RuntimeError(f"_http_get exited without returning for {url}")
+
+    def _get_session(self) -> requests.Session:
+        """Return a requests.Session configured with retries and a UA."""
+        if self._session is None:
+            self._session = requests.Session()
+            self._session.headers.update({"User-Agent": DEFAULT_USER_AGENT})
+            retry_cfg = Retry(
+                total=self._max_retries - 1,
+                backoff_factor=self._retry_backoff,
+                status_forcelist=RETRYABLE_STATUS_CODES,
+                allowed_methods=("GET",),
+                raise_on_status=False,
+            )
+            adapter = HTTPAdapter(max_retries=retry_cfg, pool_connections=4, pool_maxsize=4)
+            self._session.mount("http://", adapter)
+            self._session.mount("https://", adapter)
+        return self._session
+
+    # ---------------------------------------------------------------------------
     # Template method — shared orchestration logic
     # ---------------------------------------------------------------------------
 
@@ -124,7 +216,7 @@ class BaseHTMLScraper(ABC):
             while page <= self._start_page + self._max_pages_per_url - 1:
                 url = self._build_page_url(base_url, page)
 
-                response = requests.get(url, timeout=self._timeout)
+                response = self._http_get(url)
 
                 # 404 signals end of pagination, not a fatal error
                 if response.status_code == 404:

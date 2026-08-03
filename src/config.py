@@ -38,6 +38,7 @@ class ScraperDefaults(BaseModel):
     request_delay: float | None = Field(default=None, gt=0)
     max_results: int | None = Field(default=None, gt=0)
     max_pages_per_url: int | None = Field(default=None, gt=0)
+    timeout: int | None = Field(default=None, gt=0)
 
 
 # ---------------------------------------------------------------------------
@@ -52,6 +53,7 @@ class HTMLScraperJob(BaseModel):
     urls: list[str] = Field(min_length=1)
     request_delay: float | None = Field(default=None, gt=0)
     max_pages_per_url: int | None = Field(default=None, gt=0)
+    timeout: int | None = Field(default=None, gt=0)
 
 
 # ---------------------------------------------------------------------------
@@ -129,6 +131,14 @@ class ScrapersConfig(BaseModel):
             job_override or scraper_defaults.max_pages_per_url or 20  # fallback default
         )
 
+    def resolve_timeout(
+        self,
+        scraper_defaults: ScraperDefaults,
+        job_override: int | None = None,
+    ) -> int:
+        """Resolve request timeout (seconds) following job > defaults > global precedence."""
+        return job_override or scraper_defaults.timeout or self.global_.timeout
+
 
 # ---------------------------------------------------------------------------
 # Loader
@@ -163,18 +173,12 @@ def load_config(path: Path | None = None) -> ScrapersConfig:
     try:
         raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8"))
     except yaml.YAMLError as e:
-        raise yaml.YAMLError(
-            f"Invalid YAML in {path}: {e}"
-        ) from e
+        raise yaml.YAMLError(f"Invalid YAML in {path}: {e}") from e
 
     if not isinstance(raw, dict):
-        raise ValueError(
-            f"Expected a dict at the root of {path}, got {type(raw).__name__}"
-        )
+        raise ValueError(f"Expected a dict at the root of {path}, got {type(raw).__name__}")
 
     try:
         return ScrapersConfig.model_validate(raw)
     except Exception as e:
-        raise ValueError(
-            f"Invalid configuration in {path}: {e}"
-        ) from e
+        raise ValueError(f"Invalid configuration in {path}: {e}") from e

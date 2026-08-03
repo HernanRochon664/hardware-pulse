@@ -63,7 +63,7 @@ def fetch_fx_rates(week_starts: list[str]) -> dict[str, float | None]:
             )
 
         except Exception as exc:
-            logger.warning("Failed to fetch FX rate for %s: %s", date_str, exc)
+            logger.info("Failed to fetch FX rate for %s: %s", date_str, exc)
             results[date_str] = None
 
     return results

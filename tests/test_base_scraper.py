@@ -88,7 +88,7 @@ def make_mock_response(html: str, status_code: int = 200) -> MagicMock:
 
 
 class TestFetchBasic:
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_single_page_single_product(self, mock_get):
         mock_get.return_value = make_mock_response(make_html_page("https://thot.uy/a"))
         scraper = StubScraper(
@@ -101,7 +101,7 @@ class TestFetchBasic:
         assert len(listings) == 1
         assert str(listings[0].url) == "https://thot.uy/a"
 
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_empty_page_returns_no_listings(self, mock_get):
         mock_get.return_value = make_mock_response("<html><body></body></html>")
         scraper = StubScraper(
@@ -113,7 +113,7 @@ class TestFetchBasic:
         listings = scraper.fetch()
         assert listings == []
 
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_parse_none_results_are_skipped(self, mock_get):
         """Products without data-url → _parse_listing returns None → skipped."""
         mock_get.return_value = make_mock_response(
@@ -136,7 +136,7 @@ class TestFetchBasic:
 
 class TestPagination:
     @patch("src.scrapers.base.time.sleep")
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_stops_on_empty_page(self, mock_get, mock_sleep):
         """Scraper should stop when a page returns no products."""
         mock_get.side_effect = [
@@ -154,7 +154,7 @@ class TestPagination:
         assert mock_get.call_count == 2
 
     @patch("src.scrapers.base.time.sleep")
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_respects_max_pages(self, mock_get, mock_sleep):
         """Scraper stops at max_pages_per_url even if more pages exist."""
         mock_get.return_value = make_mock_response(
@@ -170,7 +170,7 @@ class TestPagination:
         assert mock_get.call_count == 2
 
     @patch("src.scrapers.base.time.sleep")
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_404_stops_pagination(self, mock_get, mock_sleep):
         """404 on a page should stop pagination without raising."""
         mock_get.side_effect = [
@@ -187,7 +187,7 @@ class TestPagination:
         assert len(listings) == 1  # first page only
 
     @patch("src.scrapers.base.time.sleep")
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_delay_called_between_pages(self, mock_get, mock_sleep):
         """time.sleep should be called once per page fetched."""
         mock_get.side_effect = [
@@ -210,7 +210,7 @@ class TestPagination:
 
 
 class TestDeduplication:
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_duplicate_urls_deduplicated_within_run(self, mock_get):
         """Same URL appearing on two pages → only one listing returned."""
         same_url_page = make_html_page("https://thot.uy/a")
@@ -229,7 +229,7 @@ class TestDeduplication:
         # Second page has same URL → new_items=0 → stops, deduplication works
         assert len(listings) == 1
 
-    @patch("src.scrapers.base.requests.get")
+    @patch("src.scrapers.base.requests.Session.get")
     def test_different_urls_both_returned(self, mock_get):
         mock_get.side_effect = [
             make_mock_response(make_html_page("https://thot.uy/a", "https://thot.uy/b")),
