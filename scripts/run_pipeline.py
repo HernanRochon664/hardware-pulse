@@ -267,6 +267,20 @@ def main() -> None:
 
     logger.info("=== Pipeline complete at %s ===", datetime.now(UTC).isoformat())
 
+    # -----------------------------------------------------------------------
+    # Stage 6 — Auto-commit & push (only runs after full success)
+    # -----------------------------------------------------------------------
+    git_script = Path(__file__).parent / "run_git.py"
+    result = subprocess.run([sys.executable, str(git_script)], text=True)
+    for line in result.stdout.splitlines():
+        logger.info("git: %s", line)
+    for line in result.stderr.splitlines():
+        logger.error("git: %s", line)
+    if result.returncode != 0:
+        logger.error("Auto-commit/push failed with exit code %d", result.returncode)
+        sys.exit(result.returncode)
+    logger.info("Auto-commit/push complete.")
+
 
 if __name__ == "__main__":
     main()
