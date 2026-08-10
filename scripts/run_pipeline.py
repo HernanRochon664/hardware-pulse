@@ -179,9 +179,19 @@ def main() -> None:
     else:
         ingest_result = ingest(conn=conn, scrapers=scrapers)
         logger.info("Ingestion complete: %s", ingest_result)
-        if ingest_result.errors:
-            logger.error("Ingestion failed with %d error(s)", ingest_result.errors)
+        successful_scrapers = sum(1 for count in ingest_result.per_scraper.values() if count > 0)
+        total_scrapers = len(ingest_result.per_scraper)
+        if ingest_result.errors and successful_scrapers == 0:
+            logger.error("Ingestion failed: all %d scraper(s) errored", total_scrapers)
             sys.exit(1)
+        if ingest_result.errors:
+            logger.warning(
+                "Ingestion completed with %d error(s) from %d/%d scraper(s) "
+                "— continuing with partial data",
+                ingest_result.errors,
+                total_scrapers - successful_scrapers,
+                total_scrapers,
+            )
 
         for scraper_name, count in ingest_result.per_scraper.items():
             if count == 0:

@@ -15,8 +15,8 @@ thot:
     enabled: true
 
     defaults:
-        request_delay: 1.5
-        timeout: 20
+        request_delay: 2.0
+        timeout: 30
         max_pages_per_url: 20
 
     jobs:
