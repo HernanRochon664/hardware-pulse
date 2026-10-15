@@ -89,10 +89,10 @@ def aggregate(conn: sqlite3.Connection, now: datetime | None = None) -> Aggregat
         stats.quality_issues = _rebuild_quality_issues(conn, now)
         offers = current_offers(conn, now)
         stats.current_offers = len(offers)
-        daily = _rebuild_product_daily(conn)
+        daily, store_daily = _rebuild_product_daily(conn)
         stats.product_days = len(daily)
         stats.family_days = _rebuild_family_daily(conn, daily)
-        stats.products_with_offers = _rebuild_product_stats(conn, offers, daily, now)
+        stats.products_with_offers = _rebuild_product_stats(conn, offers, daily, store_daily, now)
     logger.info("Aggregated %s", stats)
     return stats
 
@@ -130,7 +130,8 @@ def _local_dates(series: pd.Series) -> pd.Series:
     return stamps.dt.normalize().dt.tz_localize(None)
 
 
-def _rebuild_product_daily(conn: sqlite3.Connection) -> pd.DataFrame:
+def _rebuild_product_daily(conn: sqlite3.Connection) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Rebuild ``product_daily``; also return the lowest price per product, store and day."""
     periods = pd.read_sql_query(
         """
         SELECT p.listing_id, l.product_id, l.store_id, p.price_usd, p.valid_from, p.last_seen
@@ -143,7 +144,10 @@ def _rebuild_product_daily(conn: sqlite3.Connection) -> pd.DataFrame:
     )
     conn.execute("DELETE FROM product_daily")
     if periods.empty:
-        return pd.DataFrame(columns=["product_id", "date", "min_usd", "n_offers", "n_stores"])
+        return (
+            pd.DataFrame(columns=["product_id", "date", "min_usd", "n_offers", "n_stores"]),
+            pd.DataFrame(columns=["product_id", "store_id", "date", "min_usd"]),
+        )
     start = _local_dates(pd.Series(periods["valid_from"]))
     end = _local_dates(pd.Series(periods["last_seen"]))
     days = ((end - start).dt.days + 1).clip(lower=1).to_numpy()
@@ -160,6 +164,13 @@ def _rebuild_product_daily(conn: sqlite3.Connection) -> pd.DataFrame:
         .reset_index()
     )
     daily["date"] = pd.to_datetime(daily["date"]).dt.strftime("%Y-%m-%d")
+    store_daily = (
+        expanded.groupby(["product_id", "store_id", "date"])["price_usd"]
+        .min()
+        .reset_index()
+        .rename(columns={"price_usd": "min_usd"})
+    )
+    store_daily["date"] = pd.to_datetime(store_daily["date"]).dt.strftime("%Y-%m-%d")
     conn.executemany(
         "INSERT INTO product_daily (product_id, date, min_usd, n_offers, n_stores) "
         "VALUES (?, ?, ?, ?, ?)",
@@ -167,7 +178,7 @@ def _rebuild_product_daily(conn: sqlite3.Connection) -> pd.DataFrame:
             index=False, name=None
         ),
     )
-    return daily
+    return daily, store_daily
 
 
 def _rebuild_family_daily(conn: sqlite3.Connection, daily: pd.DataFrame) -> int:
@@ -241,8 +252,33 @@ def _best_offers(offers: pd.DataFrame) -> dict[int, _BestOffer]:
     return best
 
 
+def _like_for_like_change(
+    current: dict[str, float], stores: dict[str, list[tuple[str, float]]], day: date
+) -> float | None:
+    """
+    Change of the lowest price counting only stores that had a price on ``day``
+    and still have a current offer, so a store joining or leaving the
+    comparison is never reported as a price drop or rise.
+    """
+    past = {}
+    for store, series in stores.items():
+        if store in current:
+            value = _value_on_or_before(series, day)
+            if value is not None:
+                past[store] = value
+    if not past:
+        return None
+    before = min(past.values())
+    now = min(current[store] for store in past)
+    return round((now - before) / before, 4) if before else None
+
+
 def _rebuild_product_stats(
-    conn: sqlite3.Connection, offers: pd.DataFrame, daily: pd.DataFrame, now: datetime
+    conn: sqlite3.Connection,
+    offers: pd.DataFrame,
+    daily: pd.DataFrame,
+    store_daily: pd.DataFrame,
+    now: datetime,
 ) -> int:
     conn.execute("DELETE FROM product_stats")
     today = local_date(now)
@@ -252,8 +288,19 @@ def _rebuild_product_stats(
         history.setdefault(int(record["product_id"]), []).append(
             (str(record["date"]), float(record["min_usd"]))
         )
+    store_history: dict[int, dict[str, list[tuple[str, float]]]] = {}
+    for record in store_daily.sort_values("date").to_dict("records"):
+        store_history.setdefault(int(record["product_id"]), {}).setdefault(
+            str(record["store_id"]), []
+        ).append((str(record["date"]), float(record["min_usd"])))
+    current_by_store: dict[int, dict[str, float]] = {}
+    for offer in offers.to_dict("records"):
+        prices = current_by_store.setdefault(int(offer["product_id"]), {})
+        store, price = str(offer["store_id"]), float(offer["price_usd"])
+        prices[store] = min(price, prices.get(store, price))
     best = _best_offers(offers)
     since_180 = (today - timedelta(days=180)).isoformat()
+    known_since = (today - timedelta(days=HISTORIC_LOW_MIN_DAYS)).isoformat()
 
     rows = []
     for pid in set(history) | set(best):
@@ -261,20 +308,29 @@ def _rebuild_product_stats(
         prices = [price for _, price in series]
         recent = [price for d, price in series if d >= since_180]
         offer = best.get(pid)
+        stores = store_history.get(pid, {})
         changes: dict[int, float | None] = {7: None, 30: None}
         if offer is not None:
             for days in changes:
-                past = _value_on_or_before(series, today - timedelta(days=days))
-                changes[days] = round((offer.price_usd - past) / past, 4) if past else None
+                changes[days] = _like_for_like_change(
+                    current_by_store.get(pid, {}), stores, today - timedelta(days=days)
+                )
         last_change = None
         for (_, previous), (day, price) in zip(series, series[1:], strict=False):
             if round(price, 2) != round(previous, 2):
                 last_change = day
         # A flat price is not a "historic low": the product must have been at
-        # least 2% more expensive at some point of its history.
+        # least 2% more expensive at some point of its history. The store with
+        # the best price must also have been tracked for this product for a
+        # while, otherwise a store that just joined would look like a record low.
+        best_store_since = (
+            stores[offer.store_id][0][0] if offer is not None and offer.store_id in stores else None
+        )
         is_low = bool(
             offer is not None
             and len(series) >= HISTORIC_LOW_MIN_DAYS
+            and best_store_since is not None
+            and best_store_since <= known_since
             and offer.price_usd <= min(prices) + 0.005
             and max(prices) >= offer.price_usd * 1.02
         )

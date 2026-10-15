@@ -117,6 +117,7 @@ stores:
     # while it works from a home connection. Disabled so scheduled runs stay green;
     # its history stays in the DB. Re-enable with a self-hosted runner if needed.
     enabled: false
+    pause_reason: La tienda bloquea las lecturas automáticas desde servidores en la nube.
     categories:
       gpu: [/tarjetas-de-video]
       cpu: [/procesadores]
