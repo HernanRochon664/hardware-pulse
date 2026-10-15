@@ -58,8 +58,8 @@ def test_unseen_listings_are_deactivated_and_relisting_starts_new_period(db_conn
         repository.record_observation(db_conn, make_listing(url=other, price=980, at=T0), 980)
     run2 = T0 + timedelta(days=1)
     with db_conn:
-        repository.record_observation(db_conn, make_listing(at=run2), 1050)
-        delisted = repository.deactivate_unseen(db_conn, "thot", Category.GPU, run2)
+        seen = repository.record_observation(db_conn, make_listing(at=run2), 1050)
+        delisted = repository.deactivate_unseen(db_conn, "thot", Category.GPU, {seen.listing_id})
     assert delisted == 1
     active = db_conn.execute("SELECT url, is_active FROM listings ORDER BY id").fetchall()
     assert [r["is_active"] for r in active] == [1, 0]

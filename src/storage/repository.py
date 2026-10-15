@@ -16,6 +16,7 @@ Business rules implemented here (each one is covered by tests):
 
 from __future__ import annotations
 
+import json
 import sqlite3
 import statistics
 import urllib.parse
@@ -263,15 +264,16 @@ def record_observation(
 
 
 def deactivate_unseen(
-    conn: sqlite3.Connection, store_id: str, category: Category, run_started_at: datetime
+    conn: sqlite3.Connection, store_id: str, category: Category, seen_ids: set[int]
 ) -> int:
-    """Rule 2: listings not seen since the run started are no longer published."""
+    """Rule 2: listings of the store/category not seen in this run are no longer published."""
     cur = conn.execute(
         """
         UPDATE listings SET is_active = 0
-        WHERE store_id = ? AND category = ? AND is_active = 1 AND last_seen_at < ?
+        WHERE store_id = ? AND category = ? AND is_active = 1
+          AND id NOT IN (SELECT value FROM json_each(?))
         """,
-        (store_id, category.value, to_iso(run_started_at)),
+        (store_id, category.value, json.dumps(sorted(seen_ids))),
     )
     return cur.rowcount
 
