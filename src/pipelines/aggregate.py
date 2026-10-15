@@ -270,10 +270,13 @@ def _rebuild_product_stats(
         for (_, previous), (day, price) in zip(series, series[1:], strict=False):
             if round(price, 2) != round(previous, 2):
                 last_change = day
+        # A flat price is not a "historic low": the product must have been at
+        # least 2% more expensive at some point of its history.
         is_low = bool(
             offer is not None
             and len(series) >= HISTORIC_LOW_MIN_DAYS
             and offer.price_usd <= min(prices) + 0.005
+            and max(prices) >= offer.price_usd * 1.02
         )
         rows.append(
             (
