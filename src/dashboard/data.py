@@ -234,8 +234,9 @@ def signal(product_id: int) -> dict | None:
 
 
 @st.cache_data(ttl=CACHE_TTL)
-def active_model() -> dict | None:
-    df = _query("SELECT * FROM model_registry WHERE is_active = 1 ORDER BY trained_at DESC LIMIT 1")
+def latest_model() -> dict | None:
+    """The published model, or else the last one trained (shown as not published)."""
+    df = _query("SELECT * FROM model_registry ORDER BY is_active DESC, trained_at DESC LIMIT 1")
     if df.empty:
         return None
     row = df.iloc[0].to_dict()

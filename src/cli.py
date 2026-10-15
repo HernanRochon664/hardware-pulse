@@ -77,14 +77,14 @@ def cmd_aggregate(args: argparse.Namespace) -> int:
 
 
 def cmd_train(args: argparse.Namespace) -> int:
-    from src.ml.pipeline import train_and_register
+    from src.ml.signals import train_and_register
 
     train_and_register(connect(args.db))
     return EXIT_OK
 
 
 def cmd_signals(args: argparse.Namespace) -> int:
-    from src.ml.pipeline import publish_signals
+    from src.ml.signals import publish_signals
 
     publish_signals(connect(args.db))
     return EXIT_OK
@@ -101,7 +101,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    from src.ml.pipeline import publish_signals, train_if_stale
+    from src.ml.signals import publish_signals, train_if_stale
     from src.pipelines.aggregate import aggregate
     from src.pipelines.resolve import resolve_listings
     from src.pipelines.scrape import scrape_stores
