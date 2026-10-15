@@ -113,6 +113,10 @@ stores:
     name: Banifox
     base_url: https://www.banifox.com
     platform: nopcommerce
+    # CloudFront answers HTTP 405 to GitHub Actions (datacenter) IPs since 2026-10-15,
+    # while it works from a home connection. Disabled so scheduled runs stay green;
+    # its history stays in the DB. Re-enable with a self-hosted runner if needed.
+    enabled: false
     categories:
       gpu: [/tarjetas-de-video]
       cpu: [/procesadores]
