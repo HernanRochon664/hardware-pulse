@@ -1,31 +1,30 @@
 # Hardware Pulse Agent Guide
 
 ## Developer Commands
-- **Full Pipeline** (recommended): `uv run scripts/run_pipeline.py`
-- **CI**: `.github/workflows/ci.yml` runs ruff, pyright, unit tests, and E2E tests
-- **Ingestion** (standalone): `uv run scripts/run_ingest.py`
-- **Entity Resolution** (standalone): `uv run scripts/run_resolve.py`
-- **Feature Engineering** (standalone): `uv run scripts/run_features.py --since YYYY-MM-DD`
-- **Tests**: `pytest`
-- **Lint/Format**: `ruff check .` and `ruff format .`
-- **Typecheck**: `pyright`
-
-## Pipeline Order (Required)
-> `run_pipeline.py` runs all three stages sequentially and stops on error.
-Individual stages: `run_ingest.py` → `run_resolve.py` → `run_features.py`
+- **Full pipeline**: `uv run python -m src.cli run` (scrape → resolve → aggregate → signals)
+- **Without network**: `uv run python -m src.cli run --skip-scrape`
+- **Single stages**: `scrape [--dry-run]`, `resolve [--full]`, `aggregate`, `train`, `signals`, `status`
+- **Dashboard**: `uv run streamlit run streamlit_app.py` (`HP_DB_PATH` points it at a local DB)
+- **Published data**: `uv run python -m src.cli pull-data`
+- **Lint/format**: `uv run ruff check .` and `uv run ruff format .`
+- **Typecheck**: `uv run pyright`
+- **Tests**: `uv run pytest` (offline); `uv run pytest -m e2e tests/e2e`; `uv run pytest -m live`
+- Recommended verification order: ruff → pyright → pytest
 
 ## Architecture & Flow
-- **Pipeline**: `src/scrapers/` → `src/storage/` → `src/pipelines/` (resolution) → `src/features/` → `src/models/`
-- **Unit of Analysis**: Canonical product SKU aggregated weekly
-- **Data Store**: SQLite at `data/hardware_pulse.db`
-- **Target**: Median market price (USD) to reduce outlier impact
+- `src/scrapers/` (3 platform adapters, 10 stores) → `src/storage/` (SQLite + migrations)
+  → `src/entities/` (strict spec parsers) → `src/pipelines/` → `src/ml/` → `src/dashboard/`
+- **Unit of analysis**: exact product (fingerprint), grouped into families (chip/model)
+- **History**: `price_periods`, change-based; derived tables are rebuilt on every run
+- **Current price**: min USD over active, new, in-stock, fresh, issue-free offers
+- **Data store**: `data/hardware_pulse.db` locally; published as the `data-latest` Release asset
 
 ## Configuration
-- Scraper config: `configs/scrapers.yaml` (enable/disable sources, rate limits)
-- Canonical catalog: `configs/catalog.yaml` (product reference data)
-- Env vars: `.env` required for ingestion (MercadoLibre credentials)
+- Stores: `configs/stores.yaml` (platform, categories, delays)
+- Taxonomy: `configs/taxonomy.yaml` (brands, lines, modifiers, condition/accessory words)
+- Paths and time zone: `src/settings.py` (`HP_DB_PATH`, `HP_DATA_URL`)
 
-## Testing & Verification
-- Use `pytest`
-- Playwright for scraping tests via `pytest-playwright`
-- Recommended verification order: `ruff check .` → `pyright` → `pytest`
+## Rules
+- Never merge products by guessing; extend the gold set when changing resolution.
+- Schema changes go in a new file under `src/storage/migrations/`.
+- Scheduled scraping runs in GitHub Actions; ask before pushing, releasing or running workflows.
