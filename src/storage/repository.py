@@ -1,233 +1,306 @@
 """
-Repository layer for hardware-pulse.
+Write-side data access for the scrape pipeline.
 
-Responsibilities:
-- Persist RawListing objects to SQLite
-- Deduplicate via listing_key (upsert semantics)
-- Expose simple query helpers for pipeline use
+Business rules implemented here (each one is covered by tests):
 
-Does NOT:
-- Define schema (see schema.py)
-- Normalize or enrich data
-- Contain business logic
+1. Price periods: an observation extends the open period of its listing when
+   the price, regular price, currency and stock state are unchanged and the
+   listing was still active (i.e. it was not missing from any successful run
+   since it was last seen). Otherwise a new period starts. Re-running the
+   scrape on the same day is therefore idempotent.
+2. Delisting: after a successful run of (store, category), listings of that
+   store/category that were not seen in the run become inactive.
+3. Anomalies: a run with zero listings, or with fewer than half the median of
+   the last successful runs, never deactivates anything (see classify_run).
 """
 
-import hashlib
-import logging
+from __future__ import annotations
+
+import json
 import sqlite3
+import statistics
+import urllib.parse
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime
 
-from src.domain.models import RawListing, ResolvedListing
+from src.domain.models import Category, ScrapedListing
+from src.settings import to_iso
 
-logger = logging.getLogger(__name__)
+TRACKING_PARAMS = {
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "fbclid",
+    "gclid",
+    "srsltid",
+}
 
-
-# ---------------------------------------------------------------------------
-# Result type
-# ---------------------------------------------------------------------------
-
-
-@dataclass
-class UpsertResult:
-    id: int
-    inserted: bool
-    updated: bool
-
-
-# ---------------------------------------------------------------------------
-# Key derivation
-# ---------------------------------------------------------------------------
+ANOMALY_RATIO = 0.5
+ANOMALY_WINDOW = 7
 
 
-def _compute_listing_key(listing: RawListing) -> str:
-    """
-    Derive a deterministic deduplication key for a listing.
-
-    Strategy:
-    - MercadoLibre: hash(source + ":" + item_id)
-    - Retailers:    hash(source + ":" + normalized_url)
-
-    We prefer item_id for MercadoLibre because it is stable across
-    scrape runs even if the URL changes (e.g. title slug updates).
-    For retailers, the URL is the only stable identifier we have.
-    """
-    source = listing.source.value
-    identifier = listing.item_id if listing.item_id else _normalize_url(str(listing.url))
-    raw = f"{source}:{identifier}"
-    return hashlib.sha256(raw.encode()).hexdigest()
-
-
-def _normalize_url(url: str) -> str:
-    """
-    Normalize a URL to a canonical form for stable hashing.
-
-    Removes:
-    - Trailing slashes
-    - UTM and tracking query params
-    - Protocol and www prefix differences
-
-    Normalization ensures that the same product URL with minor
-    variations (utm_source, trailing slash) maps to the same key.
-    """
-    import urllib.parse
-
-    parsed = urllib.parse.urlparse(url.lower().rstrip("/"))
-
-    # Strip known tracking params
-    TRACKING_PARAMS = {"utm_source", "utm_medium", "utm_campaign", "fbclid", "gclid"}
-    query_params = urllib.parse.parse_qs(parsed.query)
-    clean_params = {k: v for k, v in query_params.items() if k not in TRACKING_PARAMS}
-    clean_query = urllib.parse.urlencode(clean_params, doseq=True)
-
-    normalized = parsed._replace(query=clean_query, fragment="")
-    return urllib.parse.urlunparse(normalized)
+def canonical_url(url: str) -> str:
+    """Stable identity for a product URL: lowercase host, no fragment/tracking params."""
+    parsed = urllib.parse.urlsplit(url.strip())
+    query = [
+        (k, v)
+        for k, v in urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
+        if k.lower() not in TRACKING_PARAMS
+    ]
+    return urllib.parse.urlunsplit(
+        (
+            (parsed.scheme or "https").lower(),
+            parsed.netloc.lower(),
+            parsed.path or "/",
+            urllib.parse.urlencode(query),
+            "",
+        )
+    )
 
 
 # ---------------------------------------------------------------------------
-# Upsert
+# Stores and scrape runs
 # ---------------------------------------------------------------------------
 
 
-def upsert_raw_listing(listing: RawListing, conn: sqlite3.Connection) -> UpsertResult:
-    listing_key = _compute_listing_key(listing)
-    now = datetime.now(UTC).isoformat()
-    params = {
-        "listing_key": listing_key,
-        "source": listing.source.value,
-        "item_id": listing.item_id,
-        "url": str(listing.url),
-        "timestamp": listing.timestamp.isoformat(),
-        "title": listing.title,
-        "price": listing.price,
-        "currency": listing.currency.value,
-        "seller": listing.seller,
-        "condition": listing.condition.value if listing.condition else None,
-        "available_quantity": listing.available_quantity,
-        "base_price": listing.base_price,
-        "now": now,
-    }
-
+def sync_stores(conn: sqlite3.Connection, stores: list[tuple[str, str, str, str]]) -> None:
+    """Upsert (id, name, base_url, platform) rows."""
     with conn:
-        existing = conn.execute(
-            "SELECT id, price FROM raw_listings WHERE listing_key = ?",
-            (listing_key,),
-        ).fetchone()
-
-        if existing is not None and existing["price"] == listing.price:
-            return UpsertResult(id=existing["id"], inserted=False, updated=False)
-
-        cursor = conn.execute(
+        conn.executemany(
             """
-            INSERT INTO raw_listings (
-                listing_key, source, item_id, url, timestamp,
-                title, price, currency, seller,
-                condition, available_quantity, base_price,
-                created_at, updated_at
-            ) VALUES (
-                :listing_key, :source, :item_id, :url, :timestamp,
-                :title, :price, :currency, :seller,
-                :condition, :available_quantity, :base_price,
-                :now, :now
-            ) ON CONFLICT (listing_key) DO UPDATE SET
-                price = excluded.price,
-                updated_at = excluded.updated_at
+            INSERT INTO stores (id, name, base_url, platform) VALUES (?, ?, ?, ?)
+            ON CONFLICT (id) DO UPDATE SET
+                name = excluded.name, base_url = excluded.base_url, platform = excluded.platform
             """,
-            params,
+            stores,
         )
 
-        row_id = cursor.lastrowid
-        if row_id is None:
-            raise RuntimeError("Invariant violated: lastrowid is None after INSERT")
 
-        inserted = existing is None
-        logger.debug(
-            "%s listing_key=%s title=%r",
-            "Inserted" if inserted else "Updated",
-            listing_key[:8],
-            listing.title,
-        )
-
-        return UpsertResult(id=row_id, inserted=inserted, updated=not inserted)
-
-
-def insert_price_snapshot(resolved: ResolvedListing, conn: sqlite3.Connection) -> int:
-    """Insert a resolved listing as a price snapshot. Returns the new row id."""
-    if not resolved.canonical_product_id:
-        raise ValueError(
-            "ResolvedListing must have canonical_product_id before inserting a price snapshot."
-        )
-
-    with conn:  # context manager → auto commit or rollback
-        cursor = conn.execute(
+def start_scrape_run(
+    conn: sqlite3.Connection, run_id: str, store_id: str, category: Category, started_at: datetime
+) -> int:
+    with conn:
+        cur = conn.execute(
             """
-            INSERT INTO price_snapshots (
-                timestamp, canonical_product_id, source, seller,
-                listing_id, price, currency, price_usd, availability
-            ) VALUES (
-                :timestamp, :canonical_product_id, :source, :seller,
-                :listing_id, :price, :currency, :price_usd, :availability
-            )
+            INSERT INTO scrape_runs (run_id, store_id, category, started_at, status)
+            VALUES (?, ?, ?, ?, 'running')
             """,
-            {
-                "timestamp": resolved.timestamp.isoformat(),
-                "canonical_product_id": resolved.canonical_product_id,
-                "source": resolved.source.value,
-                "seller": resolved.seller,
-                "listing_id": resolved.item_id,
-                "price": resolved.price,
-                "currency": resolved.currency.value,
-                "price_usd": resolved.price_usd
-                if resolved.price_usd is not None
-                else resolved.price,
-                "availability": resolved.available_quantity,
-            },
+            (run_id, store_id, category.value, to_iso(started_at)),
         )
-
-        row_id = cursor.lastrowid
-    if row_id is None:
-        raise RuntimeError("Invariant violated: lastrowid is None after inserting price snapshot")
-
-    return row_id
+    assert cur.lastrowid is not None
+    return cur.lastrowid
 
 
-# ---------------------------------------------------------------------------
-# Query helpers
-# ---------------------------------------------------------------------------
-
-
-def get_latest_listings(
+def finish_scrape_run(
     conn: sqlite3.Connection,
-    source: str | None = None,
-    limit: int = 100,
-) -> list[sqlite3.Row]:
-    """
-    Retrieve the most recently updated listings.
-
-    Args:
-        conn:   Open sqlite3.Connection.
-        source: Optional filter by source (e.g. "mercadolibre").
-        limit:  Maximum rows to return.
-
-    Returns:
-        List of sqlite3.Row objects (accessible as dicts).
-    """
-    if source:
-        return conn.execute(
+    scrape_run_id: int,
+    *,
+    status: str,
+    finished_at: datetime,
+    n_found: int = 0,
+    n_new: int = 0,
+    n_changed: int = 0,
+    n_delisted: int = 0,
+    error: str | None = None,
+) -> None:
+    with conn:
+        conn.execute(
             """
-            SELECT * FROM raw_listings
-            WHERE source = ?
-            ORDER BY updated_at DESC
-            LIMIT ?
+            UPDATE scrape_runs
+            SET status = ?, finished_at = ?, n_found = ?, n_new = ?, n_changed = ?,
+                n_delisted = ?, error = ?
+            WHERE id = ?
             """,
-            (source, limit),
-        ).fetchall()
+            (
+                status,
+                to_iso(finished_at),
+                n_found,
+                n_new,
+                n_changed,
+                n_delisted,
+                error,
+                scrape_run_id,
+            ),
+        )
 
-    return conn.execute(
+
+def classify_run(conn: sqlite3.Connection, store_id: str, category: Category, n_found: int) -> str:
+    """Return 'ok', 'empty' or 'anomaly' for a scrape that finished without errors."""
+    if n_found == 0:
+        return "empty"
+    rows = conn.execute(
         """
-        SELECT * FROM raw_listings
-        ORDER BY updated_at DESC
-        LIMIT ?
+        SELECT n_found FROM scrape_runs
+        WHERE store_id = ? AND category = ? AND status = 'ok'
+        ORDER BY started_at DESC LIMIT ?
         """,
-        (limit,),
+        (store_id, category.value, ANOMALY_WINDOW),
     ).fetchall()
+    if rows:
+        median = statistics.median(r[0] for r in rows)
+        if n_found < ANOMALY_RATIO * median:
+            return "anomaly"
+    return "ok"
+
+
+# ---------------------------------------------------------------------------
+# Listings and price periods
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ObservationResult:
+    listing_id: int
+    is_new_listing: bool
+    price_changed: bool
+
+
+def record_observation(
+    conn: sqlite3.Connection, listing: ScrapedListing, price_usd: float
+) -> ObservationResult:
+    """
+    Upsert the listing and extend or open its price period (rule 1).
+
+    Must be called inside a transaction managed by the caller.
+    """
+    url = canonical_url(listing.url)
+    seen = to_iso(listing.scraped_at)
+    row = conn.execute(
+        "SELECT id, is_active FROM listings WHERE store_id = ? AND url = ?",
+        (listing.store_id, url),
+    ).fetchone()
+
+    if row is None:
+        cur = conn.execute(
+            """
+            INSERT INTO listings (
+                store_id, url, store_sku, title, category, brand, image_url,
+                first_seen_at, last_seen_at, is_active
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+            """,
+            (
+                listing.store_id,
+                url,
+                listing.store_sku,
+                listing.title,
+                listing.category.value,
+                listing.brand,
+                listing.image_url,
+                seen,
+                seen,
+            ),
+        )
+        assert cur.lastrowid is not None
+        listing_id, was_active, is_new = cur.lastrowid, False, True
+    else:
+        listing_id, was_active, is_new = row["id"], bool(row["is_active"]), False
+        conn.execute(
+            """
+            UPDATE listings SET
+                title = ?, store_sku = COALESCE(?, store_sku), category = ?,
+                brand = COALESCE(?, brand), image_url = COALESCE(?, image_url),
+                last_seen_at = ?, is_active = 1
+            WHERE id = ?
+            """,
+            (
+                listing.title,
+                listing.store_sku,
+                listing.category.value,
+                listing.brand,
+                listing.image_url,
+                seen,
+                listing_id,
+            ),
+        )
+
+    in_stock = None if listing.in_stock is None else int(listing.in_stock)
+    open_period = conn.execute(
+        """
+        SELECT id, price, regular_price, currency, in_stock, last_seen FROM price_periods
+        WHERE listing_id = ? ORDER BY valid_from DESC, id DESC LIMIT 1
+        """,
+        (listing_id,),
+    ).fetchone()
+
+    unchanged = (
+        open_period is not None
+        and was_active
+        and open_period["price"] == listing.price
+        and open_period["regular_price"] == listing.regular_price
+        and open_period["currency"] == listing.currency.value
+        and open_period["in_stock"] == in_stock
+    )
+    if unchanged:
+        assert open_period is not None
+        if seen > open_period["last_seen"]:
+            conn.execute(
+                "UPDATE price_periods SET last_seen = ? WHERE id = ?", (seen, open_period["id"])
+            )
+        return ObservationResult(listing_id, is_new, price_changed=False)
+
+    conn.execute(
+        """
+        INSERT INTO price_periods (
+            listing_id, price, regular_price, currency, price_usd, in_stock, valid_from, last_seen
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            listing_id,
+            listing.price,
+            listing.regular_price,
+            listing.currency.value,
+            round(price_usd, 2),
+            in_stock,
+            seen,
+            seen,
+        ),
+    )
+    price_changed = open_period is not None and (
+        open_period["price"] != listing.price or open_period["in_stock"] != in_stock
+    )
+    return ObservationResult(listing_id, is_new, price_changed=price_changed)
+
+
+def deactivate_unseen(
+    conn: sqlite3.Connection, store_id: str, category: Category, seen_ids: set[int]
+) -> int:
+    """Rule 2: listings of the store/category not seen in this run are no longer published."""
+    cur = conn.execute(
+        """
+        UPDATE listings SET is_active = 0
+        WHERE store_id = ? AND category = ? AND is_active = 1
+          AND id NOT IN (SELECT value FROM json_each(?))
+        """,
+        (store_id, category.value, json.dumps(sorted(seen_ids))),
+    )
+    return cur.rowcount
+
+
+# ---------------------------------------------------------------------------
+# FX rates
+# ---------------------------------------------------------------------------
+
+
+def get_fx_rate(conn: sqlite3.Connection, day: str) -> float | None:
+    """USD/UYU rate for a local date, falling back to the latest earlier rate."""
+    row = conn.execute(
+        "SELECT usd_uyu FROM fx_rates WHERE date <= ? ORDER BY date DESC LIMIT 1", (day,)
+    ).fetchone()
+    return float(row[0]) if row else None
+
+
+def save_fx_rate(
+    conn: sqlite3.Connection, day: str, rate: float, source: str, fetched_at: datetime
+) -> None:
+    with conn:
+        conn.execute(
+            """
+            INSERT INTO fx_rates (date, usd_uyu, source, fetched_at) VALUES (?, ?, ?, ?)
+            ON CONFLICT (date) DO UPDATE SET
+                usd_uyu = excluded.usd_uyu, source = excluded.source,
+                fetched_at = excluded.fetched_at
+            """,
+            (day, rate, source, to_iso(fetched_at)),
+        )

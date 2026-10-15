@@ -1,163 +1,74 @@
-"""
-End-to-end tests for the Hardware Pulse Streamlit dashboard.
+"""Drive the dashboard with Playwright against the synthetic fixture database."""
 
-Uses Playwright to verify:
-- Dashboard loads and displays correctly
-- Category filter works
-- Price history chart renders
-- Deal section is present when data exists
-"""
+from __future__ import annotations
 
-import subprocess
-import sys
-import time
-from pathlib import Path
-from urllib.parse import urljoin
+import re
 
 import pytest
-import requests
+from playwright.sync_api import Page, expect
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+pytestmark = pytest.mark.e2e
 
-HERE = Path(__file__).parent.parent.parent.resolve()
-STREAMLIT_PORT = 8592
-STREAMLIT_URL = f"http://localhost:{STREAMLIT_PORT}"
-
-# Allow up to 60s for Streamlit to start
-POLL_INTERVAL = 1.0
-START_TIMEOUT = 60.0
+TIMEOUT = 20_000
 
 
-@pytest.fixture(scope="module")
-def streamlit_server():
-    """Start Streamlit as a subprocess, yield once ready, tear down."""
-    proc = subprocess.Popen(
-        [
-            sys.executable,
-            "-m",
-            "streamlit",
-            "run",
-            str(HERE / "src/dashboard/app.py"),
-            "--server.port",
-            str(STREAMLIT_PORT),
-            "--server.headless",
-            "true",
-            "--browser.gatherUsageStats",
-            "false",
-            "--global.developmentMode",
-            "false",
-        ],
-        cwd=HERE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        env={**__import__("os").environ, "STREAMLIT_SERVER_HEADLESS": "true"},
+def _open(page: Page, url: str) -> None:
+    page.goto(url)
+    expect(page.locator('[data-testid="stMain"]')).to_be_visible(timeout=TIMEOUT)
+    expect(page.locator('[data-testid="stStatusWidget"]')).to_have_count(0, timeout=TIMEOUT)
+
+
+def _no_exceptions(page: Page) -> None:
+    expect(page.locator('[data-testid="stException"]')).to_have_count(0)
+
+
+def test_home_shows_kpis_and_recent_drops(page: Page, app_url: str):
+    _open(page, app_url)
+    expect(page.get_by_role("heading", name="Hardware Pulse")).to_be_visible(timeout=TIMEOUT)
+    expect(page.get_by_text("Bajaron en los últimos 7 días")).to_be_visible()
+    expect(page.get_by_role("link", name=re.compile("RTX 5060 8GB Eagle OC"))).to_be_visible()
+    _no_exceptions(page)
+
+
+def test_catalog_category_comes_from_query_params(page: Page, app_url: str):
+    _open(page, f"{app_url}/catalogo?cat=ram")
+    expect(page.get_by_text("1 producto", exact=False)).to_be_visible(timeout=TIMEOUT)
+    expect(page.get_by_role("link", name=re.compile("Kingston Fury Beast"))).to_be_visible()
+    expect(page.get_by_role("link", name=re.compile("RTX 5070"))).to_have_count(0)
+    _no_exceptions(page)
+
+
+def test_catalog_search_narrows_results(page: Page, app_url: str):
+    _open(page, f"{app_url}/catalogo")
+    search = page.get_by_label("Buscar")
+    search.fill("5070")
+    search.press("Enter")
+    expect(page.get_by_role("link", name=re.compile("RTX 5070 12GB Shadow"))).to_be_visible(
+        timeout=TIMEOUT
     )
-
-    started = time.monotonic()
-    while time.monotonic() - started < START_TIMEOUT:
-        try:
-            resp = requests.get(urljoin(STREAMLIT_URL, "_stcore/health"), timeout=5)
-            if resp.status_code == 200:
-                break
-        except requests.ConnectionError:
-            pass
-        time.sleep(POLL_INTERVAL)
-    else:
-        proc.terminate()
-        proc.wait(5)
-        pytest.fail("Streamlit did not start within timeout")
-
-    yield STREAMLIT_URL
-
-    proc.terminate()
-    proc.wait(5)
+    expect(page.get_by_role("link", name=re.compile("Eagle OC"))).to_have_count(0)
 
 
-def _wait_for_page_ready(page, timeout=20000):
-    page.wait_for_load_state("networkidle")
-    page.wait_for_selector('[data-testid="stAppViewContainer"]', timeout=timeout)
-    page.wait_for_timeout(3000)
+def test_product_page_shows_best_offer_history_and_store_link(page: Page, app_url: str):
+    _open(page, f"{app_url}/catalogo?cat=gpu")
+    page.get_by_role("link", name=re.compile("RTX 5060 8GB Eagle OC")).first.click()
+    expect(page.get_by_text("PRECIO MÁS BAJO", exact=False)).to_be_visible(timeout=TIMEOUT)
+    expect(page.locator(".hp-price")).to_contain_text("U$S 560")
+    store_link = page.get_by_role("link", name="Ver en Alfa")
+    expect(store_link).to_have_attribute("href", "https://alfa.example/p/eagle")
+    expect(page.locator(".js-plotly-plot").first).to_be_visible(timeout=TIMEOUT)
+    expect(page.get_by_text("no disponible para este producto")).to_be_visible()
+    _no_exceptions(page)
 
 
-@pytest.fixture
-def page(context, streamlit_server):
-    page = context.new_page()
-    page.goto(streamlit_server)
-    _wait_for_page_ready(page)
-    yield page
-    page.close()
+def test_currency_toggle_shows_pesos(page: Page, app_url: str):
+    _open(page, f"{app_url}/catalogo?cat=ram")
+    page.get_by_text("Pesos ($)").click()
+    expect(page.locator(".hp-price-small")).to_have_text("$ 2.880", timeout=TIMEOUT)  # 72 USD x 40
 
 
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
-
-
-class TestDashboardLoads:
-    def test_page_title(self, page):
-        assert "Hardware Pulse" in page.title()
-
-    def test_page_header(self, page):
-        header = page.locator("h1")
-        assert header.is_visible()
-
-    def test_sidebar_slider_present(self, page):
-        slider = page.locator('section[data-testid="stSidebar"] div[data-testid="stSlider"]')
-        assert slider.is_visible()
-
-    def test_multiselect_filter_present(self, page):
-        multiselect = page.locator('div[data-testid="stMultiSelect"]')
-        assert multiselect.is_visible()
-
-    def test_two_tabs_rendered(self, page):
-        page.wait_for_selector('[data-testid="stTab"]', state="attached", timeout=15000)
-        tabs = page.locator('[data-testid="stTab"]')
-        count = tabs.count()
-        assert count == 2, f"Expected 2 tabs, got {count}"
-
-
-class TestDashboardFilter:
-    def test_filter_shows_categories(self, page):
-        multiselect = page.locator('div[data-testid="stMultiSelect"]')
-        multiselect.click()
-        options = page.locator('li[role="option"]')
-        if options.count() > 0:
-            assert options.first.is_visible()
-
-    def test_selecting_category_filters_table(self, page):
-        table = page.locator('div[data-testid="stDataFrame"]')
-        if not table.is_visible():
-            pytest.skip("No data table rendered (likely empty DB)")
-
-    def test_best_deals_section(self, page):
-        deals = page.locator("text=Best Deals")
-        if deals.is_visible():
-            assert deals.is_visible()
-
-
-class TestDashboardProductTab:
-    def test_product_tab_switch(self, page):
-        tabs = page.locator('[data-testid="stTab"]')
-        if tabs.count() >= 2:
-            tabs.nth(1).click()
-            page.wait_for_timeout(1000)
-            select = page.locator('div[data-testid="stSelectbox"]')
-            assert select.is_visible()
-
-    def test_price_chart_renders(self, page):
-        tabs = page.locator('[data-testid="stTab"]')
-        if tabs.count() >= 2:
-            tabs.nth(1).click()
-            page.wait_for_timeout(2000)
-            chart = page.locator('div[data-testid="stPlotlyChart"]')
-            if chart.is_visible():
-                assert chart.is_visible()
-
-
-class TestDashboardDataPresence:
-    def test_dataframe_or_warning(self, page):
-        table = page.locator('div[data-testid="stDataFrame"]')
-        warning = page.locator("text=No data")
-        assert table.is_visible() or warning.is_visible()
+@pytest.mark.parametrize("path", ["familias", "estado", "modelo"])
+def test_secondary_pages_render(page: Page, app_url: str, path: str):
+    _open(page, f"{app_url}/{path}")
+    expect(page.locator("h1").first).to_be_visible(timeout=TIMEOUT)
+    _no_exceptions(page)

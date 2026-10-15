@@ -1,41 +1,30 @@
 # Known Issues
 
-## Playwright E2E Tests (Resolved)
+v1 issues are archived in [`legacy/known_issues_v1.md`](legacy/known_issues_v1.md).
 
-**History:** `tests/e2e/test_dashboard.py` initially failed due to missing system libraries (`libnspr4`, `libnss3`, etc.) and incorrect selectors for Streamlit 1.57+ (slider uses `stSlider` div, not `input[type="range"]`; DataFrame uses `stDataFrame`, not `stTable`).
+## Buy/wait signal not published yet
 
-**Resolution:** System dependencies installed and selectors updated. All 11 E2E tests pass.
+The gate rejects the current model (Brier skill −0.42 against the baseline on the
+legacy history, see ADR-06), so products show "Señal no disponible". This is
+expected until there are a few months of clean v2 history.
 
-**Relevant commits:** `7523b9b`
+## Legacy history has unknown stock
 
-## Hardcoded ±10% Confidence Intervals
+Periods imported from v1 have no reliable stock information and cover fewer
+stores before August 2026. Charts and the backtest treat them separately.
 
-**Location:** `scripts/run_inference.py:112-113`
+## Conservative grouping leaves some offers apart
 
-**Issue:** Prediction bounds are hardcoded as `pred_val * 0.9` and `pred_val * 1.1` instead of being derived from model uncertainty or historical forecast error.
+Listings whose line is not in `configs/taxonomy.yaml` become products of their
+own inside the right family. Review `qa-report` and extend the taxonomy and
+the gold set when a store's naming is new.
 
-**Planned fix:** Replace with a dynamic interval based on historical MAPE or residual standard deviation from the last training run.
+## Banifox stock is unknown
 
-**Status:** Accepted for MVP. Tracked for Phase 4.
+The nopCommerce listing pages do not show availability, so Banifox offers have
+`in_stock = NULL` and count as available.
 
-## Schema Migrations Not Implemented
+## Datacenter IPs may be blocked
 
-**Issue:** The database schema is applied via `CREATE TABLE IF NOT EXISTS` statements. There is no migration system for evolving the schema over time (adding columns, renaming fields, backfilling data).
-
-**Planned fix:** Implement a `schema_version` table and sequential migration files in `src/storage/migrations/`.
-
-**Status:** Deferred. Schema changes require manual `DROP TABLE` or `ALTER TABLE` for now.
-
-## Structured Logging Not Implemented
-
-**Issue:** The pipeline uses Python's stdlib `logging` with plain-text formatting. There is no structured logging (JSON, log correlation IDs) for centralized log aggregation.
-
-**Planned fix:** Replace `logging.basicConfig` with a structured logger (e.g. `structlog`) that emits JSON-formatted log entries with `run_id` correlation across pipeline stages.
-
-**Status:** Deferred. Not critical for single-machine execution.
-
-## Workaround: `pythonpath = ["."]` in pyproject.toml
-
-**Issue:** Added `pythonpath = ["."]` to `[tool.pytest.ini_options]` in pyproject.toml to allow notebooks to import `src.*` modules without explicit `sys.path` manipulation. This is a pytest workaround, not a production configuration.
-
-**Status:** Acceptable for development. CI should use explicit `sys.path` or `PYTHONPATH` instead.
+If a store starts returning errors only from GitHub Actions, the planned fallback
+is a self-hosted runner for that store.

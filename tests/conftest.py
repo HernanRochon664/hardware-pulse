@@ -1,64 +1,53 @@
-"""
-Shared pytest fixtures for hardware-pulse tests.
-"""
+"""Shared pytest fixtures."""
 
-from datetime import datetime
+from __future__ import annotations
+
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
-from src.domain.models import Condition, Currency, RawListing, Source
-from src.storage.schema import init_db
+from src.domain.models import Category, Currency, ScrapedListing
+from src.storage import repository
+from src.storage.db import connect
 
-# ---------------------------------------------------------------------------
-# Database fixtures
-# ---------------------------------------------------------------------------
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
 @pytest.fixture
 def db_conn():
-    """
-    In-memory SQLite connection for tests.
-
-    Uses :memory: so each test gets a clean database with no
-    state leaking between runs. Connection is closed after the test.
-    """
-    conn = init_db(Path(":memory:"))
+    """Fresh, fully migrated in-memory database with two stores."""
+    conn = connect(":memory:")
+    repository.sync_stores(
+        conn,
+        [
+            ("thot", "Thot", "https://thotcomputacion.com.uy", "woocommerce"),
+            ("banifox", "Banifox", "https://www.banifox.com", "nopcommerce"),
+        ],
+    )
     yield conn
     conn.close()
 
 
-# ---------------------------------------------------------------------------
-# Domain fixtures
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture
-def sample_listing() -> RawListing:
-    """A valid RawListing for use across multiple test modules."""
-    return RawListing(
-        source=Source.THOT,
-        url="https://thotcomputacion.com.uy/producto/rtx-4070",
-        timestamp=datetime.fromisoformat("2026-04-25T12:00:00+00:00"),
-        title="GPU ASUS TUF RTX 4070 OC 12GB",
-        price=750.0,
+def make_listing(
+    *,
+    url: str = "https://thotcomputacion.com.uy/producto/rtx-5070/",
+    title: str = "GPU MSI GeForce RTX 5070 Shadow 2X OC 12GB",
+    price: float = 1050.0,
+    regular_price: float | None = None,
+    in_stock: bool | None = True,
+    store_id: str = "thot",
+    category: Category = Category.GPU,
+    at: datetime | None = None,
+) -> ScrapedListing:
+    return ScrapedListing(
+        store_id=store_id,
+        category=category,
+        url=url,
+        title=title,
+        price=price,
+        regular_price=regular_price,
         currency=Currency.USD,
-        seller="thot",
-        condition=Condition.NEW,
-    )
-
-
-@pytest.fixture
-def sample_listing_with_item_id() -> RawListing:
-    """A valid RawListing with item_id for deduplication tests."""
-    return RawListing(
-        source=Source.THOT,
-        url="https://thotcomputacion.com.uy/producto/MLU123456",
-        timestamp=datetime.fromisoformat("2026-04-25T12:00:00+00:00"),
-        title="RTX 4070 ASUS TUF",
-        price=780.0,
-        currency=Currency.USD,
-        seller="thot",
-        item_id="MLU123456",
-        condition=Condition.NEW,
+        in_stock=in_stock,
+        scraped_at=at or datetime(2026, 10, 14, 12, 0, tzinfo=UTC),
     )

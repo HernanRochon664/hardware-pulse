@@ -1,170 +1,96 @@
-"""
-Tests for src/storage/repository.py
+from datetime import UTC, datetime, timedelta
 
-Covers upsert semantics, deduplication logic, and key derivation.
-Uses an in-memory SQLite connection via the db_conn fixture.
-"""
+from src.domain.models import Category
+from src.storage import repository
+from src.storage.db import connect, migrate
+from tests.conftest import make_listing
 
-from datetime import datetime
-
-from src.domain.models import Currency, RawListing, Source
-from src.storage.repository import _compute_listing_key, upsert_raw_listing
-
-# ---------------------------------------------------------------------------
-# Upsert - insert path
-# ---------------------------------------------------------------------------
+T0 = datetime(2026, 10, 14, 12, 0, tzinfo=UTC)
 
 
-class TestUpsertInsert:
-    def test_new_listing_is_inserted(self, db_conn, sample_listing):
-        result = upsert_raw_listing(sample_listing, db_conn)
-        assert result.inserted is True
-        assert result.updated is False
-        assert result.id is not None
+def _periods(conn):
+    return conn.execute(
+        "SELECT price, in_stock, valid_from, last_seen FROM price_periods ORDER BY id"
+    ).fetchall()
 
-    def test_inserted_listing_exists_in_db(self, db_conn, sample_listing):
-        upsert_raw_listing(sample_listing, db_conn)
-        row = db_conn.execute("SELECT * FROM raw_listings").fetchone()
-        assert row is not None
-        assert row["title"] == sample_listing.title
-        assert row["price"] == sample_listing.price
 
-    def test_listing_with_optional_nulls_inserts(self, db_conn):
-        listing = RawListing(
-            source=Source.THOT,
-            url="https://thotcomputacion.com.uy/producto/rtx-4060",
-            timestamp=datetime.fromisoformat("2026-04-25T12:00:00+00:00"),
-            title="GPU RTX 4060",
-            price=400.0,
-            currency=Currency.USD,
-            seller="thot",
-            # All optional fields left as None
+def test_migrations_are_idempotent():
+    conn = connect(":memory:")
+    assert migrate(conn) == []
+    tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    assert {"listings", "price_periods", "products", "scrape_runs", "signals"} <= tables
+
+
+def test_canonical_url_strips_tracking_and_fragment_but_keeps_path_case():
+    url = "HTTPS://WWW.Banifox.com/Asus-Dual?utm_source=x&id=3#top"
+    assert repository.canonical_url(url) == "https://www.banifox.com/Asus-Dual?id=3"
+
+
+def test_same_price_extends_period_and_is_idempotent(db_conn):
+    with db_conn:
+        first = repository.record_observation(db_conn, make_listing(at=T0), 1050)
+        repository.record_observation(db_conn, make_listing(at=T0 + timedelta(hours=8)), 1050)
+        repository.record_observation(db_conn, make_listing(at=T0 + timedelta(hours=8)), 1050)
+    assert first.is_new_listing
+    periods = _periods(db_conn)
+    assert len(periods) == 1
+    assert periods[0]["last_seen"] == "2026-10-14T20:00:00Z"
+
+
+def test_price_or_stock_change_opens_new_period(db_conn):
+    with db_conn:
+        repository.record_observation(db_conn, make_listing(at=T0), 1050)
+        changed = repository.record_observation(
+            db_conn, make_listing(price=999, at=T0 + timedelta(days=1)), 999
         )
-        result = upsert_raw_listing(listing, db_conn)
-        assert result.inserted is True
-
-
-# ---------------------------------------------------------------------------
-# Upsert - no-op path
-# ---------------------------------------------------------------------------
-
-
-class TestUpsertNoOp:
-    def test_same_listing_twice_is_noop(self, db_conn, sample_listing):
-        first = upsert_raw_listing(sample_listing, db_conn)
-        second = upsert_raw_listing(sample_listing, db_conn)
-
-        assert first.inserted is True
-        assert second.inserted is False
-        assert second.updated is False
-
-    def test_noop_does_not_duplicate_rows(self, db_conn, sample_listing):
-        upsert_raw_listing(sample_listing, db_conn)
-        upsert_raw_listing(sample_listing, db_conn)
-
-        count = db_conn.execute("SELECT COUNT(*) FROM raw_listings").fetchone()[0]
-        assert count == 1
-
-
-# ---------------------------------------------------------------------------
-# Upsert - update path
-# ---------------------------------------------------------------------------
-
-
-class TestUpsertUpdate:
-    def test_price_change_triggers_update(self, db_conn, sample_listing):
-        upsert_raw_listing(sample_listing, db_conn)
-
-        updated_listing = sample_listing.model_copy(update={"price": 699.0})
-        result = upsert_raw_listing(updated_listing, db_conn)
-
-        assert result.updated is True
-        assert result.inserted is False
-
-    def test_updated_price_persisted_in_db(self, db_conn, sample_listing):
-        upsert_raw_listing(sample_listing, db_conn)
-
-        updated_listing = sample_listing.model_copy(update={"price": 699.0})
-        upsert_raw_listing(updated_listing, db_conn)
-
-        row = db_conn.execute("SELECT price FROM raw_listings").fetchone()
-        assert row["price"] == 699.0
-
-    def test_update_does_not_add_new_row(self, db_conn, sample_listing):
-        upsert_raw_listing(sample_listing, db_conn)
-        updated = sample_listing.model_copy(update={"price": 699.0})
-        upsert_raw_listing(updated, db_conn)
-
-        count = db_conn.execute("SELECT COUNT(*) FROM raw_listings").fetchone()[0]
-        assert count == 1
-
-
-# ---------------------------------------------------------------------------
-# Deduplication - URL-based
-# ---------------------------------------------------------------------------
-
-
-class TestDeduplicationByUrl:
-    def test_tracking_params_deduplicated(self, db_conn, sample_listing):
-        """Same product URL with different UTM params → same listing_key."""
-        listing_with_utm = sample_listing.model_copy(
-            update={"url": str(sample_listing.url) + "?utm_source=google&utm_medium=cpc"}
+        repository.record_observation(
+            db_conn, make_listing(price=999, in_stock=False, at=T0 + timedelta(days=2)), 999
         )
-        result1 = upsert_raw_listing(sample_listing, db_conn)
-        result2 = upsert_raw_listing(listing_with_utm, db_conn)
+    assert changed.price_changed
+    assert [p["price"] for p in _periods(db_conn)] == [1050, 999, 999]
+    assert _periods(db_conn)[-1]["in_stock"] == 0
 
-        assert result1.inserted is True
-        assert result2.inserted is False  # treated as same listing
 
-    def test_different_urls_are_different_listings(self, db_conn, sample_listing):
-        listing2 = sample_listing.model_copy(
-            update={"url": "https://thotcomputacion.com.uy/producto/rtx-4060"}
+def test_unseen_listings_are_deactivated_and_relisting_starts_new_period(db_conn):
+    other = "https://thotcomputacion.com.uy/producto/rx-9070/"
+    with db_conn:
+        repository.record_observation(db_conn, make_listing(at=T0), 1050)
+        repository.record_observation(db_conn, make_listing(url=other, price=980, at=T0), 980)
+    run2 = T0 + timedelta(days=1)
+    with db_conn:
+        seen = repository.record_observation(db_conn, make_listing(at=run2), 1050)
+        delisted = repository.deactivate_unseen(db_conn, "thot", Category.GPU, {seen.listing_id})
+    assert delisted == 1
+    active = db_conn.execute("SELECT url, is_active FROM listings ORDER BY id").fetchall()
+    assert [r["is_active"] for r in active] == [1, 0]
+
+    # Same price comes back after being delisted: the gap must not be bridged.
+    with db_conn:
+        repository.record_observation(
+            db_conn, make_listing(url=other, price=980, at=run2 + timedelta(days=3)), 980
         )
-        result1 = upsert_raw_listing(sample_listing, db_conn)
-        result2 = upsert_raw_listing(listing2, db_conn)
-
-        assert result1.inserted is True
-        assert result2.inserted is True
+    prices = [p["price"] for p in _periods(db_conn)]
+    assert prices.count(980) == 2
 
 
-# ---------------------------------------------------------------------------
-# Deduplication - item_id-based
-# ---------------------------------------------------------------------------
+def test_regular_price_not_above_price_is_ignored():
+    listing = make_listing(price=100, regular_price=100)
+    assert listing.regular_price is None
 
 
-class TestDeduplicationByItemId:
-    def test_same_item_id_different_url_is_duplicate(self, db_conn, sample_listing_with_item_id):
-        """item_id takes precedence over URL for ML listings."""
-        listing2 = sample_listing_with_item_id.model_copy(
-            update={"url": "https://www.mercadolibre.com.uy/producto/MLU123456-v2"}
+def test_classify_run_detects_empty_and_anomalous_counts(db_conn):
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 0) == "empty"
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 5) == "ok"
+    for i in range(3):
+        run = repository.start_scrape_run(db_conn, f"r{i}", "thot", Category.GPU, T0 + timedelta(i))
+        repository.finish_scrape_run(
+            db_conn, run, status="ok", finished_at=T0 + timedelta(i), n_found=60
         )
-        result1 = upsert_raw_listing(sample_listing_with_item_id, db_conn)
-        result2 = upsert_raw_listing(listing2, db_conn)
-
-        assert result1.inserted is True
-        assert result2.inserted is False
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 25) == "anomaly"
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 55) == "ok"
 
 
-# ---------------------------------------------------------------------------
-# Listing key derivation
-# ---------------------------------------------------------------------------
-
-
-class TestListingKeyDerivation:
-    def test_key_is_deterministic(self, sample_listing):
-        key1 = _compute_listing_key(sample_listing)
-        key2 = _compute_listing_key(sample_listing)
-        assert key1 == key2
-
-    def test_different_sources_produce_different_keys(self, sample_listing):
-        listing_banifox = sample_listing.model_copy(update={"source": Source.BANIFOX})
-        key1 = _compute_listing_key(sample_listing)
-        key2 = _compute_listing_key(listing_banifox)
-        assert key1 != key2
-
-    def test_item_id_used_over_url_for_ml(self, sample_listing_with_item_id):
-        """ML listings with same item_id but different URL → same key."""
-        listing2 = sample_listing_with_item_id.model_copy(
-            update={"url": "https://www.mercadolibre.com.uy/otro-url"}
-        )
-        assert _compute_listing_key(sample_listing_with_item_id) == _compute_listing_key(listing2)
+def test_fx_rate_falls_back_to_latest_earlier_date(db_conn):
+    repository.save_fx_rate(db_conn, "2026-10-10", 40.1, "test", T0)
+    assert repository.get_fx_rate(db_conn, "2026-10-14") == 40.1
+    assert repository.get_fx_rate(db_conn, "2026-10-01") is None

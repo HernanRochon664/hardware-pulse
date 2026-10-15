@@ -1,14 +1,9 @@
 """
-Configuration models for hardware-pulse.
+Typed loader for ``configs/stores.yaml``.
 
-Responsibilities:
-- Parse and validate configs/scrapers.yaml
-- Expose typed config objects to the pipeline
-- Apply precedence rules: job > scraper.defaults > global
-
-Does NOT:
-- Instantiate scrapers (see scripts/run_ingest.py)
-- Contain scraping logic
+Store-level values override ``defaults``; callers use the resolved
+properties (``delay``, ``timeout_s``, ``page_limit``) and never re-implement
+the precedence rules.
 """
 
 from __future__ import annotations
@@ -17,168 +12,92 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, model_validator
 
-# ---------------------------------------------------------------------------
-# Global settings
-# ---------------------------------------------------------------------------
-
-
-class GlobalConfig(BaseModel):
-    request_delay: float = Field(default=1.0, gt=0)
-    timeout: int = Field(default=10, gt=0)
+from src.domain.models import Category, Platform
+from src.settings import STORES_CONFIG_PATH
 
 
-# ---------------------------------------------------------------------------
-# Per-scraper defaults
-# ---------------------------------------------------------------------------
+class StoreDefaults(BaseModel):
+    request_delay: float = Field(default=1.5, ge=0)
+    timeout: int = Field(default=30, gt=0)
+    max_pages: int = Field(default=60, gt=0)
 
 
-class ScraperDefaults(BaseModel):
-    request_delay: float | None = Field(default=None, gt=0)
-    max_results: int | None = Field(default=None, gt=0)
-    max_pages_per_url: int | None = Field(default=None, gt=0)
-    timeout: int | None = Field(default=None, gt=0)
-
-
-# ---------------------------------------------------------------------------
-# Job definitions
-# ---------------------------------------------------------------------------
-
-
-class HTMLScraperJob(BaseModel):
-    """Shared job schema for URL-based scrapers (e.g. Thot)."""
-
+class StoreConfig(BaseModel):
+    id: str
     name: str
-    urls: list[str] = Field(min_length=1)
-    request_delay: float | None = Field(default=None, gt=0)
-    max_pages_per_url: int | None = Field(default=None, gt=0)
+    base_url: str
+    platform: Platform
+    enabled: bool = True
+    tax_included: bool = True
+    request_delay: float | None = Field(default=None, ge=0)
     timeout: int | None = Field(default=None, gt=0)
+    max_pages: int | None = Field(default=None, gt=0)
+    categories: dict[Category, list[str]] = Field(min_length=1)
+
+    # Filled in by StoresConfig so the resolved values travel with the store.
+    defaults: StoreDefaults = StoreDefaults()
+
+    @model_validator(mode="after")
+    def _strip_base_url(self) -> StoreConfig:
+        self.base_url = self.base_url.rstrip("/")
+        for category, sources in self.categories.items():
+            if not sources:
+                raise ValueError(f"{self.id}: category {category} has no sources")
+        return self
+
+    @property
+    def delay(self) -> float:
+        return self.request_delay if self.request_delay is not None else self.defaults.request_delay
+
+    @property
+    def timeout_s(self) -> int:
+        return self.timeout or self.defaults.timeout
+
+    @property
+    def page_limit(self) -> int:
+        return self.max_pages or self.defaults.max_pages
 
 
-# ---------------------------------------------------------------------------
-# Per-scraper config blocks
-# ---------------------------------------------------------------------------
+class StoresConfig(BaseModel):
+    defaults: StoreDefaults = StoreDefaults()
+    stores: dict[str, StoreConfig]
+
+    @model_validator(mode="before")
+    @classmethod
+    def _inject_ids(cls, data: Any) -> Any:
+        if isinstance(data, dict) and isinstance(data.get("stores"), dict):
+            data["stores"] = {
+                key: {**value, "id": key} if isinstance(value, dict) else value
+                for key, value in data["stores"].items()
+            }
+        return data
+
+    @model_validator(mode="after")
+    def _propagate_defaults(self) -> StoresConfig:
+        for store in self.stores.values():
+            store.defaults = self.defaults
+        return self
+
+    def enabled(self, only: list[str] | None = None) -> list[StoreConfig]:
+        stores = [s for s in self.stores.values() if s.enabled]
+        if only:
+            unknown = set(only) - set(self.stores)
+            if unknown:
+                raise ValueError(f"Unknown store(s): {', '.join(sorted(unknown))}")
+            stores = [s for s in stores if s.id in only]
+        return stores
 
 
-class ThotConfig(BaseModel):
-    enabled: bool = True
-    defaults: ScraperDefaults = ScraperDefaults()
-    jobs: list[HTMLScraperJob] = []
-
-
-class BanifoxConfig(BaseModel):
-    enabled: bool = True
-    defaults: ScraperDefaults = ScraperDefaults()
-    jobs: list[HTMLScraperJob] = []
-
-
-class PCCompuConfig(BaseModel):
-    enabled: bool = True
-    defaults: ScraperDefaults = ScraperDefaults()
-    jobs: list[HTMLScraperJob] = []
-
-
-# ---------------------------------------------------------------------------
-# Root config
-# ---------------------------------------------------------------------------
-
-
-class ScrapersConfig(BaseModel):
-    """
-    Root configuration object parsed from configs/scrapers.yaml.
-
-    Precedence rules (documented here and in the YAML):
-    - job-level values override scraper defaults
-    - scraper defaults override global settings
-    - global settings are the final fallback
-    """
-
-    global_: GlobalConfig = Field(default=GlobalConfig(), alias="global")
-    thot: ThotConfig = ThotConfig()
-    banifox: BanifoxConfig = BanifoxConfig()
-    pccompu: PCCompuConfig = PCCompuConfig()
-    model_config = {"populate_by_name": True}
-
-    # Convenience resolution helpers, callers don't need to implement
-    # the precedence logic themselves.
-
-    def resolve_request_delay(
-        self,
-        scraper_defaults: ScraperDefaults,
-        job_override: float | None = None,
-    ) -> float:
-        """Resolve request_delay following job > defaults > global precedence."""
-        return job_override or scraper_defaults.request_delay or self.global_.request_delay
-
-    def resolve_max_results(
-        self,
-        scraper_defaults: ScraperDefaults,
-        job_override: int | None = None,
-    ) -> int:
-        """Resolve max_results following job > defaults > global precedence."""
-        return (
-            job_override or scraper_defaults.max_results or 200  # fallback default
-        )
-
-    def resolve_max_pages(
-        self,
-        scraper_defaults: ScraperDefaults,
-        job_override: int | None = None,
-    ) -> int:
-        """Resolve max_pages_per_url following job > defaults > global precedence."""
-        return (
-            job_override or scraper_defaults.max_pages_per_url or 20  # fallback default
-        )
-
-    def resolve_timeout(
-        self,
-        scraper_defaults: ScraperDefaults,
-        job_override: int | None = None,
-    ) -> int:
-        """Resolve request timeout (seconds) following job > defaults > global precedence."""
-        return job_override or scraper_defaults.timeout or self.global_.timeout
-
-
-# ---------------------------------------------------------------------------
-# Loader
-# ---------------------------------------------------------------------------
-
-
-def load_config(path: Path | None = None) -> ScrapersConfig:
-    """
-    Load and validate scrapers.yaml.
-
-    Args:
-        path: Path to the YAML file. Defaults to configs/scrapers.yaml
-            relative to the project root.
-
-    Returns:
-        Validated ScrapersConfig object.
-
-    Raises:
-        FileNotFoundError: If the config file does not exist.
-        ValidationError:   If the YAML structure is invalid.
-
-    We resolve the default path relative to this file's location,
-    not relative to cwd. This makes the loader work regardless of
-    where the script is executed from.
-    """
-    if path is None:
-        path = Path(__file__).parent.parent / "configs" / "scrapers.yaml"
-
+def load_stores_config(path: Path | None = None) -> StoresConfig:
+    path = path or STORES_CONFIG_PATH
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
-
-    try:
-        raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except yaml.YAMLError as e:
-        raise yaml.YAMLError(f"Invalid YAML in {path}: {e}") from e
-
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
-        raise ValueError(f"Expected a dict at the root of {path}, got {type(raw).__name__}")
-
+        raise ValueError(f"Expected a mapping at the root of {path}")
     try:
-        return ScrapersConfig.model_validate(raw)
-    except Exception as e:
-        raise ValueError(f"Invalid configuration in {path}: {e}") from e
+        return StoresConfig.model_validate(raw)
+    except ValidationError as exc:
+        raise ValueError(f"Invalid store configuration in {path}:\n{exc}") from exc

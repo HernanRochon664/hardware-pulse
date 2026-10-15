@@ -1,231 +1,158 @@
 """
-Entity resolution pipeline for hardware-pulse.
+Resolve stage: assign every listing to its family and exact product.
 
-Responsibilities:
-- Read raw_listings from SQLite (with optional filters)
-- Resolve each listing against the canonical catalog
-- Insert resolved listings as price_snapshots
-- Return aggregated statistics
+Incremental: only listings that are new, whose title changed, or that were
+resolved by an older resolver version are processed (``full=True`` redoes all).
 
-Does NOT:
-- Scrape data (see scrapers/)
-- Define schema (see storage/schema.py)
-- Load the catalog (caller responsibility)
+Product assignment:
+- matched listings share the product with the same fingerprint; a listing
+  whose manufacturer part number (MPN) is already known in the same family
+  joins that product even if its title is worded differently;
+- family_only listings get a product of their own (never merged by guess);
+- rejected / unparsed listings get no product.
+Products left without listings are deleted.
 """
 
 from __future__ import annotations
 
+import json
 import logging
 import sqlite3
 from dataclasses import dataclass
-from datetime import UTC, datetime
 
-from src.domain.models import Condition, Currency, RawListing, Source
-from src.entities.catalog import Catalog
-from src.entities.resolver import resolve_batch
-from src.pipelines.fx import compute_week_start, fetch_fx_rates, normalize_to_usd
-from src.storage.repository import insert_price_snapshot
+from src.domain.models import Category
+from src.entities.resolver import RESOLVER_VERSION, Resolution, resolve_title
+from src.entities.taxonomy import load_taxonomy
+from src.settings import to_iso, utcnow
 
 logger = logging.getLogger(__name__)
 
 
-# ---------------------------------------------------------------------------
-# Result type
-# ---------------------------------------------------------------------------
-
-
 @dataclass
-class ResolveResult:
-    processed: int = 0  # total raw listings read
-    resolved: int = 0  # successfully matched to canonical SKU
-    skipped: int = 0  # unmatched (canonical_product_id is None)
-    errors: int = 0  # exceptions during insert
+class ResolveStats:
+    processed: int = 0
+    matched: int = 0
+    family_only: int = 0
+    rejected: int = 0
+    unparsed: int = 0
+    products_deleted: int = 0
 
-    @property
-    def total(self) -> int:
-        return self.resolved + self.skipped + self.errors
 
-    def __str__(self) -> str:
-        return (
-            f"ResolveResult("
-            f"processed={self.processed}, "
-            f"resolved={self.resolved}, "
-            f"skipped={self.skipped}, "
-            f"errors={self.errors})"
+def resolve_listings(conn: sqlite3.Connection, *, full: bool = False) -> ResolveStats:
+    taxonomy = load_taxonomy()
+    query = "SELECT id, store_id, category, title, brand, image_url FROM listings"
+    if not full:
+        query += (
+            " WHERE resolver_version IS NULL OR resolver_version != ? OR resolved_title IS NULL"
+            " OR resolved_title != title"
         )
-
-
-# ---------------------------------------------------------------------------
-# Raw listing reconstruction
-# ---------------------------------------------------------------------------
-
-
-def _rows_to_raw_listings(rows: list[sqlite3.Row]) -> list[RawListing]:
-    """
-    Reconstruct RawListing objects from sqlite3.Row results.
-
-    We reconstruct from DB rows rather than keeping objects in memory
-    across pipeline stages, this allows the resolve pipeline to run
-    independently from the ingest pipeline.
-    """
-    listings = []
-    for row in rows:
-        try:
-            listing = RawListing(
-                source=Source(row["source"]),
-                url=row["url"],
-                timestamp=row["timestamp"],
-                title=row["title"],
-                price=float(row["price"]),
-                currency=Currency(row["currency"]),
-                seller=row["seller"],
-                item_id=row["item_id"],
-                condition=Condition(row["condition"]) if row["condition"] else None,
-                available_quantity=row["available_quantity"],
-                base_price=float(row["base_price"]) if row["base_price"] else None,
+    rows = conn.execute(query, () if full else (RESOLVER_VERSION,)).fetchall()
+    stats = ResolveStats()
+    now = to_iso(utcnow())
+    with conn:
+        for row in rows:
+            resolution = resolve_title(
+                Category(row["category"]), row["title"], row["brand"], taxonomy
             )
-            listings.append(listing)
-        except Exception as exc:
-            logger.warning("Failed to reconstruct RawListing from row id=%s: %s", row["id"], exc)
-
-    return listings
-
-
-# ---------------------------------------------------------------------------
-# Query helpers
-# ---------------------------------------------------------------------------
-
-
-def _fetch_raw_listings(
-    conn: sqlite3.Connection,
-    source: str | None,
-    since: datetime | None,
-) -> list[sqlite3.Row]:
-    """
-    Fetch raw listings from the database with optional filters.
-
-    Filtering by source and since allows incremental processing,
-    only new or updated listings need to be resolved on each run.
-    """
-    query = "SELECT * FROM raw_listings WHERE 1=1"
-    params: list = []
-
-    if source:
-        query += " AND source = ?"
-        params.append(source)
-
-    if since:
-        query += " AND timestamp >= ?"
-        params.append(since.isoformat())
-
-    query += " ORDER BY timestamp ASC"
-
-    return conn.execute(query, params).fetchall()
+            product_id = _assign_product(conn, row, resolution, now)
+            conn.execute(
+                """
+                UPDATE listings SET product_id = ?, condition = ?, mpn = ?, match_status = ?,
+                    match_notes = ?, resolver_version = ?, resolved_title = title
+                WHERE id = ?
+                """,
+                (
+                    product_id,
+                    resolution.condition.value,
+                    resolution.mpn,
+                    resolution.status,
+                    resolution.notes_text or None,
+                    RESOLVER_VERSION,
+                    row["id"],
+                ),
+            )
+            stats.processed += 1
+            setattr(stats, resolution.status, getattr(stats, resolution.status) + 1)
+        stats.products_deleted = conn.execute(
+            "DELETE FROM products WHERE id NOT IN "
+            "(SELECT product_id FROM listings WHERE product_id IS NOT NULL)"
+        ).rowcount
+    logger.info("Resolved %s", stats)
+    return stats
 
 
-# ---------------------------------------------------------------------------
-# Pipeline
-# ---------------------------------------------------------------------------
-
-
-def resolve(
-    *,
-    conn: sqlite3.Connection,
-    catalog: Catalog,
-    source: str | None = None,
-    since: datetime | None = None,
-    run_at: datetime | None = None,
-) -> ResolveResult:
-    """
-    Run the entity resolution pipeline.
-
-    Reads raw_listings from the database, resolves each listing against
-    the canonical catalog, and inserts matched listings as price_snapshots.
-
-    Args:
-        conn:    Open sqlite3.Connection. Caller manages lifecycle.
-        catalog: Loaded canonical catalog for matching.
-        source:  Optional filter, process only listings from this source.
-        since:   Optional filter, process only listings after this timestamp.
-        run_at:  Timestamp for this pipeline run. Defaults to UTC now.
-
-    Returns:
-        ResolveResult with counts of processed, resolved, skipped, errors.
-    """
-    run_at = run_at or datetime.now(UTC)
-    result = ResolveResult()
-
-    logger.info(
-        "Starting resolution run at %s (source=%r, since=%r)",
-        run_at.isoformat(),
-        source,
-        since.isoformat() if since else None,
+def _assign_product(
+    conn: sqlite3.Connection, row: sqlite3.Row, resolution: Resolution, now: str
+) -> int | None:
+    parsed = resolution.parsed
+    if parsed is None:
+        return None
+    conn.execute(
+        """
+        INSERT INTO families (id, category, name, specs_json) VALUES (?, ?, ?, ?)
+        ON CONFLICT (id) DO UPDATE SET name = excluded.name, specs_json = excluded.specs_json
+        """,
+        (
+            parsed.family_id,
+            parsed.category.value,
+            parsed.family_name,
+            json.dumps(parsed.family_specs),
+        ),
     )
 
-    # Step 1: Fetch raw listings from DB
-    rows = _fetch_raw_listings(conn, source, since)
-    logger.info("Fetched %d raw listings to resolve", len(rows))
+    if parsed.fingerprint and resolution.mpn:
+        same_mpn = conn.execute(
+            "SELECT id FROM products WHERE mpn = ? AND family_id = ? ORDER BY id LIMIT 1",
+            (resolution.mpn, parsed.family_id),
+        ).fetchone()
+        if same_mpn:
+            return int(same_mpn["id"])
 
-    if not rows:
-        return result
+    fingerprint = parsed.fingerprint or f"listing:{row['id']}"
+    existing = conn.execute(
+        "SELECT id, mpn, image_url FROM products WHERE fingerprint = ?", (fingerprint,)
+    ).fetchone()
+    if existing:
+        conn.execute(
+            """
+            UPDATE products SET family_id = ?, name = ?, brand = ?, line = ?, specs_json = ?,
+                mpn = COALESCE(mpn, ?), image_url = COALESCE(image_url, ?), updated_at = ?
+            WHERE id = ?
+            """,
+            (
+                parsed.family_id,
+                parsed.name,
+                parsed.brand,
+                parsed.line,
+                json.dumps(parsed.specs),
+                resolution.mpn,
+                row["image_url"],
+                now,
+                existing["id"],
+            ),
+        )
+        return int(existing["id"])
 
-    # Step 2: Reconstruct RawListing objects
-    listings = _rows_to_raw_listings(rows)
-    result.processed = len(listings)
-
-    # Step 3: Resolve batch against catalog
-    resolved_listings = resolve_batch(listings, catalog)
-
-    # Step 3a: Collect week starts for UYU listings for batch FX fetch
-    uyu_weeks = set()
-    for resolved in resolved_listings:
-        if resolved.canonical_product_id is not None and resolved.currency == Currency.UYU:
-            uyu_weeks.add(compute_week_start(resolved.timestamp))
-
-    # Step 3b: Batch fetch FX rates if needed
-    fx_rates: dict[str, float | None] = {}
-    if uyu_weeks:
-        fx_rates = fetch_fx_rates(list(uyu_weeks))
-
-    # Step 4: Insert resolved listings as price_snapshots
-    for resolved in resolved_listings:
-        if resolved.canonical_product_id is None:
-            # Step 4a: Unmatched listings are skipped, not inserted into price_snapshots
-            result.skipped += 1
-            continue
-
-        # Fase 1.3: Skip USED/None condition listings
-        if resolved.condition != Condition.NEW:
-            result.skipped += 1
-            continue
-
-        # Fase 1.1: Normalize price to USD
-        if resolved.currency == Currency.UYU:
-            week_start = compute_week_start(resolved.timestamp)
-            fx_rate = fx_rates.get(week_start)
-            price_usd = normalize_to_usd(resolved.price, "UYU", fx_rate)
-            if price_usd is None:
-                logger.warning(
-                    "Skipping %r: no FX rate for %s",
-                    resolved.title,
-                    week_start,
-                )
-                result.skipped += 1
-                continue
-            resolved.price_usd = price_usd
-        else:
-            resolved.price_usd = resolved.price
-
-        try:
-            insert_price_snapshot(resolved, conn)
-            result.resolved += 1
-        except Exception as exc:
-            logger.warning(
-                "Failed to insert snapshot for %r: %s",
-                resolved.title,
-                exc,
-            )
-            result.errors += 1
-
-    logger.info("Resolution complete: %s", result)
-    return result
+    cur = conn.execute(
+        """
+        INSERT INTO products (
+            fingerprint, category, family_id, brand, line, name, mpn, specs_json, image_url,
+            created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            fingerprint,
+            parsed.category.value,
+            parsed.family_id,
+            parsed.brand,
+            parsed.line,
+            parsed.name,
+            resolution.mpn if parsed.fingerprint else None,
+            json.dumps(parsed.specs),
+            row["image_url"],
+            now,
+            now,
+        ),
+    )
+    assert cur.lastrowid is not None
+    return cur.lastrowid

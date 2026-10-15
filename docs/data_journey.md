@@ -1,122 +1,31 @@
-# Data Journey
+# Data Journey (v2)
 
-## Overview
+How one store listing becomes a price on the dashboard. v1's journey is
+archived in [`legacy/data_journey_v1.md`](legacy/data_journey_v1.md).
 
-The Hardware Pulse pipeline transforms raw scraped product listings into structured price intelligence. This document traces the data flow from ingestion to prediction.
-
-```
-┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌────────────┐
-│   Scrapers   │───▶│  Ingestion   │───▶│  Resolution  │───▶│  Pricing   │
-│  (Thot, etc) │    │  (raw_list-  │    │  (entity     │    │  (price_   │
-│              │    │   ings)      │    │   match)     │    │   snapshots)│
-└─────────────┘    └──────────────┘    └──────────────┘    └────────────┘
-                                                                    │
-                                                                    ▼
-┌─────────────┐    ┌──────────────┐    ┌──────────────┐             │
-│  Predictions │◀───│  Training    │◀───│  Features    │◀────────────┘
-│  (predictions│    │  (artifact   │    │  (feature_   │
-│   table)     │    │   .joblib)   │    │   snapshots) │
-└─────────────┘    └──────────────┘    └──────────────┘
-```
-
-## Stage Details
-
-### 1. Scraping → `raw_listings`
-
-**Entry point:** `scripts/run_ingest.py` → `src/pipelines/ingest.py`
-
-Each scraper (`src/scrapers/*.py`) visits configured retailer URLs, extracts product data, and yields `RawListing` objects.
-
-**Output table:** `raw_listings`
-- `source`, `url`, `item_id`, `timestamp`
-- `title`, `price`, `currency`, `seller`
-- `condition`, `available_quantity`
-
-**Key rules:**
-- Scrapers are configured in `configs/scrapers.yaml`
-- Rate limits and page counts are enforced per source
-- Duplicates are detected via SHA-256 key (`item_id` or normalized URL)
-- Existing rows are updated if price changed
-- A scraper returning 0 rows writes an alert to `logs/alerts.log`
-
-### 2. Entity Resolution → `price_snapshots`
-
-**Entry point:** `scripts/run_resolve.py` → `src/pipelines/resolve.py`
-
-Raw listings are matched against the canonical catalog (`configs/catalog.yaml`) using a three-strategy pipeline:
-
-1. **Exact match** — normalized title contains normalized SKU (confidence 1.0)
-2. **Regex match** — GPU/CPU/RAM pattern extraction + catalog validation (confidence 0.9)
-3. **Fuzzy match** — `rapidfuzz.partial_ratio` fallback (confidence >= 0.8)
-
-**Output table:** `price_snapshots`
-- `canonical_product_id`, `source`, `seller`
-- `price_usd` (normalized to USD via FX rates)
-- `timestamp`, `listing_id`
-
-**Key rules:**
-- Only NEW-condition listings persist to `price_snapshots`
-- UYU prices are converted to USD using the weekly FX rate
-- Unmatched listings (`canonical_product_id = NULL`) are logged but not stored
-- Brand (`ASUS`, `MSI`, `Gigabyte`, etc.) and variant (`TUF`, `Ventus`, etc.) are extracted
-
-### 3. Feature Engineering → `feature_snapshots`
-
-**Entry point:** `scripts/run_features.py` → `src/pipelines/features.py`
-
-Aggregates price snapshots into weekly features per canonical SKU:
-- Weekly median price and dispersion
-- Lag features (1 and 2 weeks)
-- 4-week rolling median
-- USD/UYU FX rate for the week
-
-**Output table:** `feature_snapshots`
-- `week_start`, `canonical_product_id`
-- `precio_mediana`, `precio_lag_1`, `precio_lag_2`
-- `mediana_movil`, `dispersion_precios`
-- `usd_uyu_rate`
-
-### 4. Training → Artifact
-
-**Entry point:** `scripts/run_training.py`
-
-Loads feature snapshots, filters SKUs with >= 12 weeks of history, and trains two models per SKU:
-- **ElasticNet** — linear regression with L1/L2 regularization
-- **NaivePersistence** — predicts next week = last observed value
-
-The best model (lowest MAPE on 20% holdout) is persisted as a `.joblib` artifact with metadata JSON.
-
-**Output:** `artifacts/model_YYYYMMDD.joblib`
-
-### 5. Inference → `predictions`
-
-**Entry point:** `scripts/run_inference.py`
-
-Loads the latest trained artifact, generates price predictions for the most recent complete week, and writes to the `predictions` table.
-
-**Output table:** `predictions`
-- `week_start`, `canonical_product_id`
-- `predicted_price_usd`, `lower_bound`, `upper_bound`
-- `model_id`, `run_at`
-
-### 6. Dashboard
-
-**Entry point:** `scripts/run_dashboard.py` → `src/dashboard/app.py`
-
-Read-only views powered by `price_snapshots` and `predictions`:
-- Market summary with per-SKU pricing vs historical median
-- Deal detection (configurable threshold via sidebar slider)
-- Per-product price history chart (Plotly)
-- Current store-level prices
-
-## Entity-Relationship Summary
-
-```
-raw_listings ──1:N──▶ price_snapshots ──1:N──▶ feature_snapshots ──1:N──▶ predictions
-                           │
-                           └── feeds ──▶ dashboard (queries.py)
-```
-
-- `price_snapshots` are the central fact table — all downstream stages derive from them
-- `feature_snapshots` are weekly aggregates (one row per SKU per week)
-- `predictions` are per-SKU weekly forecasts (one row per SKU per future week)
+1. **Scrape** (`src/pipelines/scrape.py`, adapters in `src/scrapers/`). Each
+   enabled store × category opens a `scrape_runs` row. The adapter yields
+   `ScrapedListing`s (title, price, regular price, currency, stock, SKU,
+   brand, image). Prices are parsed with explicit separators and converted to
+   USD with the day's rate (`fx_rates`, `src/pipelines/fx.py`).
+2. **Record** (`src/storage/repository.py`). The listing is upserted by
+   canonical URL and its price period is extended or a new one opens. The run is
+   classified `ok`, `empty`, `anomaly` or `error`, and only an `ok` run
+   deactivates the listings it did not see.
+3. **Resolve** (`src/pipelines/resolve.py`, `src/entities/`). New, retitled or
+   stale-resolver listings are processed: condition (open box, used…),
+   accessory filter, category spec parser, MPN and then a family and a product
+   fingerprint. Unparsed titles are kept with `match_status='unparsed'`.
+4. **Aggregate** (`src/pipelines/aggregate.py`). This step:
+   - flags implausible prices in `quality_issues`;
+   - expands periods into the daily lowest valid price per product
+     (`product_daily`) and per family (`family_daily`);
+   - computes `product_stats`: best current offer, 180-day min and max, 7- and 30-day
+     changes, last change and historic-low flag.
+5. **Signal** (`src/ml/`). Retrains weekly. If the model passes the gate,
+   `signals` gets a probability and a recommendation for each product with enough
+   history.
+6. **Publish** (`.github/workflows/scrape.yml`). The DB and `status.json` go to the
+   `data-latest` Release.
+7. **Show** (`streamlit_app.py`, `src/dashboard/`). The app downloads the
+   release (or uses `HP_DB_PATH`) and reads the derived tables read-only.

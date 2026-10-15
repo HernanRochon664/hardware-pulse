@@ -1,0 +1,396 @@
+# ---------------------------------------------------------------------------
+# Taxonomy used by entity resolution (src/entities/).
+#
+# Matching rules:
+# - brand aliases are matched as whole tokens on the folded title;
+# - line/model aliases are matched on the "compact" title (only [a-z0-9]),
+#   longest alias first, so "Infinity3" == "Infinity 3" and "EAGLEOC"
+#   contains "eagle". Aliases of 3 characters or less must be whole tokens.
+# - Order inside a list does not matter: longer aliases always win.
+#
+# Built from real titles of the 10 stores (2026-10). When a store publishes a
+# new line, add it here and to tests/fixtures/resolution_gold.yaml.
+# ---------------------------------------------------------------------------
+
+conditions:
+  open_box: ["open box", "openbox", "caja abierta", "exhibicion", "outlet"]
+  used: ["usado", "usada", "usados", "usadas", "segunda mano", "new pulled", "pulled",
+         "extraidas de equipos", "extraida de equipo", "seminuevo"]
+  refurbished: ["reacondicionado", "reacondicionada", "refurbished", "refurb"]
+
+# Titles in a store category that are not that kind of product.
+rejects:
+  gpu: ["riser", "soporte", "bracket", "backplate", "waterblock", "kit de iluminacion",
+        "quadro"]
+  cpu: ["pasta termica", "pasta", "cooler", "water cooling", "watercooling", "disipador termico",
+        "ventilador", "kit de iluminacion"]
+  ram: ["micro sd", "microsd", "pendrive", "kit de iluminacion", "light enhancement",
+        "memoria usb", "flash"]
+  ssd: ["disco duro", "hdd", "rpm", "purple", "skyhawk", "canvio", "lacie", "expansion",
+        "elements", "bandeja", "gabinete", "nas", "memoria usb", "ssd flash", "pendrive",
+        "ahv300", "hm800", "barracuda", "ironwolf", "wd red", "dock", "clonador",
+        "duplicador", "caddy", "adaptador", "enclosure", "carry disk", "tarjeta para"]
+
+brands:
+  # name: [aliases...]  (aliases are folded, whole-token)
+  ASUS: [asus]
+  MSI: [msi]
+  Gigabyte: [gigabyte, aorus]
+  Palit: [palit]
+  Inno3D: [inno3d, inno 3d]
+  Zotac: [zotac]
+  PNY: [pny]
+  ASRock: [asrock]
+  XFX: [xfx]
+  Sapphire: [sapphire, saphire]
+  PowerColor: [powercolor]
+  Biostar: [biostar]
+  Gainward: [gainward]
+  Arktek: [arktek]
+  EVGA: [evga]
+  Galax: [galax]
+  Kingston: [kingston]
+  Corsair: [corsair]
+  ADATA: [adata, xpg]
+  Patriot: [patriot]
+  Netac: [netac]
+  Hiksemi: [hiksemi]
+  Hikvision: [hikvision]
+  TeamGroup: [teamgroup, team group, t-force, tforce, team]
+  G.Skill: [gskill, g skill, g.skill]
+  Crucial: [crucial]
+  Lexar: [lexar]
+  Samsung: [samsung]
+  Western Digital: [western digital, wd, wd_black]
+  KingDian: [kingdian]
+  ValueTech: [valuetech]
+  Oditox: [oditox]
+  Aimerican Telekinesis: [aimerican telekinesis, aimerican]
+  Ediloca: [ediloca]
+  Raver: [raver]
+  Verbatim: [verbatim]
+  SK Hynix: [sk hynix, hynix]
+  Seagate: [seagate]
+  Toshiba: [toshiba]
+  HPE: [hpe]
+
+# Brands whose GPUs have no product lines in practice (one board per chip):
+# products are identified by chip + VRAM + modifiers.
+gpu_lineless_brands: [Biostar, Arktek]
+
+gpu_lines:
+  ASUS:
+    ROG Astral: ["rog astral", astral]
+    ROG Strix: ["rog strix", strix]
+    TUF: [tuf]
+    Prime: [prime]
+    ProArt: [proart]
+    Dual: [dual]
+    KO: [ko]
+  MSI:
+    Gaming Trio: ["gaming trio", "gaming x trio"]
+    Suprim: [suprim]
+    Inspire 3X: ["inspire 3x", "inspire"]
+    Vanguard: [vanguard]
+    Ventus 3X: ["ventus 3x", "ventus x3"]
+    Ventus 2X: ["ventus 2x", "ventus x2", "ventus"]
+    Shadow 3X: ["shadow 3x"]
+    Shadow 2X: ["shadow 2x", "shadow"]
+    Cyclone: [cyclone]
+    Gaming: [gaming]
+    Aero: [aero]
+    Mech: [mech]
+    LP: ["lp", "low profile"]
+  Gigabyte:
+    Aorus Master: ["aorus master", "aorusm", "aorus m"]
+    Aorus Infinity: ["aorus infinity", "aorusif", "aorus if"]
+    Aorus Elite: ["aorus elite", "aoruse", "aorus e"]
+    Aorus Xtreme: ["aorus xtreme", "aorusx"]
+    Eagle Max: ["eagle max", "max eagle", "eaglemax"]
+    Eagle: [eagle]
+    Windforce Max: ["windforce max", "wf2max"]
+    Windforce: [windforce, wndforce, "wf2", "wf3"]
+    Aero: [aero]
+    Gaming: [gaming]
+    Low Profile: ["low profile"]
+  Palit:
+    GameRock: [gamerock]
+    GamingPro-S: ["gamingpro s", "gaming pro s"]
+    GamingPro: [gamingpro, "gaming pro"]
+    Infinity 3: ["infinity 3"]
+    Infinity 2: ["infinity 2"]
+    JetStream: [jetstream]
+    StormX: [stormx, "storm x"]
+    White: [white, blanco, blanca]
+    Dual: [dual]
+  Inno3D:
+    iChill: [ichill]
+    X3: [x3]
+    Twin X2: ["twin x2", "twinx2"]
+    Compact: [compact]
+    Low Profile: ["low profile", "lp"]
+  Zotac:
+    AMP: [amp]
+    Twin Edge: ["twin edge"]
+    Solid: [solid]
+  PNY:
+    ARGB: [argb, epic x]
+    Triple Fan: ["triple fan"]
+    Dual Fan: ["dual fan"]
+  ASRock:
+    Taichi: [taichi]
+    Phantom Gaming: ["phantom gaming"]
+    Steel Legend: ["steel legend"]
+    Challenger Pro: ["challenger pro"]
+    Challenger: [challenger]
+    Low Profile: ["low profile"]
+  XFX:
+    Mercury: [mercury]
+    Quicksilver: [quicksilver]
+    Swift Triple: ["swift triple"]
+    Swift: [swift]
+    Speedster: [speedster, qick]
+  Sapphire:
+    Nitro+: ["nitro+", nitro]
+    Pulse: [pulse]
+    Pure: [pure]
+  PowerColor:
+    Red Devil: ["red devil"]
+    Hellhound: [hellhound]
+    Reaper: [reaper]
+    Fighter: [fighter]
+
+# Known GPU chips and their VRAM configurations (GB). Used to validate the
+# extracted VRAM and to infer it when a chip ships in a single configuration.
+gpu_chips:
+  RTX 5090: [32]
+  RTX 5080: [16]
+  RTX 5070 Ti: [16]
+  RTX 5070: [12]
+  RTX 5060 Ti: [8, 16]
+  RTX 5060: [8]
+  RTX 5050: [8]
+  RTX 4090: [24]
+  RTX 4080 Super: [16]
+  RTX 4080: [16]
+  RTX 4070 Ti Super: [16]
+  RTX 4070 Ti: [12]
+  RTX 4070 Super: [12]
+  RTX 4070: [12]
+  RTX 4060 Ti: [8, 16]
+  RTX 4060: [8]
+  RTX 3090: [24]
+  RTX 3080 Ti: [12]
+  RTX 3080: [10, 12]
+  RTX 3070 Ti: [8]
+  RTX 3070: [8]
+  RTX 3060 Ti: [8]
+  RTX 3060: [8, 12]
+  RTX 3050: [6, 8]
+  RTX 2060: [6, 12]
+  GTX 1660 Super: [6]
+  GTX 1660: [6]
+  GTX 1650: [4]
+  GTX 1630: [4]
+  GTX 1050 Ti: [4]
+  GTX 1050: [2, 3, 4]
+  GT 1030: [2, 4]
+  GT 730: [1, 2, 4]
+  GT 710: [1, 2]
+  GT 610: [1, 2]
+  GT 210: [1]
+  RX 9070 XT: [16]
+  RX 9070 GRE: [12]
+  RX 9070: [16]
+  RX 9060 XT: [8, 16]
+  RX 7900 XTX: [24]
+  RX 7900 XT: [20]
+  RX 7900 GRE: [16]
+  RX 7800 XT: [16]
+  RX 7700 XT: [12]
+  RX 7600 XT: [16]
+  RX 7600: [8]
+  RX 6750 XT: [12]
+  RX 6700 XT: [12]
+  RX 6650 XT: [8]
+  RX 6600: [8]
+  RX 6500 XT: [4, 8]
+  RX 6400: [4]
+  RX 5600 XT: [6]
+  RX 5600: [6]
+  RX 580: [4, 8]
+  RX 570: [4, 8]
+  RX 560: [2, 4]
+  RX 550: [2, 4, 8]
+  Arc B580: [12]
+  Arc B570: [10]
+  Arc A770: [8, 16]
+  Arc A750: [8]
+  Arc A580: [8]
+  Arc A380: [6]
+  Arc A310: [4]
+
+# Low-end chips sold with different memory types under the same name.
+gpu_memtype_matters: [GT 1030, GT 730, GT 710, GT 610, GT 210, RX 550, RX 560]
+
+ram_lines:
+  Kingston:
+    Fury Renegade: ["fury renegade", renegade]
+    Fury Impact: ["fury impact", impact]
+    Fury Beast: ["fury beast", beast, fury]
+    ValueRAM: [valueram, valuerram, kvr, kcp]
+  Corsair:
+    Vengeance LPX: ["vengeance lpx", lpx]
+    Vengeance RGB: ["vengeance rgb"]
+    Vengeance: [vengeance, vengance]
+    Dominator: [dominator]
+  ADATA:
+    Lancer Blade: ["lancer blade", "lancer bl"]
+    Lancer: [lancer]
+    Spectrix D35G: ["spectrix d35g", "d35g"]
+    Gammix D35: ["gammix d35", "d35"]
+    Armax: [armax]
+    Premier: [premier]
+  Patriot:
+    Viper Xtreme 5: ["viper xtreme 5", "viper xtreme"]
+    Viper Venom: ["viper venom", venom]
+    Viper Elite 5: ["viper elite 5"]
+    Viper Elite II: ["viper elite ii", "viper elite 2"]
+    Viper Steel: ["viper steel"]
+    Signature Premium: ["signature premium", "sig premium", "sig.premium"]
+    Signature: ["signature line", signature]
+  Netac:
+    Shadow III: ["shadow iii", "shadodw iii"]
+    Shadow RGB II: ["shadow rgb ii"]
+    Shadow II: ["shadow ii"]
+    Shadow: [shadow]
+    Z RGB: ["z rgb"]
+    Basic: [basic]
+  Hiksemi:
+    Future: [future]
+    Armor: [armor, "hs armor"]
+    Hiker: [hiker]
+  TeamGroup:
+    T-Force Vulcan: [vulcan]
+    T-Force Delta: [delta]
+    Elite: [elite]
+  Lexar:
+    Ares: [ares]
+  G.Skill:
+    Trident Z: ["trident z", trident]
+    Ripjaws: [ripjaws]
+
+# Valid module speeds (MT/s). Anything else is ignored as a speed.
+ram_speeds: [1066, 1333, 1600, 1866, 2133, 2400, 2666, 2933, 3000, 3200, 3600, 3866, 4000,
+             4400, 4800, 5200, 5600, 6000, 6200, 6400, 6600, 6800, 7000, 7200, 7400, 7600,
+             8000, 8200, 8400]
+
+# SSD models per brand. iface: nvme3|nvme4|nvme5|sata|external (default for the
+# model when the title does not say it).
+ssd_models:
+  Kingston:
+    Fury Renegade G5: {aliases: ["fury renegade g5", "renegade g5"], iface: nvme5}
+    Fury Renegade: {aliases: ["fury renegade", renegade], iface: nvme4}
+    KC3000: {aliases: [kc3000, skc3000], iface: nvme4}
+    NV3: {aliases: [nv3, snv3s], iface: nvme4}
+    NV2: {aliases: [nv2, snv2s], iface: nvme4}
+    NV1: {aliases: [nv1, snvs], iface: nvme3}
+    A400: {aliases: [a400, sa400s37, sa400], iface: sata}
+    KC600: {aliases: [kc600], iface: sata}
+    DC600M: {aliases: [dc600m], iface: sata}
+    XS2000: {aliases: [xs2000], iface: external}
+    XS1000: {aliases: [xs1000], iface: external}
+    Dual Portable: {aliases: ["dual 512gb usb", "dual 1tb usb", "dual 2tb usb", "ssd kingston dual"], iface: external}
+  ADATA:
+    Legend 970: {aliases: ["legend 970"], iface: nvme5}
+    Legend 960: {aliases: ["legend 960"], iface: nvme4}
+    Legend 900 Pro: {aliases: ["legend 900 pro", "legend 900p", "l 900 pro", "l900 pro"], iface: nvme4}
+    Legend 900: {aliases: ["legend 900"], iface: nvme4}
+    Legend 860: {aliases: ["legend 860"], iface: nvme4}
+    Legend 850: {aliases: ["legend 850"], iface: nvme4}
+    Legend 800: {aliases: ["legend 800"], iface: nvme4}
+    Legend 710: {aliases: ["legend 710", aleg710], iface: nvme3}
+    Gammix S70: {aliases: ["gammix s70", "xpg s70"], iface: nvme4}
+    Gammix S50 Lite: {aliases: ["gammix s50 lite", "s50 lite"], iface: nvme4}
+    Gammix S5: {aliases: ["gammix s5"], iface: nvme3}
+    S20G: {aliases: [s20g], iface: nvme4}
+    AS40G: {aliases: [as40g], iface: nvme4}
+    Swordfish: {aliases: [swordfish], iface: nvme3}
+    Ultimate SU650: {aliases: [su650, "ultimate su650"], iface: sata}
+    SD620: {aliases: [sd620], iface: external}
+  Corsair:
+    MP700 Pro: {aliases: ["mp700 pro", mp700pro, mp700phx, mp700pnh], iface: nvme5}
+    MP700 Elite: {aliases: ["mp700 elite", mp700ehs, mp700enh], iface: nvme5}
+    MP700: {aliases: [mp700], iface: nvme5}
+    MP600 Pro XT: {aliases: ["mp600 pro xt", mp600pxt, mp600phxt], iface: nvme4}
+    MP600 Pro LPX: {aliases: ["mp600 pro lpx", mp600plp], iface: nvme4}
+    MP600 Pro NH: {aliases: ["mp600 pro nh", mp600pnh], iface: nvme4}
+    MP600 Pro: {aliases: ["mp600 pro"], iface: nvme4}
+    MP600 Elite: {aliases: ["mp600 elite", mp600ehs, mp600enh, mp600ecs], iface: nvme4}
+    MP600 Core XT: {aliases: ["mp600 core xt", mp600cxt], iface: nvme4}
+    MP600 GS: {aliases: ["mp600 gs", mp600gs], iface: nvme4}
+    MP600 Mini: {aliases: ["mp600 mini", mp600mn], iface: nvme4}
+    MP600: {aliases: [mp600], iface: nvme4}
+  Patriot:
+    Viper PV553: {aliases: [pv553], iface: nvme5}
+    Viper VP4000 Mini: {aliases: ["vp4000 mini", vp4000m], iface: nvme4}
+    Viper VP4000: {aliases: [vp4000], iface: nvme4}
+    P420 Mini: {aliases: ["p420 mini", p420mp], iface: nvme4}
+    P400 Lite: {aliases: ["p400 lite", p400l], iface: nvme4}
+    P400: {aliases: [p400], iface: nvme4}
+    P310: {aliases: [p310], iface: nvme4}
+    P300: {aliases: [p300], iface: nvme3}
+    P210: {aliases: [p210], iface: sata}
+    Burst Elite: {aliases: ["burst elite", pbe], iface: sata}
+    PVP30: {aliases: [pvp30], iface: external}
+  Netac:
+    NV7000-Q: {aliases: ["nv7000 q", nv7000q], iface: nvme4}
+    NV7000: {aliases: [nv7000], iface: nvme4}
+    NV3000: {aliases: [nv3000], iface: nvme3}
+    NV2000: {aliases: [nv2000], iface: nvme3}
+    NV30ES: {aliases: [nv30es], iface: nvme3}
+    N535N: {aliases: [n535n], iface: sata}
+    SA500: {aliases: [sa500], iface: sata}
+    ZX20: {aliases: [zx20], iface: external}
+    ZX10: {aliases: [zx10], iface: external}
+    Z7S: {aliases: [z7s], iface: external}
+    Z6S: {aliases: [z6s], iface: external}
+  Hiksemi:
+    Future Core: {aliases: ["future core"], iface: nvme5}
+    Future Lite: {aliases: ["future lite"], iface: nvme4}
+    Future: {aliases: [future], iface: nvme4}
+    Wave: {aliases: [wave, "hs wave"], iface: sata}
+    City: {aliases: [city], iface: sata}
+    S450: {aliases: [s450], iface: external}
+  KingDian:
+    G38: {aliases: [g38], iface: nvme3}
+    S370: {aliases: [s370], iface: sata}
+    S280: {aliases: [s280], iface: sata}
+  Lexar:
+    NQ780: {aliases: [nq780], iface: nvme4}
+    NM610 Pro: {aliases: ["nm610 pro", nm610pro, nm610], iface: nvme3}
+    NQ100: {aliases: [nq100], iface: sata}
+  MSI:
+    Spatium M371: {aliases: [m371], iface: nvme3}
+    Spatium S270: {aliases: [s270], iface: sata}
+  Western Digital:
+    Black SN8100: {aliases: [sn8100], iface: nvme5}
+    Black SN850P: {aliases: [sn850p], iface: nvme4}
+    Black SN850X: {aliases: [sn850x], iface: nvme4}
+    Black SN7100: {aliases: [sn7100], iface: nvme4}
+    Black SN770: {aliases: [sn770], iface: nvme4}
+    Blue SN580: {aliases: [sn580], iface: nvme4}
+    Blue SA510: {aliases: [sa510], iface: sata}
+  TeamGroup:
+    T-Force Vulcan Z: {aliases: ["vulcan z"], iface: sata}
+  Verbatim:
+    Vi550: {aliases: [vi550], iface: sata}
+  ValueTech:
+    Pro: {aliases: ["valuetech pro"], iface: sata}
+  Samsung:
+    990 Pro: {aliases: ["990 pro"], iface: nvme4}
+    990 EVO: {aliases: ["990 evo"], iface: nvme4}
+    980: {aliases: ["980"], iface: nvme3}
+    970 EVO Plus: {aliases: ["970 evo plus"], iface: nvme3}
+    870 EVO: {aliases: ["870 evo"], iface: sata}
+    T7: {aliases: [t7], iface: external}

@@ -1,232 +1,65 @@
 """
-Base HTML scraper for hardware-pulse.
+Store adapter contract.
 
-Implements the Template Method pattern:
-- BaseHTMLScraper defines the scraping algorithm (fetch loop)
-- Subclasses implement site-specific steps (_build_page_url,
-  _get_product_containers, _parse_listing)
-
-This eliminates duplicated orchestration logic across Thot, Banifox,
-and PCCompu scrapers.
+An adapter turns one category source of one store (a category slug, a search
+term or a category URL path, as configured in ``configs/stores.yaml``) into
+``ScrapedListing`` objects. Adapters raise ``ScrapeError`` when a source is
+broken (e.g. the category URL now returns 404) instead of silently returning
+nothing: an empty result must never be mistaken for "the store sells nothing".
 """
 
+from __future__ import annotations
+
 import logging
-import time
 from abc import ABC, abstractmethod
-from datetime import UTC, datetime
+from collections.abc import Iterator
+from datetime import datetime
+from urllib.parse import urljoin
 
-import requests
-from bs4 import BeautifulSoup, Tag
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-
-from src.domain.models import RawListing, Source
+from src.config import StoreConfig
+from src.domain.models import Category, ScrapedListing
+from src.scrapers.http import HttpClient
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-)
 
-RETRYABLE_STATUS_CODES = (500, 502, 503, 504)
+class ScrapeError(RuntimeError):
+    """A category source could not be scraped."""
 
 
-class BaseHTMLScraper(ABC):
-    """
-    Template base class for HTML-based scrapers.
+class StoreAdapter(ABC):
+    def __init__(self, store: StoreConfig, client: HttpClient | None = None) -> None:
+        self.store = store
+        self.client = client or HttpClient(delay=store.delay, timeout=store.timeout_s)
 
-    Defines the scraping contract and orchestrates the fetch loop.
-    Subclasses must implement the four abstract methods to handle
-    site-specific URL patterns, selectors, and price parsing.
-    """
+    def absolute(self, href: str) -> str:
+        return urljoin(self.store.base_url + "/", href)
 
-    _session: requests.Session | None = None
-
-    def __init__(
-        self,
-        *,
-        urls: list[str],
-        delay: float = 1.5,
-        max_pages_per_url: int = 20,
-        timeout: int = 10,
-        max_retries: int = 3,
-        retry_backoff: float = 1.0,
-    ) -> None:
-        if not urls:
-            raise ValueError(f"{self.__class__.__name__}: urls must not be empty")
-        if max_retries < 1:
-            raise ValueError(f"{self.__class__.__name__}: max_retries must be >= 1")
-        self._urls = urls
-        self._delay = delay
-        self._max_pages_per_url = max_pages_per_url
-        self._timeout = timeout
-        self._max_retries = max_retries
-        self._retry_backoff = retry_backoff
-        self._session = None
-
-    # ---------------------------------------------------------------------------
-    # Abstract interface, subclasses must implement these
-    # ---------------------------------------------------------------------------
-
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """Human-readable scraper name for logging (e.g. 'banifox')."""
-        ...
-
-    @property
-    @abstractmethod
-    def source(self) -> Source:
-        """Domain enum identifying the data source."""
-        ...
+    def fetch_category(self, category: Category, scraped_at: datetime) -> Iterator[ScrapedListing]:
+        """All listings for a category, deduplicated by URL across its sources."""
+        seen: set[str] = set()
+        for source in self.store.categories.get(category, []):
+            for listing in self.fetch_source(category, source, scraped_at):
+                if listing.url in seen:
+                    continue
+                seen.add(listing.url)
+                yield listing
 
     @abstractmethod
-    def _build_page_url(self, base_url: str, page: int) -> str:
-        """
-        Build a paginated URL from a base URL and page index.
+    def fetch_source(
+        self, category: Category, source: str, scraped_at: datetime
+    ) -> Iterator[ScrapedListing]: ...
 
-        The subclass decides the pagination dialect:
-        - Thot:    base_url/page/N/   (1-indexed)
-        - Banifox: base_url/pag/N/    (1-indexed)
-        - PCCompu: base_url?pagina=N  (0-indexed)
-        """
-        ...
 
-    @abstractmethod
-    def _get_product_containers(self, soup: BeautifulSoup) -> list[Tag]:
-        """
-        Extract the list of product card Tags from a parsed page.
+def build_adapter(store: StoreConfig, client: HttpClient | None = None) -> StoreAdapter:
+    from src.domain.models import Platform
+    from src.scrapers.nopcommerce import NopCommerceAdapter
+    from src.scrapers.sme import SmeAdapter
+    from src.scrapers.woocommerce import WooCommerceAdapter
 
-        Returns an empty list if no products are found, signals
-        end of pagination to the fetch loop.
-        """
-        ...
-
-    @abstractmethod
-    def _parse_listing(self, product: Tag, fetched_at: datetime) -> RawListing | None:
-        """
-        Transform a product Tag into a RawListing domain object.
-
-        Returns None if the product is invalid or unparseable.
-        The fetch loop skips None results silently.
-        """
-        ...
-
-    # ---------------------------------------------------------------------------
-    # HTTP helpers
-    # ---------------------------------------------------------------------------
-
-    def _http_get(self, url: str) -> requests.Response:
-        """
-        GET with retry/backoff on transient failures.
-
-        Retries are delegated to the urllib3 ``Retry`` policy attached to
-        the HTTPAdapter (see ``_get_session``). The adapter handles:
-        - ``requests.exceptions.Timeout``
-        - ``requests.exceptions.ConnectionError``
-        - 5xx responses (500, 502, 503, 504)
-
-        4xx responses are NOT retried (urllib3 default), so they
-        propagate immediately so the caller can decide (e.g. 404 stops
-        pagination). A single ``Session.get`` call therefore performs
-        up to ``max_retries`` total attempts internally, eliminating the
-        previous duplicated retry loop and its noisy log output.
-        """
-        return self._get_session().get(url, timeout=self._timeout)
-
-    def _get_session(self) -> requests.Session:
-        """Return a requests.Session configured with retries and a UA."""
-        if self._session is None:
-            self._session = requests.Session()
-            self._session.headers.update({"User-Agent": DEFAULT_USER_AGENT})
-            retry_cfg = Retry(
-                total=self._max_retries - 1,
-                backoff_factor=self._retry_backoff,
-                status_forcelist=RETRYABLE_STATUS_CODES,
-                allowed_methods=("GET",),
-                raise_on_status=False,
-            )
-            adapter = HTTPAdapter(max_retries=retry_cfg, pool_connections=4, pool_maxsize=4)
-            self._session.mount("http://", adapter)
-            self._session.mount("https://", adapter)
-        return self._session
-
-    # ---------------------------------------------------------------------------
-    # Template method — shared orchestration logic
-    # ---------------------------------------------------------------------------
-
-    def fetch(self) -> list[RawListing]:
-        """
-        Scrape all configured URLs and return a deduplicated list of listings.
-
-        Algorithm:
-        1. For each base URL:
-           a. Iterate pages until no products found or max_pages reached
-           b. For each page: GET → parse → extract containers → parse listings
-           c. Deduplicate by URL within this run
-           d. Stop early if a page yields no new items
-        2. Log final count and return
-
-        fetched_at is set once per fetch() call so all listings from
-        the same run share a consistent timestamp.
-        """
-        fetched_at = datetime.now(UTC)  # ①
-        listings: list[RawListing] = []
-        seen_urls: set[str] = set()
-
-        for base_url in self._urls:
-            page = self._start_page
-
-            while page <= self._start_page + self._max_pages_per_url - 1:
-                url = self._build_page_url(base_url, page)
-
-                response = self._http_get(url)
-
-                # 404 signals end of pagination, not a fatal error
-                if response.status_code == 404:
-                    break
-                response.raise_for_status()
-
-                soup = BeautifulSoup(response.text, "html.parser")
-                products = self._get_product_containers(soup)
-
-                if not products:
-                    break
-
-                new_items = 0
-                for product in products:
-                    parsed = self._parse_listing(product, fetched_at)
-                    if not parsed:
-                        continue
-                    if parsed.url in seen_urls:
-                        continue
-                    seen_urls.add(parsed.url)
-                    listings.append(parsed)
-                    new_items += 1
-
-                # Stop if page returned no new items, avoids infinite loops
-                # on sites that repeat content on out-of-range pages
-                if new_items == 0:
-                    break
-
-                page += 1
-                time.sleep(self._delay)
-
-        logger.info(
-            "Fetched %d listings from %s (%d URLs scraped)",
-            len(listings),
-            self.name,
-            len(self._urls),
-        )
-        return listings
-
-    @property
-    def _start_page(self) -> int:
-        """
-        Starting page index for pagination.
-
-        Override in subclasses that use 0-indexed pagination (e.g. PCCompu).
-        Default is 1 (Thot, Banifox).
-        """
-        return 1
+    adapters: dict[Platform, type[StoreAdapter]] = {
+        Platform.WOOCOMMERCE: WooCommerceAdapter,
+        Platform.SME: SmeAdapter,
+        Platform.NOPCOMMERCE: NopCommerceAdapter,
+    }
+    return adapters[store.platform](store, client)

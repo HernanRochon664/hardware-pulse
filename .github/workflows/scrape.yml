@@ -1,0 +1,96 @@
+name: Scrape prices
+
+# Twice a day (09:00 and 17:00 Uruguay time): download the published database,
+# scrape the 10 stores, resolve, aggregate, refresh the buy/wait signal and
+# publish the result again as the "data-latest" Release asset.
+
+on:
+  schedule:
+    - cron: "0 12,20 * * *"
+    - cron: "0 6 1 * *" # monthly keepalive (see the keepalive job)
+  workflow_dispatch:
+    inputs:
+      stores:
+        description: "Comma separated store ids (empty = all enabled)"
+        required: false
+        default: ""
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+permissions:
+  contents: write # upload Release assets
+  actions: write # keepalive re-enables this workflow
+
+env:
+  RELEASE_TAG: data-latest
+  DB: data/hardware_pulse.db
+
+jobs:
+  scrape:
+    if: github.event.schedule != '0 6 1 * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - run: uv sync --locked --no-dev
+
+      - name: Download published database
+        run: |
+          gh release download "$RELEASE_TAG" --pattern hardware_pulse.db.gz --dir data --clobber
+          gunzip --force data/hardware_pulse.db.gz
+
+      - name: Run pipeline
+        id: pipeline
+        run: |
+          set +e
+          args=()
+          if [ -n "${{ inputs.stores }}" ]; then args+=(--stores "${{ inputs.stores }}"); fi
+          uv run python -m src.cli --db "$DB" run --status-json data/status.json "${args[@]}"
+          code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          # 0 = ok, 2 = degraded (publish anyway, fail at the end), 1 = fatal
+          if [ "$code" -eq 1 ]; then exit 1; fi
+          exit 0
+
+      - name: Compress database
+        run: gzip --best --keep --force "$DB"
+
+      - name: Publish to the data-latest Release
+        run: |
+          gh release upload "$RELEASE_TAG" data/hardware_pulse.db.gz data/status.json --clobber
+
+      - name: Keep a 30-day backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: hardware-pulse-${{ github.run_id }}
+          path: |
+            data/hardware_pulse.db.gz
+            data/status.json
+          retention-days: 30
+
+      - name: Fail when some store or category degraded
+        if: steps.pipeline.outputs.code == '2'
+        run: |
+          echo "::error::Degraded run, see the DEGRADED lines in the pipeline log"
+          jq '.degraded' data/status.json
+          exit 1
+
+  # GitHub disables scheduled workflows after 60 days without repository
+  # activity. The pipeline no longer commits, so re-enable it once a month.
+  keepalive:
+    if: github.event.schedule == '0 6 1 * *'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/scrape.yml/enable"

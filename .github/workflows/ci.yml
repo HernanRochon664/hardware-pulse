@@ -19,8 +19,9 @@ jobs:
         with:
           python-version: "3.11"
           enable-cache: true
-      - run: uv sync --dev
-      - run: uv run ruff check src/ scripts/ tests/ .github/
+      - run: uv sync --locked --dev
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
 
   typecheck:
     runs-on: ubuntu-latest
@@ -30,7 +31,7 @@ jobs:
         with:
           python-version: "3.11"
           enable-cache: true
-      - run: uv sync --dev
+      - run: uv sync --locked --dev
       - run: uv run pyright
 
   unit:
@@ -41,8 +42,9 @@ jobs:
         with:
           python-version: "3.11"
           enable-cache: true
-      - run: uv sync --dev
-      - run: uv run pytest tests/ --ignore=tests/e2e --cov=src --cov-report=term
+      - run: uv sync --locked --dev
+      # offline: store fixtures, resolution gold set gates, pipeline rules, ML
+      - run: uv run pytest --cov=src --cov-report=term
 
   e2e:
     runs-on: ubuntu-latest
@@ -52,11 +54,8 @@ jobs:
         with:
           python-version: "3.11"
           enable-cache: true
-      - run: uv sync --dev
-      - name: Install Playwright browsers
-        run: uv run python -m playwright install chromium
-      - name: Install Playwright system deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libnspr4 libnss3 libatk-bridge2.0-0 libdrm2 libxkbcommon0 libgbm1
-      - run: uv run pytest tests/e2e/
+      - run: uv sync --locked --dev
+      - name: Install Playwright browser and system deps
+        run: uv run python -m playwright install --with-deps chromium
+      # the dashboard runs against a synthetic fixture DB built by the tests
+      - run: uv run pytest tests/e2e -m e2e
