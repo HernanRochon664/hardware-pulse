@@ -6,6 +6,7 @@ shown on the dashboard's "Estado de datos" page.
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -13,9 +14,28 @@ from typing import Any
 
 from src.settings import to_iso, utcnow
 
+logger = logging.getLogger(__name__)
 
-def build_status(conn: sqlite3.Connection, now: datetime | None = None) -> dict[str, Any]:
+
+def paused_stores() -> dict[str, str]:
+    """Stores disabled on purpose in configs/stores.yaml, with the reason to show."""
+    from src.config import load_stores_config
+
+    try:
+        stores = load_stores_config().stores.values()
+    except Exception:  # the dashboard must still render without the config
+        logger.warning("Could not read the stores config", exc_info=True)
+        return {}
+    return {s.id: s.pause_reason or "Pausada" for s in stores if not s.enabled}
+
+
+def build_status(
+    conn: sqlite3.Connection,
+    now: datetime | None = None,
+    paused: dict[str, str] | None = None,
+) -> dict[str, Any]:
     now = now or utcnow()
+    paused = paused_stores() if paused is None else paused
     latest_runs = conn.execute(
         """
         SELECT r.* FROM scrape_runs r
@@ -54,9 +74,11 @@ def build_status(conn: sqlite3.Connection, now: datetime | None = None) -> dict[
             "error": run["error"],
             "last_ok_at": last_ok.get((run["store_id"], run["category"])),
         }
-    for store in stores.values():
+    for store_id, store in stores.items():
         statuses = [c["status"] for c in store["categories"].values()]
         store["ok"] = all(s == "ok" for s in statuses)
+        store["paused"] = paused.get(store_id)
+    active = [s for s in stores.values() if not s["paused"]]
 
     def scalar(sql: str) -> int:
         return int(conn.execute(sql).fetchone()[0] or 0)
@@ -71,8 +93,9 @@ def build_status(conn: sqlite3.Connection, now: datetime | None = None) -> dict[
         "generated_at": to_iso(now),
         "last_scrape_at": conn.execute("SELECT MAX(started_at) FROM scrape_runs").fetchone()[0],
         "stores": stores,
-        "stores_ok": sum(1 for s in stores.values() if s["ok"]),
-        "stores_total": len(stores),
+        "stores_ok": sum(1 for s in active if s["ok"]),
+        "stores_total": len(active),
+        "stores_paused": len(stores) - len(active),
         "products_with_offers": scalar(
             "SELECT COUNT(*) FROM product_stats WHERE best_price_usd IS NOT NULL"
         ),

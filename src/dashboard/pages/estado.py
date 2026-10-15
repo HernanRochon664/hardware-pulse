@@ -29,21 +29,29 @@ st.caption(
 )
 
 rows = []
-for _store_id, store in sorted(status["stores"].items(), key=lambda kv: kv[1]["name"]):
+stores = sorted(status["stores"].values(), key=lambda s: (bool(s.get("paused")), s["name"]))
+for store in stores:
     for category, run in sorted(store["categories"].items()):
         rows.append(
             {
                 "Tienda": store["name"],
                 "Categoría": category_label(category),
-                "Estado": STATUS_LABELS.get(run["status"], run["status"]),
+                "Estado": "Pausada"
+                if store.get("paused")
+                else STATUS_LABELS.get(run["status"], run["status"]),
                 "Productos leídos": run["n_found"],
                 "Última lectura": ago(run["started_at"]),
                 "Último éxito": ago(run["last_ok_at"]),
-                "Detalle": run["error"] or "",
+                "Detalle": store.get("paused") or run["error"] or "",
                 "Sitio": store["url"],
             }
         )
 st.subheader("Tiendas")
+if status.get("stores_paused"):
+    st.caption(
+        "Las tiendas **pausadas** no se leen por ahora; sus precios anteriores quedan en el "
+        "historial pero no cuentan para el precio actual."
+    )
 st.dataframe(
     pd.DataFrame(rows),
     hide_index=True,

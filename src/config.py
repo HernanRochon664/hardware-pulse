@@ -30,6 +30,8 @@ class StoreConfig(BaseModel):
     base_url: str
     platform: Platform
     enabled: bool = True
+    # Shown on the dashboard when a store is disabled on purpose.
+    pause_reason: str | None = None
     tax_included: bool = True
     request_delay: float | None = Field(default=None, ge=0)
     timeout: int | None = Field(default=None, gt=0)
