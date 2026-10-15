@@ -1,0 +1,6127 @@
+# Resolution gold set: real store titles (scraped 2026-10-14) with the expected
+# status, condition, family and exact-product fingerprint. Every group was
+# reviewed by hand (see docs/decisions.md). tests/test_resolution_gold.py
+# enforces precision/recall gates on it. When the taxonomy changes, review
+# the diff of this file instead of regenerating it blindly.
+- title: Pasta Térmica Cooler Master CRYOFUZE 5
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta termica Deep Cool Z3
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta termica Deep Cool Z5
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta térmica Aerocool Baraf
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta térmica Aerocool Cog 2g
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta térmica Cooler Master RPD Grease High Performance
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta térmica Deep Cool DM9 1,5g
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta térmica Manhattan 1.5g
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Pasta térmica Sabo 1.7g
+  store: thot
+  category: cpu
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Procesador CPU AMD Ryzen 5 86006 6 Nucleos AM5 De 4.3 Hasta 5.0Ghz Video Amd Radeon 760m
+  store: infinit
+  category: cpu
+  store_brand: AMD
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: AMD Athlon 3000G AM4
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-athlon-3000g
+  product: cpu:amd-athlon-3000g
+- title: CPU AMD Athlon 3000G
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-athlon-3000g
+  product: cpu:amd-athlon-3000g
+- title: Procesador CPU AMD Athlon 3000g Socket AM4 3.5GHz Radeon Vega 3 Graphics
+  store: pccompu
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-athlon-3000g
+  product: cpu:amd-athlon-3000g
+- title: CPU AMD Ryzen 3 3200G con Radeon Vega 8
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-3-3200g
+  product: cpu:amd-ryzen-3-3200g
+- title: Cpu Amd Ryzen 3 3200g Am4 Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-3-3200g
+  product: cpu:amd-ryzen-3-3200g
+- title: Procesador AMD Ryzen 3 3200G AM4
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-3-3200g
+  product: cpu:amd-ryzen-3-3200g
+- title: AMD Ryzen 3 4100
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-3-4100
+  product: cpu:amd-ryzen-3-4100
+- title: Procesador AMD Ryzen 3 4100
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-3-4100
+  product: cpu:amd-ryzen-3-4100
+- title: Procesador Cpu AMD Ryzen 3 4100 Quad Core 3.8 Hasta 4.0 Ghz Socket Am4
+  store: infinit
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-3-4100
+  product: cpu:amd-ryzen-3-4100
+- title: CPU AMD Ryzen 5 3400G AM4
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-3400g
+  product: cpu:amd-ryzen-5-3400g
+- title: Procesador AMD Ryzen 5 3400G
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-3400g
+  product: cpu:amd-ryzen-5-3400g
+- title: CPU AMD Ryzen 5 4500
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-4500
+  product: cpu:amd-ryzen-5-4500
+- title: Procesador AMD Ryzen 5 4500
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-4500
+  product: cpu:amd-ryzen-5-4500
+- title: CPU AMD Ryzen 5 5500
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5500
+  product: cpu:amd-ryzen-5-5500
+- title: Procesador AMD Ryzen 5 5500
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5500
+  product: cpu:amd-ryzen-5-5500
+- title: RYZEN 5 5500
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5500
+  product: cpu:amd-ryzen-5-5500
+- title: CPU AMD Ryzen 5 5600GT AM4
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5600gt
+  product: cpu:amd-ryzen-5-5600gt
+- title: Procesador AMD Ryzen 5 5600GT
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5600gt
+  product: cpu:amd-ryzen-5-5600gt
+- title: RYZEN 5 5600GT
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5600gt
+  product: cpu:amd-ryzen-5-5600gt
+- title: CPU AMD Ryzen 5 5600XT
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5600xt
+  product: cpu:amd-ryzen-5-5600xt
+- title: Cpu Amd Ryzen 5 5600xt Am4 Box
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5600xt
+  product: cpu:amd-ryzen-5-5600xt
+- title: Cpu Amd Ryzen 5 5600xt Am4 Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-5600xt
+  product: cpu:amd-ryzen-5-5600xt
+- title: CPU AMD Ryzen 5 7600 AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600
+  product: cpu:amd-ryzen-5-7600
+- title: Cpu Amd Ryzen 5 7600 Am5 Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600
+  product: cpu:amd-ryzen-5-7600
+- title: Procesador AMD Ryzen 5 7600
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600
+  product: cpu:amd-ryzen-5-7600
+- title: CPU AMD Ryzen 5 7600X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600x
+  product: cpu:amd-ryzen-5-7600x
+- title: Procesador AMD Ryzen 5 7600X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600x
+  product: cpu:amd-ryzen-5-7600x
+- title: RYZEN 5 7600X
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600x
+  product: cpu:amd-ryzen-5-7600x
+- title: CPU AMD Ryzen 5 7600X3D AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600x3d
+  product: cpu:amd-ryzen-5-7600x3d
+- title: PROCESADOR AMD RYZEN 5 7600X3D AM4
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600x3d
+  product: cpu:amd-ryzen-5-7600x3d
+- title: Procesador Cpu Amd Ryzen 5 7600X3D Six Core 4.1 Hasta 4.7Ghz Socket Am5
+  store: infinit
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-7600x3d
+  product: cpu:amd-ryzen-5-7600x3d
+- title: AMD Ryzen 5 8400F AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8400f
+  product: cpu:amd-ryzen-5-8400f
+- title: Procesador AMD Ryzen 5 8400F
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8400f
+  product: cpu:amd-ryzen-5-8400f
+- title: RYZEN 5 8400F
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8400f
+  product: cpu:amd-ryzen-5-8400f
+- title: AMD Ryzen 5 8500G AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8500g
+  product: cpu:amd-ryzen-5-8500g
+- title: Cpu Amd Ryzen 5 8500g Am5 Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8500g
+  product: cpu:amd-ryzen-5-8500g
+- title: Procesador AMD Ryzen 5 8500G
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8500g
+  product: cpu:amd-ryzen-5-8500g
+- title: AMD Ryzen 5 8600G AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8600g
+  product: cpu:amd-ryzen-5-8600g
+- title: Procesador AMD Ryzen 5 8600G
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8600g
+  product: cpu:amd-ryzen-5-8600g
+- title: RYZEN 5 8600G
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-8600g
+  product: cpu:amd-ryzen-5-8600g
+- title: CPU AMD Ryzen 5 9600 AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-9600
+  product: cpu:amd-ryzen-5-9600
+- title: PROCESADOR AMD RYZEN 5 9600 AM5
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-9600
+  product: cpu:amd-ryzen-5-9600
+- title: CPU AMD Ryzen 5 9600X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-9600x
+  product: cpu:amd-ryzen-5-9600x
+- title: Cpu Amd Ryzen 5 9600x Am5 Box S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-9600x
+  product: cpu:amd-ryzen-5-9600x
+- title: Procesador AMD Ryzen 5 9600X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-5-9600x
+  product: cpu:amd-ryzen-5-9600x
+- title: CPU AMD Ryzen 7 5700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700
+  product: cpu:amd-ryzen-7-5700
+- title: Cpu Amd Ryzen 7 5700 Am4
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700
+  product: cpu:amd-ryzen-7-5700
+- title: Procesador AMD Ryzen 7 5700
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700
+  product: cpu:amd-ryzen-7-5700
+- title: CPU AMD Ryzen 7 5700G con Gráficos Radeon
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700g
+  product: cpu:amd-ryzen-7-5700g
+- title: Cpu Amd Ryzen 7 5700g Am4 Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700g
+  product: cpu:amd-ryzen-7-5700g
+- title: Procesador AMD Ryzen 7 5700G
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700g
+  product: cpu:amd-ryzen-7-5700g
+- title: CPU AMD Ryzen 7 5700X
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700x
+  product: cpu:amd-ryzen-7-5700x
+- title: Cpu Amd Ryzen 7 5700x Am4
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700x
+  product: cpu:amd-ryzen-7-5700x
+- title: Procesador AMD Ryzen 7 5700X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5700x
+  product: cpu:amd-ryzen-7-5700x
+- title: CPU AMD Ryzen 7 5800X3D AM4
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5800x3d
+  product: cpu:amd-ryzen-7-5800x3d
+- title: PROCESADOR AMD RYZEN 7 5800X3D
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5800x3d
+  product: cpu:amd-ryzen-7-5800x3d
+- title: Procesador AMD Ryzen 7 5800X3D
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5800x3d
+  product: cpu:amd-ryzen-7-5800x3d
+- title: PROCESADOR AMD RYZEN 7 5800XT
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5800xt
+  product: cpu:amd-ryzen-7-5800xt
+- title: Procesador Cpu Amd Ryzen 7 5800xt Am4
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5800xt
+  product: cpu:amd-ryzen-7-5800xt
+- title: RYZEN 7 5800XT
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-5800xt
+  product: cpu:amd-ryzen-7-5800xt
+- title: AMD Ryzen 7 7700
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700
+  product: cpu:amd-ryzen-7-7700
+- title: CPU AMD Ryzen 7 7700 AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700
+  product: cpu:amd-ryzen-7-7700
+- title: Cpu Amd Ryzen 7 7700 Am5 Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700
+  product: cpu:amd-ryzen-7-7700
+- title: CPU AMD Ryzen 7 7700X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700x
+  product: cpu:amd-ryzen-7-7700x
+- title: Cpu Amd Ryzen 7 7700x Am5 Box S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700x
+  product: cpu:amd-ryzen-7-7700x
+- title: Procesador AMD Ryzen 7 7700X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700x
+  product: cpu:amd-ryzen-7-7700x
+- title: CPU AMD Ryzen 7 7700X3D AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700x3d
+  product: cpu:amd-ryzen-7-7700x3d
+- title: PROCESADOR AMD RYZEN 7 7700X3D AM5
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700x3d
+  product: cpu:amd-ryzen-7-7700x3d
+- title: Procesador AMD Ryzen 7 7700X3D
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7700x3d
+  product: cpu:amd-ryzen-7-7700x3d
+- title: CPU AMD Ryzen 7 7800X3D AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7800x3d
+  product: cpu:amd-ryzen-7-7800x3d
+- title: Procesador AMD Ryzen 7 7800X3D
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7800x3d
+  product: cpu:amd-ryzen-7-7800x3d
+- title: RYZEN 7 7800X3D
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-7800x3d
+  product: cpu:amd-ryzen-7-7800x3d
+- title: AMD Ryzen 7 8700F AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-8700f
+  product: cpu:amd-ryzen-7-8700f
+- title: Cpu Amd Ryzen 7 8700f Am5 Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-8700f
+  product: cpu:amd-ryzen-7-8700f
+- title: Procesador AMD Ryzen 7 8700F
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-8700f
+  product: cpu:amd-ryzen-7-8700f
+- title: AMD Ryzen 7 8700G
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-8700g
+  product: cpu:amd-ryzen-7-8700g
+- title: AMD Ryzen 7 8700G AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-8700g
+  product: cpu:amd-ryzen-7-8700g
+- title: Cpu Amd Ryzen 7 8700g Am5 Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-8700g
+  product: cpu:amd-ryzen-7-8700g
+- title: CPU AMD Ryzen 7 9700X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9700x
+  product: cpu:amd-ryzen-7-9700x
+- title: Cpu Amd Ryzen 7 9700x Am5 Box S/fan
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9700x
+  product: cpu:amd-ryzen-7-9700x
+- title: Procesador AMD Ryzen 7 9700X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9700x
+  product: cpu:amd-ryzen-7-9700x
+- title: AMD Ryzen 7 9800X3D
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9800x3d
+  product: cpu:amd-ryzen-7-9800x3d
+- title: CPU AMD Ryzen 7 9800X3D AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9800x3d
+  product: cpu:amd-ryzen-7-9800x3d
+- title: Cpu Amd Ryzen 7 9800x3d Am5 Box S/fan
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9800x3d
+  product: cpu:amd-ryzen-7-9800x3d
+- title: PROCESADOR AMD RYZEN 7 9850X3D AM5 8C/16T 5.6GHZ X3D
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9850x3d
+  product: cpu:amd-ryzen-7-9850x3d
+- title: Procesador AMD Ryzen 7 9850X3D
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-7-9850x3d
+  product: cpu:amd-ryzen-7-9850x3d
+- title: Procesador Cpu AMD Ryzen 9 5900X 16 Nucleos De 3.3 Hasta 4.8Ghz AM4 Box
+  store: infinit
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-5900x
+  product: cpu:amd-ryzen-9-5900x
+- title: AMD Ryzen 9 7900
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7900
+  product: cpu:amd-ryzen-9-7900
+- title: Cpu Amd Ryzen 9 7900 Am5 Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7900
+  product: cpu:amd-ryzen-9-7900
+- title: Cpu Amd Ryzen 9 7900 Am5 Box Sin/fan
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7900
+  product: cpu:amd-ryzen-9-7900
+- title: AMD Ryzen 9 7900X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7900x
+  product: cpu:amd-ryzen-9-7900x
+- title: CPU AMD Ryzen 9 7900X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7900x
+  product: cpu:amd-ryzen-9-7900x
+- title: Cpu Amd Ryzen 9 7900x Am5 Box S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7900x
+  product: cpu:amd-ryzen-9-7900x
+- title: CPU AMD Ryzen 9 7950X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7950x
+  product: cpu:amd-ryzen-9-7950x
+- title: Cpu Amd Ryzen 9 7950x Am5 Box S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7950x
+  product: cpu:amd-ryzen-9-7950x
+- title: PROCESADOR AMD RYZEN 9 7950X AM5
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-7950x
+  product: cpu:amd-ryzen-9-7950x
+- title: CPU AMD Ryzen 9 9900X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9900x
+  product: cpu:amd-ryzen-9-9900x
+- title: Cpu Amd Ryzen 9 9900x Am5 Box S/fan
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9900x
+  product: cpu:amd-ryzen-9-9900x
+- title: Procesador AMD Ryzen 9 9900X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9900x
+  product: cpu:amd-ryzen-9-9900x
+- title: AMD Ryzen 9 9900X3D AM5
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9900x3d
+  product: cpu:amd-ryzen-9-9900x3d
+- title: CPU AMD Ryzen 9 9900X3D AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9900x3d
+  product: cpu:amd-ryzen-9-9900x3d
+- title: Cpu Amd Ryzen 9 9900x3d Am5 Box S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9900x3d
+  product: cpu:amd-ryzen-9-9900x3d
+- title: CPU AMD Ryzen 9 9950X AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x
+  product: cpu:amd-ryzen-9-9950x
+- title: Cpu Amd Ryzen 9 9950x Am5 S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x
+  product: cpu:amd-ryzen-9-9950x
+- title: Procesador AMD Ryzen 9 9950X
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x
+  product: cpu:amd-ryzen-9-9950x
+- title: CPU AMD Ryzen 9 9950X3D AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x3d
+  product: cpu:amd-ryzen-9-9950x3d
+- title: Cpu Amd Ryzen 9 9950x3d Am5 Box S/fan
+  store: laaca
+  category: cpu
+  store_brand: AMD
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x3d
+  product: cpu:amd-ryzen-9-9950x3d
+- title: RYZEN 9 9950X3D
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x3d
+  product: cpu:amd-ryzen-9-9950x3d
+- title: CPU AMD Ryzen 9 9950X3D2 Dual Edition AM5
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x3d2
+  product: cpu:amd-ryzen-9-9950x3d2
+- title: PROCESADOR AMD RYZEN 9 9950X3D2 AM5
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:amd-ryzen-9-9950x3d2
+  product: cpu:amd-ryzen-9-9950x3d2
+- title: Intel Core i3 10100f 3.60GHz 6MB LGA1200 10th Gen
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-10100f
+  product: cpu:intel-core-i3-10100f
+- title: PROCESADOR INTEL I3 10100F 3.60GHZ (1200) NO INCLUYE TARJETA DE VIDEO
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-10100f
+  product: cpu:intel-core-i3-10100f
+- title: CPU Intel Core i3 12100 Alder Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-12100
+  product: cpu:intel-core-i3-12100
+- title: Cpu Intel Core I3 12100 S1700 12va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-12100
+  product: cpu:intel-core-i3-12100
+- title: Intel Core I3 12100
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-12100
+  product: cpu:intel-core-i3-12100
+- title: CPU Intel Core i3 12100f Alder Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-12100f
+  product: cpu:intel-core-i3-12100f
+- title: Cpu Intel Core I3 12100f S1700 S/video 12ma G. Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-12100f
+  product: cpu:intel-core-i3-12100f
+- title: Intel Core I3 12100F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-12100f
+  product: cpu:intel-core-i3-12100f
+- title: CPU Intel Core i3 13100f Raptor Lake 1700 – Precio Especial
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-13100f
+  product: cpu:intel-core-i3-13100f
+- title: Intel Core i3 13100F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-13100f
+  product: cpu:intel-core-i3-13100f
+- title: Intel Core i3 i3-14100 - 3.5 GHz - 4 núcleos - 8 hilos - 12 MB caché - FCLGA1700 Socket - Caja
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-14100
+  product: cpu:intel-core-i3-14100
+- title: Procesador CPU INTEL Core i3 14100 Quad Core 3.5 hasta 4.7Ghz S1700
+  store: infinit
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-14100
+  product: cpu:intel-core-i3-14100
+- title: Procesador Intel Core i3 14100
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-14100
+  product: cpu:intel-core-i3-14100
+- title: CPU Intel Core i3 14100f Raptor Lake 1700 – Precio Especial
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-14100f
+  product: cpu:intel-core-i3-14100f
+- title: Cpu Intel Core I3 14100f S1700 S/video 14va G. Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-14100f
+  product: cpu:intel-core-i3-14100f
+- title: Intel Core i3 14100F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-14100f
+  product: cpu:intel-core-i3-14100f
+- title: Procesador CPU Intel Core I3-8100 Socket LGA 1151 4 Nucleos (Tray)
+  store: pccompu
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i3-8100
+  product: cpu:intel-core-i3-8100
+- title: Intel Core i5 10400F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-10400f
+  product: cpu:intel-core-i5-10400f
+- title: Intel Core i5 10400f 2.9GHz 12MB LGA1200 10th Gen
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-10400f
+  product: cpu:intel-core-i5-10400f
+- title: PROCESADOR INTEL I5 10400F 2.9GHZ (1200) NO INCLUYE TARJETA DE VIDEO
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-10400f
+  product: cpu:intel-core-i5-10400f
+- title: Cpu Intel Core I5 12400 S1700 12va Gen
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12400
+  product: cpu:intel-core-i5-12400
+- title: Intel Core I5 12400
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12400
+  product: cpu:intel-core-i5-12400
+- title: Intel Core i5 12400 Alder Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12400
+  product: cpu:intel-core-i5-12400
+- title: CPU Intel Core i5 12400f Alder Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12400f
+  product: cpu:intel-core-i5-12400f
+- title: INTEL I5 12400F
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12400f
+  product: cpu:intel-core-i5-12400f
+- title: Intel Core i5 12400F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12400f
+  product: cpu:intel-core-i5-12400f
+- title: Intel Core I5 12600KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12600kf
+  product: cpu:intel-core-i5-12600kf
+- title: Micro Procesador CPU Intel Core i5-12600KF 1700 Gen12 (Tray)
+  store: pccompu
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12600kf
+  product: cpu:intel-core-i5-12600kf
+- title: PROCESADOR INTEL CORE I5 12600KF LGA 1700
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-12600kf
+  product: cpu:intel-core-i5-12600kf
+- title: Cpu Intel Core I5 13400f S1700 S/video 13va G. Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-13400f
+  product: cpu:intel-core-i5-13400f
+- title: Intel Core i5 13400F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-13400f
+  product: cpu:intel-core-i5-13400f
+- title: CPU Intel Core i5 14400 Raptor Lake 1700 – Precio Especial
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14400
+  product: cpu:intel-core-i5-14400
+- title: Intel Core i5 14400
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14400
+  product: cpu:intel-core-i5-14400
+- title: Procesador CPU INTEL Core i5 14400 10 Core 1.8Ghz Hasta 4.7Ghz Raptor Lake S1700 14va Generacion
+  store: infinit
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14400
+  product: cpu:intel-core-i5-14400
+- title: CPU Intel Core i5 14400f Raptor Lake Tray
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14400f
+  product: cpu:intel-core-i5-14400f
+- title: INTEL I5 14400F
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14400f
+  product: cpu:intel-core-i5-14400f
+- title: Intel Core i5 14400F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14400f
+  product: cpu:intel-core-i5-14400f
+- title: CPU Intel Core i5 14600K Raptor Lake 1700 – Precio Especial
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14600k
+  product: cpu:intel-core-i5-14600k
+- title: Cpu Intel Core I5 14600k S1700 S/fan 14va G. Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14600k
+  product: cpu:intel-core-i5-14600k
+- title: Intel Core I5 14600K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14600k
+  product: cpu:intel-core-i5-14600k
+- title: Cpu Intel Core I5 14600kf S1700 S/fan S/video 14va
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14600kf
+  product: cpu:intel-core-i5-14600kf
+- title: Intel Core i5 14600KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14600kf
+  product: cpu:intel-core-i5-14600kf
+- title: Procesador Cpu Intel Core i5 14600kf 14 Nucleos 3.5 Hasta 5.3Ghz S1700 14va Generacion
+  store: infinit
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i5-14600kf
+  product: cpu:intel-core-i5-14600kf
+- title: CPU Intel Core i7 12700 LGA 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700
+  product: cpu:intel-core-i7-12700
+- title: Cpu Intel Core I7 12700 S1700 12va Gen
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700
+  product: cpu:intel-core-i7-12700
+- title: Intel Core I7 12700
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700
+  product: cpu:intel-core-i7-12700
+- title: CPU Intel Core i7 12700F LGA 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700f
+  product: cpu:intel-core-i7-12700f
+- title: Cpu Intel Core I7 12700f S1700 S/video 12va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700f
+  product: cpu:intel-core-i7-12700f
+- title: Intel Core I7 12700F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700f
+  product: cpu:intel-core-i7-12700f
+- title: CPU Intel Core i7 12700K Alder Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700k
+  product: cpu:intel-core-i7-12700k
+- title: Cpu Intel Core I7 12700k S1700 S/fan 12va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700k
+  product: cpu:intel-core-i7-12700k
+- title: Intel Core i7 12700K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700k
+  product: cpu:intel-core-i7-12700k
+- title: CPU Intel Core i7 12700KF Alder Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700kf
+  product: cpu:intel-core-i7-12700kf
+- title: Cpu Intel Core I7 12700kf 12va S1700 S/fan S/video
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700kf
+  product: cpu:intel-core-i7-12700kf
+- title: Intel Core I7 12700KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-12700kf
+  product: cpu:intel-core-i7-12700kf
+- title: Intel I7 13700KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-13700kf
+  product: cpu:intel-core-i7-13700kf
+- title: Cpu Intel Core I7 14700 S1700 14va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700
+  product: cpu:intel-core-i7-14700
+- title: Intel Core I7 14700 S1700 14va G. Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700
+  product: cpu:intel-core-i7-14700
+- title: Intel Core i7 14700
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700
+  product: cpu:intel-core-i7-14700
+- title: CPU Intel Core i7 14700f Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700f
+  product: cpu:intel-core-i7-14700f
+- title: Core I7 14700f S1700 S/video 14va G. Box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700f
+  product: cpu:intel-core-i7-14700f
+- title: Intel Core i7 14700F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700f
+  product: cpu:intel-core-i7-14700f
+- title: CPU Intel Core i7 14700K Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700k
+  product: cpu:intel-core-i7-14700k
+- title: Core I7 14700k S/fan S1700 14va G.box
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700k
+  product: cpu:intel-core-i7-14700k
+- title: Intel Core I7 14700K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700k
+  product: cpu:intel-core-i7-14700k
+- title: CPU Intel Core i7 14700KF Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700kf
+  product: cpu:intel-core-i7-14700kf
+- title: Core I7 14700kf S/fan S/video S1700 14va
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700kf
+  product: cpu:intel-core-i7-14700kf
+- title: Intel Core i7 14700KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i7-14700kf
+  product: cpu:intel-core-i7-14700kf
+- title: Cpu Intel Core I9 12900 S1700 12va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900
+  product: cpu:intel-core-i9-12900
+- title: Intel Core i9 12900
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900
+  product: cpu:intel-core-i9-12900
+- title: Procesador CPU INTEL Core i9 12900 16 Core 1.8Ghz Hasta 5.1Ghz Raptor Lake S1700 12va Generacion
+  store: infinit
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900
+  product: cpu:intel-core-i9-12900
+- title: Cpu Intel Core I9 12900f S1700 S/video 12va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900f
+  product: cpu:intel-core-i9-12900f
+- title: Cpu Intel Core I9 12900f S1700 S/video 12va G. Box
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900f
+  product: cpu:intel-core-i9-12900f
+- title: Intel Core I9 12900F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900f
+  product: cpu:intel-core-i9-12900f
+- title: Cpu Intel Core I9 12900k 12va G.s1700 S/fan
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900k
+  product: cpu:intel-core-i9-12900k
+- title: Cpu Intel Core I9 12900k S1700 S/fan 12va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900k
+  product: cpu:intel-core-i9-12900k
+- title: Intel Core I9 12900K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900k
+  product: cpu:intel-core-i9-12900k
+- title: Cpu Intel Core I9 12900kf S1700 S/fan S/video 12va
+  store: pcparts
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900kf
+  product: cpu:intel-core-i9-12900kf
+- title: Cpu Intel Core I9 12900kf S1700 S/fan S/video 12va
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900kf
+  product: cpu:intel-core-i9-12900kf
+- title: Intel Core i9 12900KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-12900kf
+  product: cpu:intel-core-i9-12900kf
+- title: Cpu Intel Core I9 13900 S1700 13va G. Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-13900
+  product: cpu:intel-core-i9-13900
+- title: Cpu Intel Core I9 13900 S1700 13va G. Box
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-13900
+  product: cpu:intel-core-i9-13900
+- title: Intel Core i9 13900
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-13900
+  product: cpu:intel-core-i9-13900
+- title: CPU Intel Core i9 14900 Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900
+  product: cpu:intel-core-i9-14900
+- title: Intel Core i9 14900
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900
+  product: cpu:intel-core-i9-14900
+- title: PROCESADOR INTEL CORE I9 14900 LGA1700
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900
+  product: cpu:intel-core-i9-14900
+- title: CPU Intel Core i9 14900f Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900f
+  product: cpu:intel-core-i9-14900f
+- title: Intel Core i9 14900F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900f
+  product: cpu:intel-core-i9-14900f
+- title: Intel Core i9 i9-14900F - 2 GHz - 24 núcleos - 32 hilos - 36 MB caché - FCLGA1700 Socket - Caja
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900f
+  product: cpu:intel-core-i9-14900f
+- title: CPU Intel Core i9 14900K Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900k
+  product: cpu:intel-core-i9-14900k
+- title: Procesador Cpu INTEL Core i9 14900k 24 Core 2.4Ghz Hasta 6.0Ghz Raptor Lake S1700 14va Generacion
+  store: infinit
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900k
+  product: cpu:intel-core-i9-14900k
+- title: Procesador Intel Core i9-14900K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900k
+  product: cpu:intel-core-i9-14900k
+- title: CPU Intel Core i9 14900KF Raptor Lake 1700
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900kf
+  product: cpu:intel-core-i9-14900kf
+- title: Intel Core i9 14900KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900kf
+  product: cpu:intel-core-i9-14900kf
+- title: Procesador Cpu Intel Core i9 14900kf 24 Core 2.4Ghz Hasta 6.0Ghz Raptor Lake S1700 14va Generacion
+  store: infinit
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-core-i9-14900kf
+  product: cpu:intel-core-i9-14900kf
+- title: CPU Intel Core Ultra 5 225 Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-225
+  product: cpu:intel-core-ultra-5-225
+- title: Cpu Intel Core Ultra 5 225 S1851 15va Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-225
+  product: cpu:intel-core-ultra-5-225
+- title: Procesador Intel Core Ultra 5 225
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-225
+  product: cpu:intel-core-ultra-5-225
+- title: CPU Intel Core Ultra 5 225F Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-225f
+  product: cpu:intel-core-ultra-5-225f
+- title: INTEL CORE ULTRA 5 225F
+  store: obsidian
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-225f
+  product: cpu:intel-core-ultra-5-225f
+- title: Procesador Intel i5 225F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-225f
+  product: cpu:intel-core-ultra-5-225f
+- title: CPU Intel Core Ultra 5 245K Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-245k
+  product: cpu:intel-core-ultra-5-245k
+- title: Cpu Intel Core Ultra 5 245k S1851 S/fan 15va Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-245k
+  product: cpu:intel-core-ultra-5-245k
+- title: Intel Core Ultra i5 245K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-245k
+  product: cpu:intel-core-ultra-5-245k
+- title: CPU Intel Core Ultra 5 245Kf Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-245kf
+  product: cpu:intel-core-ultra-5-245kf
+- title: Cpu Intel Core Ultra 5 245kf S1851 S/fan S/vid 15v
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-245kf
+  product: cpu:intel-core-ultra-5-245kf
+- title: Procesador Intel Core Ultra 5 245KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-245kf
+  product: cpu:intel-core-ultra-5-245kf
+- title: PROCESADOR INTEL CORE ULTRA 5 250K PLUS LGA 1851
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-250k-plus
+  product: cpu:intel-core-ultra-5-250k-plus
+- title: Procesador Intel Core Ultra 5 250K Plus
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-250k-plus
+  product: cpu:intel-core-ultra-5-250k-plus
+- title: CPU Intel Core Ultra 5 250KF Plus Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-250kf-plus
+  product: cpu:intel-core-ultra-5-250kf-plus
+- title: PROCESADOR INTEL CORE ULTRA 5 250KF PLUS LGA 1851
+  store: banifox
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-250kf-plus
+  product: cpu:intel-core-ultra-5-250kf-plus
+- title: Procesador Intel Core Ultra 5 250KF Plus
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-5-250kf-plus
+  product: cpu:intel-core-ultra-5-250kf-plus
+- title: CPU Intel Core Ultra 7 265 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265
+  product: cpu:intel-core-ultra-7-265
+- title: Cpu Intel Core Ultra 7 265 S1851 15va Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265
+  product: cpu:intel-core-ultra-7-265
+- title: Intel Core Ultra 7 265
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265
+  product: cpu:intel-core-ultra-7-265
+- title: CPU Intel Core Ultra 7 265F Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265f
+  product: cpu:intel-core-ultra-7-265f
+- title: Cpu Intel Core Ultra 7 265f S1851 S/vid 15va Box
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265f
+  product: cpu:intel-core-ultra-7-265f
+- title: Intel Core Ultra 7 265F
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265f
+  product: cpu:intel-core-ultra-7-265f
+- title: CPU Intel Core Ultra 7 265K Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265k
+  product: cpu:intel-core-ultra-7-265k
+- title: Intel Core Ultra i7 265K
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265k
+  product: cpu:intel-core-ultra-7-265k
+- title: CPU Intel Core Ultra 7 265KF Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265kf
+  product: cpu:intel-core-ultra-7-265kf
+- title: Cpu Intel Core Ultra 7 265kf S1851 S/fan S/vid 15v
+  store: tecnocity
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265kf
+  product: cpu:intel-core-ultra-7-265kf
+- title: Intel Core Ultra 7 265KF
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-265kf
+  product: cpu:intel-core-ultra-7-265kf
+- title: CPU Intel Core Ultra 7 270K Plus Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-270k-plus
+  product: cpu:intel-core-ultra-7-270k-plus
+- title: Procesador Intel Core Ultra 7 270K Plus
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-7-270k-plus
+  product: cpu:intel-core-ultra-7-270k-plus
+- title: CPU Intel Core Ultra 9 285 Arrow Lake 1851
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-9-285
+  product: cpu:intel-core-ultra-9-285
+- title: Intel Core Ultra 9 285
+  store: laaca
+  category: cpu
+  store_brand: Intel
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-9-285
+  product: cpu:intel-core-ultra-9-285
+- title: CPU Intel Core Ultra 9 285K
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-core-ultra-9-285k
+  product: cpu:intel-core-ultra-9-285k
+- title: CPU Intel Pentium G7400 Dual Core 3.7ghz LGA1700 12th gen
+  store: thot
+  category: cpu
+  status: matched
+  condition: new
+  family: cpu:intel-pentium-gold-g7400
+  product: cpu:intel-pentium-gold-g7400
+- title: PROCESADOR INTEL DUAL CORE G7400 (1700) 12VA
+  store: hardpc
+  category: cpu
+  store_brand: INTEL
+  status: matched
+  condition: new
+  family: cpu:intel-pentium-gold-g7400
+  product: cpu:intel-pentium-gold-g7400
+- title: GPU ASrock Intel Arc A380 Challenger 6Gb DDR6
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-a380-6gb
+  product: gpu|asrock|arc a380|6|challenger|
+- title: Tarjeta Asrock Intel Arc A380 Challenger 6gb Ddr6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-a380-6gb
+  product: gpu|asrock|arc a380|6|challenger|
+- title: Tarjeta De Video ASROCK ARC A380 Challenger ITX 6Gb Ddr6 Single Fan Hdmi Dp Intel Pci-e 4.0 96bits DirectX OpenGl
+  store: infinit
+  category: gpu
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: gpu:arc-a380-6gb
+  product: gpu|asrock|arc a380|6|challenger|itx
+- title: Tarjeta Asrock Intel A580 Arc Challenger 8gb Oc D6
+  store: laaca
+  category: gpu
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: gpu:arc-a580-8gb
+  product: gpu|asrock|arc a580|8|challenger|oc
+- title: Tarjeta Asrock Intel A580 Arc Challenger 8gb Oc D6
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-a580-8gb
+  product: gpu|asrock|arc a580|8|challenger|oc
+- title: Tarjeta Asrock Intel A580 Arc Challenger 8gb Oc D6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-a580-8gb
+  product: gpu|asrock|arc a580|8|challenger|oc
+- title: GPU ASrock Intel Arc B570 Challenger 10Gb DDR6 OC
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-b570-10gb
+  product: gpu|asrock|arc b570|10|challenger|oc
+- title: Tarjeta Asrock Intel B570 Arc Challenger 10gb Oc
+  store: laaca
+  category: gpu
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: gpu:arc-b570-10gb
+  product: gpu|asrock|arc b570|10|challenger|oc
+- title: Tarjeta Asrock Intel B570 Arc Challenger 10gb Oc
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-b570-10gb
+  product: gpu|asrock|arc b570|10|challenger|oc
+- title: GPU ASrock Intel Arc B580 Challenger 12Gb DDR6 OC
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-b580-12gb
+  product: gpu|asrock|arc b580|12|challenger|oc
+- title: Tarjeta Asrock Intel B580 Arc Challenger 12gb Oc
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:arc-b580-12gb
+  product: gpu|asrock|arc b580|12|challenger|oc
+- title: Tarjeta de video ASRock Intel Arc B580 12GB Challenger OC
+  store: laaca
+  category: gpu
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: gpu:arc-b580-12gb
+  product: gpu|asrock|arc b580|12|challenger|oc
+- title: GPU Inno3d GeForce GT 1030 2Gb GDDR5
+  store: thot
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:gt-1030-2gb
+  product: null
+- title: Tarjeta Inno3d Geforce GT 1030 2GB GDDR5
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: family_only
+  condition: new
+  family: gpu:gt-1030-2gb
+  product: null
+- title: Tarjeta De Video BIOSTAR GT1030 4GB ATX D4
+  store: netpc
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:gt-1030-4gb
+  product: gpu|biostar|gt 1030|4||ddr4
+- title: Tarjeta De Video BIOSTAR GT1030 4Gb Gddr4 GeForce Dvi Hdmi
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-1030-4gb
+  product: gpu|biostar|gt 1030|4||ddr4
+- title: Tarjeta Video Biostar GT1030 4GB ATX D4
+  store: laaca
+  category: gpu
+  store_brand: Biostar
+  status: matched
+  condition: new
+  family: gpu:gt-1030-4gb
+  product: gpu|biostar|gt 1030|4||ddr4
+- title: TARJETA DE VIDEO MSI GEFORCE N 210-MD1G/D3
+  store: banifox
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:gt-210-1gb
+  product: null
+- title: TARJETA VIDEO BIOSTAR G210 1GB DDR3
+  store: hardpc
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-210-1gb
+  product: gpu|biostar|gt 210|1||ddr3
+- title: Tarjeta De Video BIOSTAR G210 1GB D3G210
+  store: netpc
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:gt-210-1gb
+  product: gpu|biostar|gt 210|1||ddr3
+- title: Tarjeta De Video BIOSTAR G210 1Gb Ddr3 Nvidia GeForce Vga Hdmi Dvi
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-210-1gb
+  product: gpu|biostar|gt 210|1||ddr3
+- title: GPU Biostar GeForce GT 610 2Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:gt-610-2gb
+  product: gpu|biostar|gt 610|2||
+- title: Tarjeta De Video BIOSTAR GT610 2GB D3 GT610
+  store: netpc
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:gt-610-2gb
+  product: gpu|biostar|gt 610|2||ddr3
+- title: Tarjeta Video BIOSTAR GT610 2GB D3 HDMI/VGA/DVI
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-610-2gb
+  product: gpu|biostar|gt 610|2||ddr3
+- title: Tarjeta de Video Biostar GeForce GT 610 2GB DDR3 PCIe 2.0
+  store: pccompu
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-610-2gb
+  product: gpu|biostar|gt 610|2||ddr3
+- title: Tarjeta de video Nvidia BIOSTAR GT 610 2Gb
+  store: laaca
+  category: gpu
+  store_brand: Biostar
+  status: matched
+  condition: new
+  family: gpu:gt-610-2gb
+  product: gpu|biostar|gt 610|2||
+- title: TARJETA DE VIDEO ASUS GEFORCE GT 710 2GB GDDR5 GT710-SL-2GD5-BRK-EVO
+  store: banifox
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:gt-710-2gb
+  product: null
+- title: Tarjeta De Video INNO3D GT730 2Gb Sddr3 Hdmi Dvi-d Vga
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: family_only
+  condition: new
+  family: gpu:gt-730-2gb
+  product: null
+- title: Tarjeta de video Inno3D GT 730 2GB DDR3 Pasiva
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: family_only
+  condition: new
+  family: gpu:gt-730-2gb
+  product: null
+- title: TARJETA VIDEO BIOSTAR GT 730 4GB DDR3
+  store: hardpc
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-730-4gb
+  product: gpu|biostar|gt 730|4||ddr3
+- title: Tarjeta De Video BIOSTAR Gt730 4Gb Ddr3 Vga Hdmi Dvi Nvidia GeForce
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gt-730-4gb
+  product: gpu|biostar|gt 730|4||ddr3
+- title: Tarjeta Inno3d Geforce GT 730 4GB SDDR3 V1
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: family_only
+  condition: new
+  family: gpu:gt-730-4gb
+  product: null
+- title: GPU Biostar GeForce GTX 1050 4Gb GDDR5
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:gtx-1050-4gb
+  product: gpu|biostar|gtx 1050|4||
+- title: TARJETA VIDEO BIOSTAR GTX1050 4GB DDR5
+  store: hardpc
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gtx-1050-4gb
+  product: gpu|biostar|gtx 1050|4||
+- title: Tarjeta de video Biostar GTX 1050 4GB
+  store: laaca
+  category: gpu
+  store_brand: Biostar
+  status: matched
+  condition: new
+  family: gpu:gtx-1050-4gb
+  product: gpu|biostar|gtx 1050|4||
+- title: Tarjeta De Video BIOSTAR GTX 1050Ti 4Gb Gddr5 Extreme Gaming Dvi Hdmi Dp Nvidia GeForce Pci-e 3.0 128bits DirectX
+    OpenGL
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:gtx-1050-ti-4gb
+  product: gpu|biostar|gtx 1050 ti|4||
+- title: Tarjeta de video Biostar GTX 1050 Ti 4GB
+  store: laaca
+  category: gpu
+  store_brand: Biostar
+  status: matched
+  condition: new
+  family: gpu:gtx-1050-ti-4gb
+  product: gpu|biostar|gtx 1050 ti|4||
+- title: GPU MSI GeForce RTX 3050 LP OC 6Gb DDR6
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|msi|rtx 3050|6|lp|oc
+- title: GPU MSI GeForce RTX 3050 Ventus X2 OC 6Gb DDR6
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|msi|rtx 3050|6|ventus 2x|oc
+- title: GPU Palit GeForce RTX3050 Stormx 6GB DDR6
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|palit|rtx 3050|6|stormx|
+- title: TARJETA DE VIDEO PALIT GEFORCE RTX 3050 STORMX 6GB GDDR6 PCIE 4.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|palit|rtx 3050|6|stormx|
+- title: Tarjeta de Video MSI GeForce RTX 3050 6GB GDDR6 LP OC Low Profile Dual Fan HDMI/D-Port
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|msi|rtx 3050|6|lp|oc
+- title: Tarjeta de Video MSI GeForce RTX 3050 6GB GDDR6 Ventus 2X OC PCIe 4.0 Dual Fan HDMI/D-Port
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|msi|rtx 3050|6|ventus 2x|oc
+- title: Tarjeta de Video Palit StormX Nvidia GeForce RTX 3050 6GB GDDR6 PCIe 4.0 96bit HDMI/D-Port
+  store: pccompu
+  category: gpu
+  store_brand: PALIT
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|palit|rtx 3050|6|stormx|
+- title: Tarjeta de video MSI RTX 3050 LP 6Gb OC
+  store: laaca
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-6gb
+  product: gpu|msi|rtx 3050|6|lp|oc
+- title: GPU Inno3d GeForce RTX 3050 8GB Twin X2
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-8gb
+  product: gpu|inno3d|rtx 3050|8|twin x2|
+- title: Tarjeta Inno3d Geforce Rtx 3050 8gb Twin X2
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-8gb
+  product: gpu|inno3d|rtx 3050|8|twin x2|
+- title: Tarjeta de Video Inno3D Nvidia GeForce RTX 3050 8GB GDDR6 Twin x2 HDMI/D-Port
+  store: pccompu
+  category: gpu
+  store_brand: INNO3D
+  status: matched
+  condition: new
+  family: gpu:rtx-3050-8gb
+  product: gpu|inno3d|rtx 3050|8|twin x2|
+- title: GPU Asus Dual Geforce RTX3060 OC 12Gb DDR6
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3060-12gb
+  product: gpu|asus|rtx 3060|12|dual|oc
+- title: TARJETA DE VIDEO ASUS GEFORCE RTX 3060 DUAL OC 12GB DUAL-RTX3060-O12G-V2
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-3060-12gb
+  product: gpu|asus|rtx 3060|12|dual|oc+v2
+- title: Tarjeta De Video ASUS RTX 3060 12Gb Gddr6 DUAL OC Hdmi Dp Nvidia GeForce Pci-e 4.0 192bits DirectX OpneGL
+  store: infinit
+  category: gpu
+  store_brand: ASUS
+  status: matched
+  condition: new
+  family: gpu:rtx-3060-12gb
+  product: gpu|asus|rtx 3060|12|dual|oc
+- title: Tarjeta de video ASUS Dual GeForce RTX 3060 V2 OC 12GB GDDR6
+  store: laaca
+  category: gpu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: gpu:rtx-3060-12gb
+  product: gpu|asus|rtx 3060|12|dual|oc+v2
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE RTX 3080 GV-N3080IXEB-10GD GA20-REF 10GB GDDR6X PCI-E 4.0 REF
+  store: banifox
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:rtx-3080-10gb
+  product: null
+- title: Tarjeta de video GIGABYTE RTX 4060 TI WINDFORCE OC 8Gb
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rtx-4060-ti-8gb
+  product: gpu|gigabyte|rtx 4060 ti|8|windforce|oc
+- title: GPU Asus Dual GeForce RTX5050 OC 8GB DDR6
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|asus|rtx 5050|8|dual|oc
+- title: GPU Gigabyte GeForce RTX5050 Windforce OC V2 8GB
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|gigabyte|rtx 5050|8|windforce|oc+v2
+- title: GPU MSI GeForce RTX 5050 Ventus 2X OC 8GB
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|msi|rtx 5050|8|ventus 2x|oc
+- title: GPU PALIT GeForce RTX 5050 Stormx OC 8GB
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|stormx|oc
+- title: GPU Palit GeForce RTX 5050 Dual 8GB
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|dual|
+- title: TARJETA DE VIDEO ASUS GEFORCE RTX 5050 DUAL OC 8GB GDDR6 DUAL-RTX5050-O8G 90YV0N72-M0AA00
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|asus|rtx 5050|8|dual|oc
+- title: TARJETA DE VIDEO PALIT GEFORCE RTX 5050 DUAL OC 8GB GDDR6 DLSS 4 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|dual|oc
+- title: Tarjeta Inno3d Geforce Rtx 5050 8gb Twin X2
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|inno3d|rtx 5050|8|twin x2|
+- title: Tarjeta Inno3d Geforce Rtx 5050 8gb Twin X2
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|inno3d|rtx 5050|8|twin x2|
+- title: Tarjeta Inno3d Geforce Rtx 5050 8gb Twin X2
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|inno3d|rtx 5050|8|twin x2|
+- title: Tarjeta Palit Geforce Rtx 5050 Dual Oc 8gb Gddr6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|dual|oc
+- title: Tarjeta Palit Geforce Rtx 5050 Stormx Oc 8gb Gddr6
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|stormx|oc
+- title: Tarjeta Palit Geforce Rtx 5050 Stormx Oc 8gb Gddr6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|stormx|oc
+- title: Tarjeta Palit Geforce Rtx5050 Dual 8gb Gddr6
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|dual|
+- title: Tarjeta de Video MSI GeForce RTX 5050 8GB Shadow 2X OC
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|msi|rtx 5050|8|shadow 2x|oc
+- title: Tarjeta de Video MSI GeForce RTX 5050 8GB Ventus 2X OC DLSS4
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|msi|rtx 5050|8|ventus 2x|oc
+- title: Tarjeta de video Gigabyte RTX 5050 8GB Windforce OC V2
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|gigabyte|rtx 5050|8|windforce|oc+v2
+- title: Tarjeta de video PNY RTX 5050 8Gb
+  store: laaca
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: null
+- title: Tarjeta de video Palit RTX 5050 8GB Dual OC
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5050-8gb
+  product: gpu|palit|rtx 5050|8|dual|oc
+- title: GPU Asus Dual GeForce RTX5060 8GB
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|asus|rtx 5060|8|dual|
+- title: GPU Gigabyte GeForce RTX5060 Eagle OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|gigabyte|rtx 5060|8|eagle|oc
+- title: GPU Gigabyte GeForce RTX5060 Eagle OC ICE 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|gigabyte|rtx 5060|8|eagle|oc+white
+- title: GPU MSI GeForce RTX5060 Shadow 2X OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|msi|rtx 5060|8|shadow 2x|oc
+- title: GPU Palit Geforce RTX5060 Infinity 2 OC 8Gb GDDR7
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|palit|rtx 5060|8|infinity 2|oc
+- title: GPU Palit Geforce RTX5060 White OC 8Gb GDDR7
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|palit|rtx 5060|8|white|oc
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE RTX 5060 EAGLE OC GV-N5060EAGLEOC ICE-8GD 8GB GDDR6 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|gigabyte|rtx 5060|8|eagle|oc+white
+- title: TARJETA DE VIDEO MSI GEFORCE RTX 5060 SHADOW 2X OC 8GB GDDR7 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|msi|rtx 5060|8|shadow 2x|oc
+- title: TARJETA VIDEO MSI GEFORCE RTX5060 8GB GAMING OC 912-V537-023
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|msi|rtx 5060|8|gaming|oc
+- title: Tarjeta De Video GIGABYTE RTX 5060 8Gb Gddr7 Eagle OC Hdmi Dp Nvidia GeForce Pci-e 5.0 128bits
+  store: infinit
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|gigabyte|rtx 5060|8|eagle|oc
+- title: Tarjeta Inno3d Geforce RTX 5060 8GB Twin X2
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|inno3d|rtx 5060|8|twin x2|
+- title: Tarjeta Inno3d Geforce RTX 5060 8GB Twin X2
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|inno3d|rtx 5060|8|twin x2|
+- title: Tarjeta Inno3d Geforce Rtx 5060 8gb Twin X2 Wh
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|inno3d|rtx 5060|8|twin x2|white
+- title: Tarjeta Inno3d Geforce Rtx 5060 8gb Twin X2 Wh
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|inno3d|rtx 5060|8|twin x2|white
+- title: Tarjeta Inno3d Geforce Rtx 5060 8gb Twin X2 Wh
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|inno3d|rtx 5060|8|twin x2|white
+- title: Tarjeta Palit Geforce Rtx 5060 Infinity 2 Oc 8gb D
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|palit|rtx 5060|8|infinity 2|oc
+- title: Tarjeta Palit Rtx 5060 White Oc 8gb Gddr7
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|palit|rtx 5060|8|white|oc
+- title: Tarjeta de Video Gigabyte GeForce RTX 5060 8GB GDDR7 Eagle OC 128-bits PCIe 5.0
+  store: pccompu
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|gigabyte|rtx 5060|8|eagle|oc
+- title: Tarjeta de Video MSI GeForce RTX 5060 8GB Gaming OC GDDR7
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|msi|rtx 5060|8|gaming|oc
+- title: Tarjeta de Video MSI GeForce RTX 5060 8GB Shadow 2x OC
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|msi|rtx 5060|8|shadow 2x|oc
+- title: Tarjeta de video ASUS Dual GeForce RTX 5060 8Gb
+  store: laaca
+  category: gpu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|asus|rtx 5060|8|dual|
+- title: Tarjeta de video GIGABYTE RTX 5060 Eagle OC ICE 8Gb
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|gigabyte|rtx 5060|8|eagle|oc+white
+- title: Tarjeta de video Palit RTX 5060 8GB Infinity 2 OC
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-8gb
+  product: gpu|palit|rtx 5060|8|infinity 2|oc
+- title: GPU MSI GeForce RTX5060 TI Ventus 2X OC Plus 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-16gb
+  product: gpu|msi|rtx 5060 ti|16|ventus 2x|oc+plus
+- title: TARJETA DE VIDEO ASUS GEFORCE RTX 5060 TI DUAL EVO OC 16GB GDDR7 DUAL-RTX5060TI-O16G-EVO
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-16gb
+  product: gpu|asus|rtx 5060 ti|16|dual|evo+oc
+- title: TARJETA DE VODEO MSI GEFORCE RTX 5060 TI 16GB VENTUS 2X OC PLUS 912-V535-097
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-16gb
+  product: gpu|msi|rtx 5060 ti|16|ventus 2x|oc+plus
+- title: Tarjeta de Video Asus Dual GeForce RTX 5060 Ti EVO OC 16GB
+  store: pccompu
+  category: gpu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-16gb
+  product: gpu|asus|rtx 5060 ti|16|dual|evo+oc
+- title: Tarjeta de Video MSI GeForce RTX 5060 Ti 16GB Ventus 2X OC Plus
+  store: pccompu
+  category: gpu
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-16gb
+  product: gpu|msi|rtx 5060 ti|16|ventus 2x|oc+plus
+- title: GPU Gigabyte GeForce RTX5060 TI Eagle OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|eagle|oc
+- title: GPU Gigabyte GeForce RTX5060 TI Eagle OC ICE 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|eagle|oc+white
+- title: GPU Gigabyte GeForce RTX5060 TI Gaming OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|gaming|oc
+- title: GPU Gigabyte GeForce RTX5060 TI Windforce OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|windforce|oc
+- title: GPU MSI GeForce RTX5060 TI Ventus 2X OC Plus 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|msi|rtx 5060 ti|8|ventus 2x|oc+plus
+- title: GPU Palit Geforce RTX5060 Ti Dual 8Gb GDDR7
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|palit|rtx 5060 ti|8|dual|
+- title: GPU Palit Geforce RTX5060 Ti White OC 8Gb GDDR7
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|palit|rtx 5060 ti|8|white|oc
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE RTX 5060 TI GV-N506TEAGLE OC-8GD 8GB GDDR6 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|eagle|oc
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE RTX 5060 TI GV-N506TEAGLEOC ICE-8GD EAGLE OC ICE 8GB GDDR7 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|eagle|oc+white
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE RTX 5060 TI GV-N506TGAMING OC-8GD 8GB GDDR6 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|gaming|oc
+- title: TARJETA DE VIDEO GIGABYTE GV-N506TWF2OC-8GD 5060TI WINDFORCE OC 8G
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|windforce|oc
+- title: TARJETA DE VIDEO MSI GEFORCE RTX 5060 TI VENTUS 2X OC PLUS 8GB GDDR7 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|msi|rtx 5060 ti|8|ventus 2x|oc+plus
+- title: Tarjeta De Video GIGABYTE RTX 5060Ti 8Gb Gddr7 Gaming OC Hdmi Dp Nvidia GeForce Pci-e 5.0 128bits
+  store: infinit
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|gaming|oc
+- title: Tarjeta Inno3d Geforce Rtx 5060 Ti 8gb Twin X2 Wh
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|inno3d|rtx 5060 ti|8|twin x2|white
+- title: Tarjeta Inno3d Geforce Rtx 5060 Ti 8gb Twin X2 Wh
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|inno3d|rtx 5060 ti|8|twin x2|white
+- title: Tarjeta Inno3d Geforce Rtx 5060ti 8gb Twin X2 Wh
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|inno3d|rtx 5060 ti|8|twin x2|white
+- title: Tarjeta Inno3d Geforce Rtx 5060ti Twin X2 8gb D7
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|inno3d|rtx 5060 ti|8|twin x2|
+- title: Tarjeta Palit Geforce RTX 5060ti Dual 8Gb
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|palit|rtx 5060 ti|8|dual|
+- title: Tarjeta Palit Geforce RTX 5060ti Dual 8gb GDDR7
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|palit|rtx 5060 ti|8|dual|
+- title: Tarjeta Palit Geforce Rtx 5060ti White OC 8gb D7
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|palit|rtx 5060 ti|8|white|oc
+- title: Tarjeta Video Palit RTX 5060Ti OC 8GB blanca
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|palit|rtx 5060 ti|8|white|oc
+- title: Tarjeta de Video Gigabyte RTX 5060 Ti 8GB EAGLE OC ICE
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|eagle|oc+white
+- title: Tarjeta de Video Inno3d GeForce RTX 5060Ti 8Gb Twin X2 GDDR7
+  store: pccompu
+  category: gpu
+  store_brand: INNO3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|inno3d|rtx 5060 ti|8|twin x2|
+- title: Tarjeta de video ASUS The T1 RTX 5060 Ti 8GB
+  store: laaca
+  category: gpu
+  store_brand: Asus
+  status: family_only
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: null
+- title: Tarjeta de video GIGABYTE RTX 5060 TI WINDFORCE 8Gb
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|gigabyte|rtx 5060 ti|8|windforce|
+- title: Tarjeta de video Inno3D RTX 5060 Ti 8GB Twin X2
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5060-ti-8gb
+  product: gpu|inno3d|rtx 5060 ti|8|twin x2|
+- title: GPU Gigabyte GeForce RTX 5070 Eagle OC SFF 12GB ICE
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|gigabyte|rtx 5070|12|eagle|oc+sff+white
+- title: GPU Inno3d GeForce RTX 5070 12Gb Twin X2
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|inno3d|rtx 5070|12|twin x2|
+- title: GPU Inno3d GeForce RTX 5070 12Gb Twin X2 OC Wh
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|inno3d|rtx 5070|12|twin x2|oc+white
+- title: GPU PNY GeForce RTX 5070 OC 12Gb GDDR7
+  store: thot
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: null
+- title: GPU Palit Geforce RTX 5070 INFINITY 3 OC 12Gb GDDR7
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|infinity 3|oc
+- title: TARJETA DE VIDEO GIGABYTE AORUS GEFORCE RTX 5070 INFINITY 12GB GDDR7 DLSS 4 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: null
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE GV-N5070EAGLEOC ICE-12GD SFF
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|gigabyte|rtx 5070|12|eagle|oc+sff+white
+- title: Tarjeta Inno3d Geforce Rtx 5070 12gb Twin X2
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|inno3d|rtx 5070|12|twin x2|
+- title: Tarjeta Inno3d Geforce Rtx 5070 12gb Twin X2 Oc Wh
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|inno3d|rtx 5070|12|twin x2|oc+white
+- title: Tarjeta Inno3d Geforce Rtx 5070 12gb Twin X2 Oc Wh
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|inno3d|rtx 5070|12|twin x2|oc+white
+- title: Tarjeta Palit Geforce Rtx 5070 Infinity 3 Oc 12gb
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|infinity 3|oc
+- title: Tarjeta Palit Geforce Rtx 5070 Infinity3 12gb D7
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|infinity 3|
+- title: Tarjeta Palit Geforce Rtx 5070 Infinity3 12gb D7
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|infinity 3|
+- title: Tarjeta Palit Geforce Rtx 5070 Infinity3 12gb D7
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|infinity 3|
+- title: Tarjeta Palit Geforce Rtx5070 White Oc 12gb Gddr7
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|white|oc
+- title: Tarjeta Palit Geforce Rtx5070 White Oc 12gb Gddr7
+  store: hardpc
+  category: gpu
+  store_brand: PALIT
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|white|oc
+- title: Tarjeta de video Inno3d RTX 5070 12Bb Twin X2
+  store: laaca
+  category: gpu
+  store_brand: Inno3D
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|inno3d|rtx 5070|12|twin x2|
+- title: Tarjeta de video Palit RTX 5070 12GB Blanco OC
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|white|oc
+- title: Tarjeta de video Palit RTX 5070 12GB Infinity 3 OC
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-12gb
+  product: gpu|palit|rtx 5070|12|infinity 3|oc
+- title: Tarjeta Inno3d Geforce Rtx 5070 Ti 16gb X3 Oc Wh
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5070-ti-16gb
+  product: gpu|inno3d|rtx 5070 ti|16|x3|oc+white
+- title: GPU Gigabyte GeForce RTX 5080 Aorus Infinity 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5080-16gb
+  product: gpu|gigabyte|rtx 5080|16|aorus infinity|
+- title: GPU Palit GeForce RTX 5080 Gaming Pro 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5080-16gb
+  product: gpu|palit|rtx 5080|16|gamingpro|
+- title: TARJETA DE VIDEO GIGABYTE AORUS GEFORCE RTX 5080 INFINITY 16GB GV-N5080AORUS IF-16GD
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5080-16gb
+  product: gpu|gigabyte|rtx 5080|16|aorus infinity|
+- title: Tarjeta Palit Geforce RTX 5080 GamingPro 16gb D7
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5080-16gb
+  product: gpu|palit|rtx 5080|16|gamingpro|
+- title: Tarjeta de video Palit RTX 5080 16GB GamingPro
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5080-16gb
+  product: gpu|palit|rtx 5080|16|gamingpro|
+- title: GPU Palit Geforce RTX5090 Gamerock OC 32Gb GDDR7
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5090-32gb
+  product: gpu|palit|rtx 5090|32|gamerock|oc
+- title: TARJETA DE VIDEO GIGABYTE GEFORCE RTX 5090 AORUS MASTER GV-5090AORUS M-32G 32GB GDDR7 PCI-E 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5090-32gb
+  product: gpu|gigabyte|rtx 5090|32|aorus master|
+- title: Tarjeta De Video GIGABYTE RTX 5090 32Gb Gddr7 Aorus Master 3 Fanes Hdmi Dp Nvidia GeForce Pci-e 5.0 512bits
+  store: infinit
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rtx-5090-32gb
+  product: gpu|gigabyte|rtx 5090|32|aorus master|
+- title: Tarjeta Palit Geforce Rtx 5090 Gamerock Oc 32gb D7
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rtx-5090-32gb
+  product: gpu|palit|rtx 5090|32|gamerock|oc
+- title: Tarjeta de video Palit RTX 5090 32GB Gamerock OC
+  store: laaca
+  category: gpu
+  store_brand: Palit
+  status: matched
+  condition: new
+  family: gpu:rtx-5090-32gb
+  product: gpu|palit|rtx 5090|32|gamerock|oc
+- title: Biostar Radeon RX550 4gb ddr5
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-550-4gb
+  product: gpu|biostar|rx 550|4||gddr5
+- title: Tarjeta De Video BIOSTAR RX550 4Gb Gddr5 128bit Amd Radeon Hdmi Dvi Dp AMD XConnect y HDR Ready
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:rx-550-4gb
+  product: gpu|biostar|rx 550|4||gddr5
+- title: BIOSTAR Radeon RX560 4gb gddr5
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-560-4gb
+  product: gpu|biostar|rx 560|4||gddr5
+- title: TARJETA VIDEO BIOSTAR RX560 4GB DDR5 (VA5615RF41)
+  store: hardpc
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:rx-560-4gb
+  product: gpu|biostar|rx 560|4||gddr5
+- title: Tarjeta De Video BIOSTAR RX560 4Gb GDdr5 Amd Radeon Hdmi Dp Dvi
+  store: infinit
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:rx-560-4gb
+  product: gpu|biostar|rx 560|4||gddr5
+- title: TARJETA VIDEO BIOSTAR RX6400 4GB DDR6
+  store: hardpc
+  category: gpu
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: gpu:rx-6400-4gb
+  product: gpu|biostar|rx 6400|4||
+- title: Tarjeta De Video BIOSTAR RX6400 4GB
+  store: netpc
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-6400-4gb
+  product: gpu|biostar|rx 6400|4||
+- title: GPU Gigabyte Radeon RX7600 Gaming OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|gigabyte|rx 7600|8|gaming|oc
+- title: RX 7600 8GB GIGABYTE GAMING OC
+  store: obsidian
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|gigabyte|rx 7600|8|gaming|oc
+- title: Tarjeta Asrock Radeon Rx7600 Challenger 8gb Oc D6
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|asrock|rx 7600|8|challenger|oc
+- title: Tarjeta Asrock Radeon Rx7600 Challenger 8gb Oc D6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|asrock|rx 7600|8|challenger|oc
+- title: Tarjeta De Video GIGABYTE AMD RX7600 8Gb Gddr6 Gaming Oc 3 Fanes Hdmi Dp Pci-e 4.0 128 Bits DirectX OpenGL
+  store: infinit
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|gigabyte|rx 7600|8|gaming|oc
+- title: Tarjeta de Video ASRock AMD Radeon RX 7600 Challenger OC 8GB GDDR6 128bit HDMI/DisplayPort
+  store: pccompu
+  category: gpu
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|asrock|rx 7600|8|challenger|oc
+- title: Tarjeta de video ASUS RX 7600 Dual 8Gb OC
+  store: laaca
+  category: gpu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: gpu:rx-7600-8gb
+  product: gpu|asus|rx 7600|8|dual|oc
+- title: GPU ASRock Radeon RX9060 XT Challenger OC 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|asrock|rx 9060 xt|16|challenger|oc
+- title: GPU Gigabyte Radeon RX9060 XT Gaming OC ICE 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|gigabyte|rx 9060 xt|16|gaming|oc+white
+- title: TARJETA DE VIDEO GIGABYTE RADEON GV-R906XGAMINGOCEICE-16GB
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|gigabyte|rx 9060 xt|16|gaming|oc
+- title: Tarjeta Asrock Amd Rx9060xt Challenger 16gb Oc
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|asrock|rx 9060 xt|16|challenger|oc
+- title: Tarjeta De Video GIGABYTE RX 9060XT 16Gb Gddr6 GAMING OC 3X Fanes Hdmi Dp Nvidia GeForce Pci-e 5.0 128bits
+  store: infinit
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|gigabyte|rx 9060 xt|16|gaming|oc
+- title: Tarjeta de Video GIGABYTE RX 9060 XT 16Gb GAMING OC ICE blanca
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|gigabyte|rx 9060 xt|16|gaming|oc+white
+- title: Tarjeta de video ASRock RX 9060 XT Challenger OC 16GB
+  store: laaca
+  category: gpu
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-16gb
+  product: gpu|asrock|rx 9060 xt|16|challenger|oc
+- title: GPU Gigabyte Radeon RX9060XT Gaming OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|gigabyte|rx 9060 xt|8|gaming|oc
+- title: GPU XFX Radeon RX9060 XT Swift Dual OC 8Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|oc
+- title: Tarjeta Xfx Radeon Rx9060xt 8gb Swift Dual Gddr6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|
+- title: Tarjeta Xfx Radeon Rx9060xt 8gb Swift Dual Gddr6
+  store: hardpc
+  category: gpu
+  store_brand: XFX
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|
+- title: Tarjeta Xfx Radeon Rx9060xt 8gb Swift Dual W Gddr6
+  store: laaca
+  category: gpu
+  store_brand: XFX
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|white
+- title: Tarjeta Xfx Radeon Rx9060xt 8gb Swift Dual W Gddr6
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|white
+- title: Tarjeta Xfx Radeon Rx9060xt 8gb Swift Dual W Gddr6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|white
+- title: Tarjeta de Video Gigabyte AMD Radeon RX 9060 XT Gaming OC 8GB GDDR6 128bit RGB Lighting
+  store: pccompu
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|gigabyte|rx 9060 xt|8|gaming|oc
+- title: Tarjeta de Video XFX Swift AMD Radeon RX 9060 XT OC Gaming Edition 8GB
+  store: pccompu
+  category: gpu
+  store_brand: XFX
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|oc
+- title: Tarjeta de video SAPHIRE RX 9060 XT 8Gb
+  store: laaca
+  category: gpu
+  status: family_only
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: null
+- title: Tarjeta de video XFX Radeon Rx9060 XT 8Gb Swift Dual
+  store: laaca
+  category: gpu
+  store_brand: XFX
+  status: matched
+  condition: new
+  family: gpu:rx-9060-xt-8gb
+  product: gpu|xfx|rx 9060 xt|8|swift|
+- title: GPU Gigabyte Radeon RX9070 Gaming 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|gigabyte|rx 9070|16|gaming|
+- title: GPU Gigabyte Radeon RX9070 Gaming OC 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|gigabyte|rx 9070|16|gaming|oc
+- title: TARJETA DE VIDEO GIGABYTE RADEON RX9070 GAMING 16GB GV-R9070GAMING-16GD
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|gigabyte|rx 9070|16|gaming|
+- title: Tarjeta Asrock Radeon Rx9070 Challenger 16gb GDDR6
+  store: laaca
+  category: gpu
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|asrock|rx 9070|16|challenger|
+- title: Tarjeta Asrock Radeon Rx9070 Challenger 16gb GDDR6
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|asrock|rx 9070|16|challenger|
+- title: Tarjeta De Video ASROCK AMD RX9070 16Gb Gddr6 Challenger Hdmi Dp 256bit Pci-e 5.0 DirectX OpenGL
+  store: infinit
+  category: gpu
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|asrock|rx 9070|16|challenger|
+- title: Tarjeta de Video Gigabyte AMD Radeon RX 9070 Gaming OC 16GB GDDR6 256bit RGB Lighting
+  store: pccompu
+  category: gpu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|gigabyte|rx 9070|16|gaming|oc
+- title: Tarjeta de video Gigabyte RX 9070 16GB Gaming
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|gigabyte|rx 9070|16|gaming|
+- title: Tarjeta de video Gigabyte RX 9070 Gaming OC 16Gb GDDR6
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|gigabyte|rx 9070|16|gaming|oc
+- title: Tarjeta de video XfX Radeon RX 9070 16Gb Swift
+  store: laaca
+  category: gpu
+  store_brand: XFX
+  status: matched
+  condition: new
+  family: gpu:rx-9070-16gb
+  product: gpu|xfx|rx 9070|16|swift|
+- title: Tarjeta de video Gigabyte RX 9070 GRE 12GB Gaming OC
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rx-9070-gre-12gb
+  product: gpu|gigabyte|rx 9070 gre|12|gaming|oc
+- title: GPU ASRock Radeon RX9070 XT Challenger 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|asrock|rx 9070 xt|16|challenger|
+- title: GPU Gigabyte Radeon RX9070 XT Gaming 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|gigabyte|rx 9070 xt|16|gaming|
+- title: GPU Gigabyte Radeon RX9070 XT Gaming OC ICE 16Gb
+  store: thot
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|gigabyte|rx 9070 xt|16|gaming|oc+white
+- title: GPU Gigabyte Radeon RX9070 XT Gaming OC ICE 16Gb
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|gigabyte|rx 9070 xt|16|gaming|oc+white
+- title: TARJETA DE VIDEO GIGABYTE RADEON RX 9070 XT GAMING OC ICE GV-R907XGAMINGOCICE-16GD 16GB GDDR6 PCIE 5.0
+  store: banifox
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|gigabyte|rx 9070 xt|16|gaming|oc+white
+- title: Tarjeta Asrock Amd Rx9070xt Challenger 16gb
+  store: pcparts
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|asrock|rx 9070 xt|16|challenger|
+- title: Tarjeta Asrock Amd Rx9070xt Challenger 16gb
+  store: tecnocity
+  category: gpu
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|asrock|rx 9070 xt|16|challenger|
+- title: Tarjeta de Video ASRock RX 9070 XT 16GB
+  store: laaca
+  category: gpu
+  store_brand: Asrock
+  status: family_only
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: null
+- title: Tarjeta de Video GIGABYTE RX 9070 XT 16Gb GAMING
+  store: laaca
+  category: gpu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: gpu:rx-9070-xt-16gb
+  product: gpu|gigabyte|rx 9070 xt|16|gaming|
+- title: KIT DE ILUMINACIÓN CORSAIR VENGEANCE RGB PRO LIGHT ENHANCEMENT WHITE CMPLEKIT2W
+  store: banifox
+  category: ram
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Kingston ValueRAM DDR4
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA MICRO SD 128GB KINGSTON CLASE 10 CANVAS
+  store: hardpc
+  category: ram
+  store_brand: KINGSTON
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA MICRO SD 256GB KINGSTON
+  store: hardpc
+  category: ram
+  store_brand: KINGSTON
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA MICRO SD 64GB KINGSTON CLASE 10
+  store: hardpc
+  category: ram
+  store_brand: KINGSTON
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Memoria DDR5 CORSAIR VENGEANCE 32Gb (2x16Gb) RGB DIMM blanca CL36
+  store: laaca
+  category: ram
+  store_brand: Corsair
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Memoria DDR5 Kingston 5600MHz SODIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Memoria RAM Sodimm SAMSUNG 16Gb DDR5 Para notebook o Mini PC
+  store: infinit
+  category: ram
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA DDR3 SODIMM VARIAS MARCAS 1GB 1066
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr3-1gb-1066-sodimm
+  product: null
+- title: MEMORIA DDR3 SODIMM VARIAS MARCAS 1GB 1333
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr3-1gb-1333-sodimm
+  product: null
+- title: Memoria Ram Sodimm 1Gb Ddr3 1333Mhz Generica Para Notebook Varias Marcas
+  store: infinit
+  category: ram
+  store_brand: GENERICO
+  status: family_only
+  condition: new
+  family: ram:ddr3-1gb-1333-sodimm
+  product: null
+- title: Memoria RAM 2GB DDR3 PC3-10600U 1333MHZ Usadas con Garantia
+  store: pccompu
+  category: ram
+  store_brand: OEM
+  status: family_only
+  condition: used
+  family: ram:ddr3-2gb-1333-dimm
+  product: null
+- title: Memoria RAM 2GB DDR3 PC3-12800 1600MHZ Usadas con Garantia
+  store: pccompu
+  category: ram
+  store_brand: OEM
+  status: family_only
+  condition: used
+  family: ram:ddr3-2gb-1600-dimm
+  product: null
+- title: Memoria RAM DDR3 4GB 1333MHz ValueTech DIMM 1.5V Nueva
+  store: pccompu
+  category: ram
+  store_brand: VALUETECH
+  status: family_only
+  condition: new
+  family: ram:ddr3-4gb-1333-dimm
+  product: null
+- title: Memoria RAM SODIMM ValueTech 8GB DDR3 1333MHz VTP8G3S1333
+  store: pccompu
+  category: ram
+  store_brand: VALUETECH
+  status: family_only
+  condition: new
+  family: ram:ddr3-8gb-1333-sodimm
+  product: null
+- title: Memoria HikSemi DDR3 8GB 1600Mhz
+  store: laaca
+  category: ram
+  store_brand: HikSemi
+  status: family_only
+  condition: new
+  family: ram:ddr3-8gb-1600-dimm
+  product: null
+- title: Memoria Hiksemi 8Gb DDR3 1600mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr3-8gb-1600-dimm
+  product: null
+- title: Memoria RAM DDR3 8GB 1600MHz ValueTech DIMM 1.5V Nueva
+  store: pccompu
+  category: ram
+  store_brand: VALUETECH
+  status: family_only
+  condition: new
+  family: ram:ddr3-8gb-1600-dimm
+  product: null
+- title: Memoria RAM DDR3L 8GB 1600MHz Oditox Desktop UDIMM Para PC Nueva Bulk
+  store: pccompu
+  category: ram
+  store_brand: ODITOX
+  status: family_only
+  condition: new
+  family: ram:ddr3-8gb-1600-dimm
+  product: null
+- title: Memoria RAM Sodimm 16Gb Ddr4 2666Mhz Para Notebooks Varias Marcas
+  store: infinit
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-2666-sodimm
+  product: null
+- title: MEMORIA DDR4 AIMERICAN TELEKINESIS 16GB 3200MHZ
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: MEMORIA DDR4 KINGSTON FURY BEAST RGB 16GB 3200MT/S CL16 BLACK KF432C16BB12A/16
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|kingston|fury beast|ddr4|16|1x|3200|dimm|rgb|
+- title: MEMORIA DIMM DDR4 16GB HIKSEMI 3200MHZ
+  store: hardpc
+  category: ram
+  store_brand: Hiksemi
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: MEMORIA DIMM DDR4 16GB KINGSTON 3200MHZ
+  store: hardpc
+  category: ram
+  store_brand: KINGSTON
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria ARMOR BLACK 16GB 3200MHZ
+  store: laaca
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria Adata Premier 16Gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|adata|premier|ddr4|16|1x|3200|dimm||
+- title: Memoria Adata Premier Ddr4 16gb 3200 CL22
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|adata|premier|ddr4|16|1x|3200|dimm||
+- title: Memoria Adata Xpg D35 Ddr4 16gb 3200 Cl16 Wt
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|adata|gammix d35|ddr4|16|1x|3200|dimm||white
+- title: Memoria DDR4 ADATA 16GB 3200MHz DIMM RGB
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria DDR4 KINGSTON FURY 16GB 3200MHz DIMM RGB
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|kingston|fury beast|ddr4|16|1x|3200|dimm|rgb|
+- title: Memoria DDR4 Patriot Signature 16Gb 3200MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: Patriot
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|patriot|signature|ddr4|16|1x|3200|dimm||
+- title: Memoria HikSemi 16Gb DDR4 3200mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria HikSemi DDR4 16GB 3200Mhz DIMM
+  store: laaca
+  category: ram
+  store_brand: HikSemi
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria HikSemi Future 16Gb DDR4 3200mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|hiksemi|future|ddr4|16|1x|3200|dimm||
+- title: Memoria HikSemi HS-ARMOR 16Gb DDR4 3200mhz Black
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|hiksemi|armor|ddr4|16|1x|3200|dimm||
+- title: Memoria HikSemi HS-ARMOR 16Gb DDR4 3200mhz White
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|hiksemi|armor|ddr4|16|1x|3200|dimm||white
+- title: Memoria Kingston 16gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria Kingston Fury Beast RGB 16GB DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|kingston|fury beast|ddr4|16|1x|3200|dimm|rgb|
+- title: Memoria Lexar DDR4 16GB 3200Mhz DIMM
+  store: laaca
+  category: ram
+  store_brand: Lexar
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria RAM ADATA Xpg Spectrix D35g 16GB Ddr4 3200Mhz Rgb Udimm
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|adata|spectrix d35g|ddr4|16|1x|3200|dimm|rgb|
+- title: Memoria RAM DDR4 16GB 3200MHz Adata XPG Gaming Spectrix D35G Negra RGB UDIMM CL16
+  store: pccompu
+  category: ram
+  store_brand: XPG
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|adata|spectrix d35g|ddr4|16|1x|3200|dimm|rgb|
+- title: Memoria RAM DDR4 16GB 3200MHz Hiksemi Armor HSC416U32Z2 1.2V CL22 UDIMM
+  store: pccompu
+  category: ram
+  store_brand: HIKSEMI
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|hiksemi|armor|ddr4|16|1x|3200|dimm||
+- title: Memoria RAM DDR4 16GB 3200MHz Hiksemi Armor White HSC416U32E2 1.2V CL22 UDIMM
+  store: pccompu
+  category: ram
+  store_brand: HIKVISION
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|hiksemi|armor|ddr4|16|1x|3200|dimm||white
+- title: Memoria RAM DDR4 16GB 3200MHz Oditox Desktop 1.2V CL22 UDIMM Para PC - Nueva Bulk
+  store: pccompu
+  category: ram
+  store_brand: ODITOX
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria RAM KINGSTON 16Gb Ddr4 3200Mhz Udimm Para Pc
+  store: infinit
+  category: ram
+  store_brand: KINGSTON
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: null
+- title: Memoria RAM PATRIOT 16Gb Ddr4 3200Mhz Signature 1.2v CL22
+  store: infinit
+  category: ram
+  store_brand: PATRIOT
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-dimm
+  product: ram|patriot|signature|ddr4|16|1x|3200|dimm||
+- title: Memoria DDR4 KINGSTON ECC 16GB 3200MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-rdimm
+  product: null
+- title: MEMORIA DDR4 SODIMM CORSAIR VENGEANCE 16GB 3200MHZ CL22 CMSX16GX4M1A3200C22
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: ram|corsair|vengeance|ddr4|16|1x|3200|sodimm||
+- title: Memoria DDR4 ADATA Premier 16Gb 3200MHz CL22 SODIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: ram|adata|premier|ddr4|16|1x|3200|sodimm||
+- title: Memoria DDR4 HIKSEMI 16Gb 3200Mhz SODIMM
+  store: laaca
+  category: ram
+  store_brand: HikSemi
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: null
+- title: Memoria DDR4 Kingston 16Gb 3200Mhz SODIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: null
+- title: Memoria DDR4 Lexar 16Gb 3200MHz SODIMM
+  store: laaca
+  category: ram
+  store_brand: Lexar
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: null
+- title: Memoria RAM SODIMM Corsair Vengeance 16GB DDR4 3200MHz PC4-25600 CL22 1.2V
+  store: pccompu
+  category: ram
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: ram|corsair|vengeance|ddr4|16|1x|3200|sodimm||
+- title: Memoria RAM SODIMM Kingston 16GB DDR4 3200MHz PC4-25600 CL22 1.2V KVR32S22S8/16
+  store: pccompu
+  category: ram
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: ram|kingston|valueram|ddr4|16|1x|3200|sodimm||
+- title: Memoria RAM SODIMM Lexar 16GB DDR4 3200MHz PC4-25600 CL22 1.2V LD4AS016G-B3200GSST
+  store: pccompu
+  category: ram
+  store_brand: LEXAR
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: null
+- title: Memoria RAM Sodimm 16Gb Ddr4 3200Mhz Para Notebooks Varias Marcas
+  store: infinit
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: null
+- title: Memoria Ram Sodimm ADATA Premier 16Gb Ddr4 3200Mhz 1.2v CL22
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: ram|adata|premier|ddr4|16|1x|3200|sodimm||
+- title: Memoria Sodimm Hiksemi 16gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: null
+- title: Sodimm Kingston KVR32S22S8 16Gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-16gb-3200-sodimm
+  product: ram|kingston|valueram|ddr4|16|1x|3200|sodimm||
+- title: Memoria RAM Sodimm 2Gb Ddr4 2133Mhz Para Notebooks Varias Marcas
+  store: infinit
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-2gb-2133-sodimm
+  product: null
+- title: MEMORIA NOTEBOOK DDR4 2GB 2400MHZ
+  store: hardpc
+  category: ram
+  store_brand: HYNIX
+  status: family_only
+  condition: new
+  family: ram:ddr4-2gb-2400-sodimm
+  product: null
+- title: Memoria Adata Xpg D35g Ddr4 32gb 3200 Cl 16 Wt
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-dimm
+  product: ram|adata|spectrix d35g|ddr4|32|1x|3200|dimm|rgb|white
+- title: Memoria DDR4 KINGSTON ValueRam 32GB 3200MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-dimm
+  product: ram|kingston|valueram|ddr4|32|1x|3200|dimm||
+- title: Memoria Kingston KVR32N22D8 32gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-dimm
+  product: ram|kingston|valueram|ddr4|32|1x|3200|dimm||
+- title: Memoria RAM ADATA XPG 32Gb Ddr4 3200Mhz Spectrix D35G Cl16 Blanco
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-dimm
+  product: ram|adata|spectrix d35g|ddr4|32|1x|3200|dimm|rgb|white
+- title: MEMORIA DDR4 SODIMM PATRIOT SIGNATURE 32GB 3200MT/S PSD432G32002S
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-sodimm
+  product: ram|patriot|signature|ddr4|32|1x|3200|sodimm||
+- title: Memoria Ram Sodimm PATRIOT Signature 32Gb Ddr4 3200Mhz CL22
+  store: infinit
+  category: ram
+  store_brand: PATRIOT
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-sodimm
+  product: ram|patriot|signature|ddr4|32|1x|3200|sodimm||
+- title: Memoria Sodimm Kingston KVR32S22D8 32gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3200-sodimm
+  product: ram|kingston|valueram|ddr4|32|1x|3200|sodimm||
+- title: MEMORIA DDR4 PATRIOT VIPER STEEL V4S 32GB 3600MHZ CL20 PVSR432G360C0
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3600-dimm
+  product: ram|patriot|viper steel|ddr4|32|1x|3600|dimm||
+- title: Memoria Kingston Fury Beast 32GB DDR4 3600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-32gb-3600-dimm
+  product: ram|kingston|fury beast|ddr4|32|1x|3600|dimm||
+- title: Memoria RAM Sodimm 4Gb Ddr4 2400Mhz Varias Marcas
+  store: infinit
+  category: ram
+  store_brand: VARIAS MARCAS
+  status: family_only
+  condition: new
+  family: ram:ddr4-4gb-2400-sodimm
+  product: null
+- title: Memoria RAM SODIMM 4GB DDR4 2666MHz - New Pulled
+  store: pccompu
+  category: ram
+  status: family_only
+  condition: used
+  family: ram:ddr4-4gb-2666-sodimm
+  product: null
+- title: Memoria RAM SOdimm 4Gb Ddr4 2666Mhz Varias Marcas
+  store: infinit
+  category: ram
+  store_brand: VARIAS MARCAS
+  status: family_only
+  condition: new
+  family: ram:ddr4-4gb-2666-sodimm
+  product: null
+- title: Memoria RAM Sodimm 4Gb Ddr4 3200Mhz Para Notebook Laptop Netbook
+  store: infinit
+  category: ram
+  store_brand: OEM
+  status: family_only
+  condition: new
+  family: ram:ddr4-4gb-3200-sodimm
+  product: null
+- title: MEMORIA DDR4 SODIMM CORSAIR 8GB 2133MHZ SODIMM CL15 CMSO8GX4M1A2133C15
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-2133-sodimm
+  product: null
+- title: MEMORIA DDR4 SODIMM NETAC 8GB PC2666 NTBSD4N26SP-08
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-2666-sodimm
+  product: null
+- title: Memoria Ram Sodimm 8Gb Ddr4 2666Mhz Varias Marcas Extraidas De Equipos
+  store: infinit
+  category: ram
+  store_brand: SAMSUNG
+  status: family_only
+  condition: used
+  family: ram:ddr4-8gb-2666-sodimm
+  product: null
+- title: MEMORIA DDR4 AIMERICAN TELEKINESIS 8GB 3200MHZ UDIMM PARA PC
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: Memoria ARMOR BLACK 8GB 3200MHZ
+  store: laaca
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: Memoria Adata XPG D35 8Gb DDR4 3200Mhz Bk
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|adata|gammix d35|ddr4|8|1x|3200|dimm||
+- title: Memoria Adata Xpg D35 Ddr4 8gb 3200 Cl16 Wt
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|adata|gammix d35|ddr4|8|1x|3200|dimm||white
+- title: Memoria Adata Xpg D35g Rgb Ddr4 8gb 3200 Cl 16 Wt
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|adata|spectrix d35g|ddr4|8|1x|3200|dimm|rgb|white
+- title: Memoria DDR4 ADATA XPG Gammix D35 8Gb 3200MHz CL16 DIMM Negra
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|adata|gammix d35|ddr4|8|1x|3200|dimm||
+- title: Memoria DDR4 HIKSEMI FUTURE 8GB 3200MHz DIMM RGB
+  store: laaca
+  category: ram
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|hiksemi|future|ddr4|8|1x|3200|dimm|rgb|
+- title: Memoria DDR4 HIKVISION 8Gb 3200Mhz DIMM
+  store: laaca
+  category: ram
+  store_brand: Hikvision
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: Memoria DDR4 KINGSTON FURY 8GB 3200MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|kingston|fury beast|ddr4|8|1x|3200|dimm||
+- title: Memoria HikSemi 8Gb DDR4 3200mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: Memoria HikSemi Future 8Gb DDR4 3200mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|hiksemi|future|ddr4|8|1x|3200|dimm||
+- title: Memoria HikSemi Future RGB 8Gb DDR4 3200mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|hiksemi|future|ddr4|8|1x|3200|dimm|rgb|
+- title: Memoria HikSemi HS-ARMOR 8Gb DDR4 3200mhz White
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|hiksemi|armor|ddr4|8|1x|3200|dimm||white
+- title: Memoria Kingston 8GB DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: Memoria Kingston Fury Beast 8GB DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|kingston|fury beast|ddr4|8|1x|3200|dimm||
+- title: Memoria RAM ADATA Gammix D35 8Gb Ddr4 3200Mhz Xpg Cl16 Blanco
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: ram|adata|gammix d35|ddr4|8|1x|3200|dimm||white
+- title: Memoria RAM DDR4 8GB 3200MHz Patriot UDIMM 1.2V CL22 PSD48G320081
+  store: pccompu
+  category: ram
+  store_brand: PATRIOT
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: Memoria RAM NETAC 8Gb Ddr4 3200Mhz CL16 Udimm
+  store: infinit
+  category: ram
+  store_brand: NETAC
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-dimm
+  product: null
+- title: MEMORIA DDR4 SODIMM NETAC BASIC 8GB 3200MHZ CL22 NTBSD4N32SP-08
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: ram|netac|basic|ddr4|8|1x|3200|sodimm||
+- title: MEMORIA NOTEBOOK DDR4 8GB PATRIOT 3200MHZ
+  store: hardpc
+  category: ram
+  store_brand: PATRIOT
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: Memoria DDR4 HIKVISION 8Gb 3200Mhz SODIMM
+  store: laaca
+  category: ram
+  store_brand: Hikvision
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: Memoria DDR4 KINGSTON ValuerRam 8Gb 3200Mhz SODIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: ram|kingston|valueram|ddr4|8|1x|3200|sodimm||
+- title: Memoria DDR4 Lexar 8Gb 3200MHz SODIMM
+  store: laaca
+  category: ram
+  store_brand: Lexar
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: Memoria RAM NETAC 8Gb Ddr4 3200Mhz Sodimm
+  store: infinit
+  category: ram
+  store_brand: NETAC
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: Memoria RAM SODIMM Patriot 8GB DDR4 3200MHz PC4-25600 CL22 1.2V PSD48G3200
+  store: pccompu
+  category: ram
+  store_brand: PATRIOT
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: Memoria RAM Sodimm 8GB Ddr4 3200Mhz Varias Marcas
+  store: infinit
+  category: ram
+  store_brand: OEM
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: Memoria Sodimm Hiksemi 8gb DDR4 3200Mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr4-8gb-3200-sodimm
+  product: null
+- title: MEMORIA DDR5 R-DIMM KINGSTON FURY 16GB KF548R36RB-16GB
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-4800-rdimm
+  product: ram|kingston|fury beast|ddr5|16|1x|4800|rdimm||
+- title: MEMORIA DDR5 KINGSTON FURY 16GB 5200 WHITE RGB XMP KF552C40BWA-16
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5200-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5200|dimm|rgb|white
+- title: Memoria DDR5 KINGSTON Fury 16Gb 5200Mhz RGB DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5200-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5200|dimm|rgb|
+- title: Memoria DDR5 KINGSTON Fury 16Gb 5200Mhz RGB DIMM Blanco CL40
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5200-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5200|dimm|rgb|white
+- title: Memoria Kingston Fury Beast RGB 16GB DDR5 5200Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5200-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5200|dimm|rgb|
+- title: MEMORIA DDR5 CORSAIR VENGEANCE 16GB 5600MHZ CL40 CMK16GX5M1B5600C40
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|corsair|vengeance|ddr5|16|1x|5600|dimm||
+- title: MEMORIA DDR5 KINGSTON 16GB 5600 MT/S CL46 DIMM KCP556US8-16
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|valueram|ddr5|16|1x|5600|dimm||
+- title: MEMORIA DDR5 PATRIOT SIGNATURE 16GB PSD516G560081
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|patriot|signature|ddr5|16|1x|5600|dimm||
+- title: Memoria Adata Premier Ddr5 16gb 5600 Cl46
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|premier|ddr5|16|1x|5600|dimm||
+- title: Memoria DDR5 ADATA XPG Armax 16Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|armax|ddr5|16|1x|5600|dimm||
+- title: Memoria DDR5 ADATA XPG Armax 16Gb 5600MHz CL46 RGB DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|armax|ddr5|16|1x|5600|dimm|rgb|
+- title: Memoria DDR5 ADATA XPG Lancer Blade 16Gb 5600MHz CL46 DIMM Negra
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|lancer blade|ddr5|16|1x|5600|dimm||
+- title: Memoria DDR5 Corsair Vengeance 16Gb 5600MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: Corsair
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|corsair|vengeance|ddr5|16|1x|5600|dimm||
+- title: Memoria DDR5 KINGSTON FURY 16GB 5600MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm||
+- title: Memoria DDR5 KINGSTON FURY 16GB 5600MHz DIMM RGB
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm|rgb|
+- title: Memoria DDR5 KINGSTON Fury 16Gb 5600Mhz RGB DIMM Blanco CL40
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm|rgb|white
+- title: Memoria DDR5 Kingston 16Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: family_only
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: null
+- title: Memoria DDR5 Kingston Fury Beast 16Gb 5600MHz DIMM Blanca CL40
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm||white
+- title: Memoria DDR5 Kingston ValueRAM 16Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|valueram|ddr5|16|1x|5600|dimm||
+- title: Memoria Kingston Fury Beast 16GB DDR5 5600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm||
+- title: Memoria Kingston Fury Beast 16gb DDR5 5600Mhz White Edition
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm||white
+- title: Memoria Kingston Fury Beast RGB 16GB DDR5 5600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm|rgb|
+- title: Memoria Kingston Fury Beast RGB 16gb DDR5 5600Mhz White Edition
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm|rgb|white
+- title: Memoria Kingston KVR 16gb DDR5 5600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|valueram|ddr5|16|1x|5600|dimm||
+- title: Memoria RAM ADATA 16Gb Ddr5 5600Mhz Premier Cl46
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|premier|ddr5|16|1x|5600|dimm||
+- title: Memoria RAM Adata Armax Ddr5 16gb 5600 Cl45
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|armax|ddr5|16|1x|5600|dimm||
+- title: Memoria RAM Adata Armax Rgb Ddr5 16gb 5600 Cl45
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|armax|ddr5|16|1x|5600|dimm|rgb|
+- title: Memoria RAM Adata Premier Ddr5 16gb 5600 Cl46
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|premier|ddr5|16|1x|5600|dimm||
+- title: Memoria RAM Adata Xpg Lancer Bl Ddr5 16gb 5600 Cl46 Bk
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|lancer blade|ddr5|16|1x|5600|dimm||
+- title: Memoria RAM Adata Xpg Lancer Bl Ddr5 16gb 5600 Cl46 Wh
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|lancer blade|ddr5|16|1x|5600|dimm||white
+- title: Memoria RAM DDR5 16GB 5600Mhz Adata XPG Lancer Blade Blanca AX5U5600C4616G-SLABWH con Disipador
+  store: pccompu
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|lancer blade|ddr5|16|1x|5600|dimm||white
+- title: Memoria RAM DDR5 16GB 5600Mhz Adata XPG Lancer Blade Negra AX5U5600C4616G-SLABBK con Disipador
+  store: pccompu
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|adata|lancer blade|ddr5|16|1x|5600|dimm||
+- title: Memoria RAM DDR5 16GB 5600Mhz Kingston Fury Beast Negra KF556C40BBA-16 con Disipador RGB
+  store: pccompu
+  category: ram
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|dimm|rgb|
+- title: MEMORIA DDR5 KINGSTON FURY KF556R36RB-16GB
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-rdimm
+  product: ram|kingston|fury beast|ddr5|16|1x|5600|rdimm||
+- title: Memoria RAM Sodimm ADATA 16Gb Ddr5 5600Mhz Premier CL46
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-5600-sodimm
+  product: ram|adata|premier|ddr5|16|1x|5600|sodimm||
+- title: Memoria Sodimm Adata Ddr5 16gb 5600Mhz
+  store: thot
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr5-16gb-5600-sodimm
+  product: null
+- title: PATRIOT RAM 16GB DDR5-5600 SODIMM
+  store: laaca
+  category: ram
+  store_brand: Patriot
+  status: family_only
+  condition: new
+  family: ram:ddr5-16gb-5600-sodimm
+  product: null
+- title: MEMORIA DDR5 CORSAIR 16GB CMK16GX5M2E6000Z36
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: null
+- title: MEMORIA DDR5 NETAC SHADOW II 16GB PC6000 NTSWD5P60SP-16K
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|netac|shadow ii|ddr5|16|1x|6000|dimm||
+- title: Memoria Adata XPG Lancer 16Gb DDR5 6000Mhz BK
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|lancer|ddr5|16|1x|6000|dimm||
+- title: Memoria Adata Xpg Lancer Ddr5 16gb 6000 Cl48 Wh
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|lancer|ddr5|16|1x|6000|dimm||white
+- title: Memoria DDR5 ADATA XPG Armax 16Gb 6000MHz CL36 DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|armax|ddr5|16|1x|6000|dimm||
+- title: Memoria DDR5 ADATA XPG Armax 16Gb 6000MHz CL36 RGB DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|armax|ddr5|16|1x|6000|dimm|rgb|
+- title: Memoria DDR5 Corsair Vengeance RGB 16Gb 6000MHz CL36 DIMM
+  store: laaca
+  category: ram
+  store_brand: Corsair
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|corsair|vengeance rgb|ddr5|16|1x|6000|dimm|rgb|
+- title: Memoria DDR5 KINGSTON FURY 16Gb 6000MHz DIMM RGB
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|6000|dimm|rgb|
+- title: Memoria DDR5 XPG 16Gb 6000MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: family_only
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: null
+- title: Memoria Kingston Fury Beast 16GB DDR5 6000Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|6000|dimm||
+- title: Memoria Kingston Fury Beast 16gb DDR5 6000Mhz White Edition
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|6000|dimm||white
+- title: Memoria Kingston Fury Beast RGB 16gb DDR5 6000Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|kingston|fury beast|ddr5|16|1x|6000|dimm|rgb|
+- title: Memoria RAM ADATA Armax 16Gb Ddr5 6000Mhz CL38
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|armax|ddr5|16|1x|6000|dimm||
+- title: Memoria RAM Adata Armax Ddr5 16gb 6000 Cl38
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|armax|ddr5|16|1x|6000|dimm||
+- title: Memoria RAM Adata Armax Rgb Ddr5 16gb 6000 Cl38
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-dimm
+  product: ram|adata|armax|ddr5|16|1x|6000|dimm|rgb|
+- title: MEMORIA DDR5 R-DIMM KINGSTON FURY 16GB KF560R32RB-16GB
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-16gb-6000-rdimm
+  product: ram|kingston|fury beast|ddr5|16|1x|6000|rdimm||
+- title: MEMORIA DDR5 NETAC SHADODW III 32GB (2X16) NTSHD5P56DP-32K
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-dimm
+  product: ram|netac|shadow iii|ddr5|32|2x16GB|5600|dimm||
+- title: Memoria Adata Premier Ddr5 32gb 5600 Cl46
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-dimm
+  product: ram|adata|premier|ddr5|32|1x|5600|dimm||
+- title: Memoria Adata XPG Lancer 32Gb DDR5 5600Mhz BK
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-dimm
+  product: ram|adata|lancer|ddr5|32|1x|5600|dimm||
+- title: Memoria Adata Xpg Lancer Ddr5 32gb 5600 Cl46 Bk
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-dimm
+  product: ram|adata|lancer|ddr5|32|1x|5600|dimm||
+- title: Memoria RAM Adata Premier Ddr5 32gb 5600 Cl46
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-dimm
+  product: ram|adata|premier|ddr5|32|1x|5600|dimm||
+- title: Memoria DDR5 Kingston ValueRAM 32Gb 5600MHz CL46 SODIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-sodimm
+  product: ram|kingston|valueram|ddr5|32|1x|5600|sodimm||
+- title: Memoria Sodimm Kingston KVR56S46BD8 32gb DDR5 5600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-5600-sodimm
+  product: ram|kingston|valueram|ddr5|32|1x|5600|sodimm||
+- title: PATRIOT RAM 32GB DDR5-5600 SODIMM
+  store: laaca
+  category: ram
+  store_brand: Patriot
+  status: family_only
+  condition: new
+  family: ram:ddr5-32gb-5600-sodimm
+  product: null
+- title: Memoria DDR5 XPG 32Gb (16Gbx2) 6000MHz DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: family_only
+  condition: new
+  family: ram:ddr5-32gb-6000-dimm
+  product: null
+- title: Memoria Kingston Fury Beast 32GB DDR5 6000Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-6000-dimm
+  product: ram|kingston|fury beast|ddr5|32|1x|6000|dimm||
+- title: MEMORIA DDR5 PATRIOT VIPER VENOM RGB 32GB 2X16GB 6800MHZ CL34 PVVR532G680C34K
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-6800-dimm
+  product: ram|patriot|viper venom|ddr5|32|2x16GB|6800|dimm|rgb|
+- title: MEMORIA DDR5 NETAC Z RGB 32GB 2X16GB 7200MT/S NTZED5P72DP-32S
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-7200-dimm
+  product: ram|netac|z rgb|ddr5|32|2x16GB|7200|dimm|rgb|
+- title: MEMORIA DDR5 PATRIOT VIPER XTREME 5 32GB (2X16GB) DDR5 8000MHZ CL38 PVXR532G80C38KM
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-8000-dimm
+  product: ram|patriot|viper xtreme 5|ddr5|32|2x16GB|8000|dimm||
+- title: MEMORIA DDR5 PATRIOT VIPER XTREME 5 32GB 2X16GB 8200MT/S CL38 PVX532G82C38K
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-32gb-8200-dimm
+  product: ram|patriot|viper xtreme 5|ddr5|32|2x16GB|8200|dimm||
+- title: MEMORIA DDR5 PATRIOT SIGNATURE PREMIUM 48GB 2X24GB 5600MT/S PSP548G5600KH1
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-48gb-5600-dimm
+  product: ram|patriot|signature premium|ddr5|48|2x24GB|5600|dimm||
+- title: MEMORIA DDR5 PATRIOT VIPER ELITE 5 RGB 48GB 5600MT/S CL38 PVER548G56C38KW
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-48gb-5600-dimm
+  product: ram|patriot|viper elite 5|ddr5|48|1x|5600|dimm|rgb|
+- title: Memoria DDR5 ADATA Premier 48Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-48gb-5600-dimm
+  product: ram|adata|premier|ddr5|48|1x|5600|dimm||
+- title: Memoria RAM Adata Premier Ddr5 48gb 5600 Cl45
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-48gb-5600-dimm
+  product: ram|adata|premier|ddr5|48|1x|5600|dimm||
+- title: MEMORIA DDR5 PATRIOT VIPER ELITE 5 TUF RGB 48GB 2X24GB 6600MT/S CL34 PVER548G66C34KT
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-48gb-6600-dimm
+  product: ram|patriot|viper elite 5|ddr5|48|2x24GB|6600|dimm|rgb|
+- title: MEMORIA DDR5 PATRIOT VIPER ELITE 5 48GB 2X24GB 8000MHZ CL36 VEU548G8036K
+  store: banifox
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-48gb-8000-dimm
+  product: ram|patriot|viper elite 5|ddr5|48|2x24GB|8000|dimm||
+- title: Memoria DDR5 ADATA Premier 64Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-64gb-5600-dimm
+  product: ram|adata|premier|ddr5|64|1x|5600|dimm||
+- title: Memoria RAM Adata Premier Ddr5 64gb 5600 Cl46
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-64gb-5600-dimm
+  product: ram|adata|premier|ddr5|64|1x|5600|dimm||
+- title: MEMORIA DDR5 CORSAIR 64GB 2X32GB 6000MT/S CMK64GX5M2D6000C40
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr5-64gb-6000-dimm
+  product: null
+- title: Memoria RAM ADATA 8Gb Ddr5 4800Mhz CL40 Udimm
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: family_only
+  condition: new
+  family: ram:ddr5-8gb-4800-dimm
+  product: null
+- title: Memoria DDR5 KINGSTON Fury Beast 8Gb 5200Mhz DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5200-dimm
+  product: ram|kingston|fury beast|ddr5|8|1x|5200|dimm||
+- title: Memoria RAM KINGSTON FURY 8Gb Ddr5 5200Mhz Beast Cl40 Udimm
+  store: infinit
+  category: ram
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5200-dimm
+  product: ram|kingston|fury beast|ddr5|8|1x|5200|dimm||
+- title: MEMORIA DDR5 PATRIOT 8GB PC5600 UDIMM PSD58G560081
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: null
+- title: Memoria Adata Premier Ddr5 8gb 5600 Cl46
+  store: laaca
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|adata|premier|ddr5|8|1x|5600|dimm||
+- title: Memoria DDR5 Kingston 8Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: family_only
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: null
+- title: Memoria DDR5 Kingston Fury Beast 8Gb 5600MHz CL40 DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|8|1x|5600|dimm||
+- title: Memoria DDR5 Kingston ValueRAM 8Gb 5600MHz CL46 DIMM
+  store: laaca
+  category: ram
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|kingston|valueram|ddr5|8|1x|5600|dimm||
+- title: Memoria Kingston Fury Beast 8gb DDR5 5600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|8|1x|5600|dimm||
+- title: Memoria Kingston KVR56U46BS6 8Gb DDR5 5600Mhz
+  store: thot
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|kingston|valueram|ddr5|8|1x|5600|dimm||
+- title: Memoria RAM ADATA PREMIER 8Gb CL46 Ddr5 5600Mhz Udimm
+  store: infinit
+  category: ram
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|adata|premier|ddr5|8|1x|5600|dimm||
+- title: Memoria RAM Adata Premier Ddr5 8gb 5600 Cl46
+  store: tecnocity
+  category: ram
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|adata|premier|ddr5|8|1x|5600|dimm||
+- title: Memoria Ram KINGSTON Fury Beast 8Gb CL36 Ddr5 5600Mhz Udimm Negro
+  store: infinit
+  category: ram
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ram:ddr5-8gb-5600-dimm
+  product: ram|kingston|fury beast|ddr5|8|1x|5600|dimm||
+- title: MEMORIA DDR5 SODIMM PATRIOT 8GB 5600 PSD58G560041S
+  store: banifox
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr5-8gb-5600-sodimm
+  product: null
+- title: Memoria RAM SODIMM 8GB DDR5 5600MHz - New Pulled
+  store: pccompu
+  category: ram
+  store_brand: OEM
+  status: family_only
+  condition: used
+  family: ram:ddr5-8gb-5600-sodimm
+  product: null
+- title: Memoria RAM Sodimm 8Gb Ddr5 5600Mhz Varias Marcas
+  store: infinit
+  category: ram
+  status: family_only
+  condition: new
+  family: ram:ddr5-8gb-5600-sodimm
+  product: null
+- title: BANDEJA DISCO 2.5" USB 3.0 ADATA SATA LII EX500 RED
+  store: hardpc
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: BANDEJA DISCO 2.5" USB 3.0 SATA XTREME
+  store: hardpc
+  category: ssd
+  store_brand: XTREME
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: BANDEJA DISCO KINGSTON SSD METÁLICA
+  store: hardpc
+  category: ssd
+  store_brand: KINGSTON
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: BANDEJA DISCO M.2 NVME Y SATA USB C 3.2 UGREEN
+  store: hardpc
+  category: ssd
+  store_brand: UGREEN
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO 10TB WESTERN DIGITAL SATA PURPLE
+  store: hardpc
+  category: ssd
+  store_brand: WESTERN DIGITAL
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO 2TB WESTERN DIGITAL SATA PURPLE
+  store: hardpc
+  category: ssd
+  store_brand: WESTERN DIGITAL
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO 4TB SEAGATE SATA SKYHAWK (VIGILANCIA)
+  store: hardpc
+  category: ssd
+  store_brand: SEAGATE
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO 4TB WESTERN DIGITAL PURPLE
+  store: hardpc
+  category: ssd
+  store_brand: WESTERN DIGITAL
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO 8TB WESTERN DIGITAL PURPLE
+  store: hardpc
+  category: ssd
+  store_brand: WESTERN DIGITAL
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO 1TB TOSHIBA 2.5 USB 3.0
+  store: hardpc
+  category: ssd
+  store_brand: Toshiba
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO 4TB TOSHIBA 2.5 USB 3.0
+  store: hardpc
+  category: ssd
+  store_brand: Toshiba
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO SEAGATE EXPANSION 2.5 4TB STGX4000400 USB 3.0
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO SEAGATE EXPANSION 2.5" 2TB USB 3.0 STGX2000400
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO SEAGATE PORTABLE 1TB HDD USB 3.0 BLACK STGX1000400
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO TOSHIBA 1TB ADVANCE VERDE HDTCA10XG3AA
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO TOSHIBA 2TB CANVIO BASIC
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO TOSHIBA CANVIO BASICS 1TB USB 3.2 PORTÁTIL NEGRO
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO TOSHIBA CANVIO BASICS 4TB USB 3.2 GEN 1 PORTÁTIL NEGRO
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO EXTERNO WESTERN DIGITAL ELEMENTS 1TB USB 3 NEGRO
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO SSD 480GB KINGSTON
+  store: hardpc
+  category: ssd
+  store_brand: KINGSTON
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Disco Duro 5Tb WESTERN DIGITAL Element Externo 3.5" Usb 3.0 Portatil
+  store: infinit
+  category: ssd
+  store_brand: WESTERN DIGITAL
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco Duro Externo Seagate 4TB USB 3.0 Portable
+  store: pccompu
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco Duro Externo Toshiba Canvio Basics 1TB USB 3.0 Windows y Mac OS
+  store: pccompu
+  category: ssd
+  store_brand: TOSHIBA
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco Duro Externo Toshiba Canvio Basics 2TB USB 3.0 Windows y Mac OS
+  store: pccompu
+  category: ssd
+  store_brand: TOSHIBA
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco Duro Usb Externo 4Tb SEAGATE Expansion Usb 3.0 Tamaño 2.5 Portable
+  store: infinit
+  category: ssd
+  store_brand: SEAGATE
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco externo LaCie D2 Professional 24Tb
+  store: thot
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco externo LaCie D2 Professional 4Tb
+  store: thot
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco externo LaCie D2 Professional 8Tb
+  store: thot
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco externo Toshiba Canvio 1tb usb 3.0
+  store: thot
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco externo Toshiba Canvio 2tb usb 3.0
+  store: thot
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Disco externo Toshiba Canvio 4tb usb 3.0
+  store: thot
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Gabinete Externo Unitek Y-3036 USB 3.0 SATA III para HDD/SSD 2.5"
+  store: hardpc
+  category: ssd
+  store_brand: Unitek
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: HDD Externo Adata Ahv300 2tb 2.5" Usb Wt
+  store: hardpc
+  category: ssd
+  store_brand: ADATA
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Hdd Externo Adata Ahv300 1tb 2.5" Usb Wt
+  store: hardpc
+  category: ssd
+  store_brand: ADATA
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Hdd Externo Adata Hm800 6tb 3.5" Usb 3.2
+  store: hardpc
+  category: ssd
+  store_brand: ADATA
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Hdd Externo Adata Hm800 8tb 3.5" Usb 3.2
+  store: hardpc
+  category: ssd
+  store_brand: ADATA
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA USB PATRIOT ILUXE CUBE A 1TB USB 3.2 GEN1 TYPE-A PI1TBCUW30A
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA USB PATRIOT ILUXE CUBE A 512GB USB 3.2 GEN1 TYPE-A PI512GCUW30A
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA USB PATRIOT ILUXE CUBE C 1TB USB 3.2 GEN1 TYPE-C PI1TBCUW30C
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MEMORIA USB PATRIOT ILUXE CUBE C 512GB USB 3.2 GEN1 TYPE-C PI512GCUW30C
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: NAS ASUSTOR AS5404T 4 BAHÍAS / 4GB DDR4 / N5105
+  store: hardpc
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: NAS WESTERN DIGITAL MY CLOUD EX2 ULTRA DISKLESS USB 3
+  store: hardpc
+  category: ssd
+  store_brand: WESTERN DIGITAL
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: SSD FLASH NETAC US2 128GB USB 3.2 NT03US2N-128G-32SL
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: SSD FLASH NETAC US2 256GB USB 3.2 NT03US2N-256G-32SL
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: SSD FLASH NETAC US2 512GB USB 3.2 NT03US2N-512G-32SL
+  store: banifox
+  category: ssd
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: DISCO SSD PORTABLE PATRIOT 1TB USB 3.2 PTPL1TBPECB
+  store: banifox
+  category: ssd
+  status: family_only
+  condition: new
+  family: ssd:external-1tb
+  product: null
+- title: Disco Externo SSD Kingston Dual 1Tb USB A + USB C
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:external-1tb
+  product: ssd|kingston|dual portable|1000|external|
+- title: DISCO SSD 1TB KINGSTON M.2 NVME
+  store: hardpc
+  category: ssd
+  store_brand: KINGSTON
+  status: family_only
+  condition: new
+  family: ssd:nvme-1tb
+  product: null
+- title: DISCO SSD 256GB M.2 NVME PATRIOT
+  store: hardpc
+  category: ssd
+  store_brand: PATRIOT
+  status: family_only
+  condition: new
+  family: ssd:nvme-256gb
+  product: null
+- title: DISCO SSD 2TB KINGSTON M.2 NVME
+  store: hardpc
+  category: ssd
+  store_brand: KINGSTON
+  status: family_only
+  condition: new
+  family: ssd:nvme-2tb
+  product: null
+- title: Disco SSD ADATA Legend 710 1Tb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|adata|legend 710|1000|nvme3|
+- title: Disco SSD Ediloca 1Tb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: Ediloca
+  status: family_only
+  condition: new
+  family: ssd:nvme3-1tb
+  product: null
+- title: Disco SSD Hiksemi Wave 1Tb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|hiksemi|wave|1000|nvme3|
+- title: Disco SSD Lexar NM610 Pro 1Tb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: Lexar
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|lexar|nm610 pro|1000|nvme3|
+- title: HikSemi HS-WAVE SSD PCIe NVMe 1Tb GEN 3.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|hiksemi|wave|1000|nvme3|
+- title: Solido Ssd Nvme M.2 1Tb LEXAR NQ100 NM610PRO 2280 PCIe Gen 3.0 x4 Para Notebooks y Pcs
+  store: infinit
+  category: ssd
+  store_brand: LEXAR
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|lexar|nm610 pro|1000|nvme3|
+- title: Ssd Nvme Adata Legend 710 1tb 2280 M2 2400/1800
+  store: pcparts
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|adata|legend 710|1000|nvme3|
+- title: Ssd Nvme Adata Legend 710 1tb 2280 M2 2400/1800
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-1tb
+  product: ssd|adata|legend 710|1000|nvme3|
+- title: DISCO SSD M.2 PATRIOT P300 256GB PCIE 3.0 P300P256GM28
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|patriot|p300|256|nvme3|
+- title: Disco SSD ADATA Legend 710 256Gb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|adata|legend 710|256|nvme3|
+- title: Disco SSD Ediloca 256Gb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: Ediloca
+  status: family_only
+  condition: new
+  family: ssd:nvme3-256gb
+  product: null
+- title: Disco SSD Hiksemi Wave 256Gb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|hiksemi|wave|256|nvme3|
+- title: Disco SSD Patriot P300 256Gb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: Patriot
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|patriot|p300|256|nvme3|
+- title: HikSemi HS-WAVE SSD PCIe NVMe 256Gb GEN 3.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|hiksemi|wave|256|nvme3|
+- title: Ssd Nvme Adata Legend 710 256gb 2280 M2 2100/1000
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|adata|legend 710|256|nvme3|
+- title: Ssd Solido M.2 ADATA 256Gb Legend 710 2280
+  store: infinit
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme3-256gb
+  product: ssd|adata|legend 710|256|nvme3|
+- title: DISCO SSD M.2 NETAC NV3000 2TB NT01NV3000-2T0-E4X
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-2tb
+  product: ssd|netac|nv3000|2000|nvme3|
+- title: Disco SSD ADATA Legend 710 2Tb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme3-2tb
+  product: ssd|adata|legend 710|2000|nvme3|
+- title: Disco SSD Ediloca 2Tb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: Ediloca
+  status: family_only
+  condition: new
+  family: ssd:nvme3-2tb
+  product: null
+- title: Solido Ssd Nvme ADATA LEGEND 710 2Tb 2280 M2 Para Notebooks y Pcs
+  store: infinit
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme3-2tb
+  product: ssd|adata|legend 710|2000|nvme3|
+- title: Ssd Nvme Adata Legend 710 2tb 2280 M.2 2400/1800
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-2tb
+  product: ssd|adata|legend 710|2000|nvme3|
+- title: Disco SSD Adata Legend 710 512Gb M2 PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme3-512gb
+  product: ssd|adata|legend 710|512|nvme3|
+- title: Disco SSD Ediloca 512Gb M.2 NVMe PCIe 3.0
+  store: laaca
+  category: ssd
+  store_brand: Ediloca
+  status: family_only
+  condition: new
+  family: ssd:nvme3-512gb
+  product: null
+- title: Disco Solido SSD M2 2280 Patriot P300 PCIe Gen3 x4 NVMe 512GB P300P512GM28
+  store: pccompu
+  category: ssd
+  store_brand: PATRIOT
+  status: matched
+  condition: new
+  family: ssd:nvme3-512gb
+  product: ssd|patriot|p300|512|nvme3|
+- title: Ssd Nvme Adata Legend 710 512gb 2280 M2 2400/1600
+  store: pcparts
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-512gb
+  product: ssd|adata|legend 710|512|nvme3|
+- title: Ssd Nvme Adata Legend 710 512gb 2280 M2 2400/1600
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme3-512gb
+  product: ssd|adata|legend 710|512|nvme3|
+- title: DISCO SSD 1TB M.2 ADATA LEGEND 900 PRO 2280
+  store: hardpc
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|adata|legend 900 pro|1000|nvme4|
+- title: Disco SSD ADATA Legend 900 1Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|adata|legend 900|1000|nvme4|
+- title: Disco SSD ADATA Legend 900P 1Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|adata|legend 900 pro|1000|nvme4|
+- title: Disco SSD Kingston NV3 1Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|kingston|nv3|1000|nvme4|
+- title: Disco SSD Lexar NQ780 1TB M.2 2280 NVMe PCIe Gen4x4
+  store: laaca
+  category: ssd
+  store_brand: Lexar
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|lexar|nq780|1000|nvme4|
+- title: Disco SSD Raver 1Tb M.2 NVMe PCIe 4.0 c/disip
+  store: laaca
+  category: ssd
+  store_brand: Raver
+  status: family_only
+  condition: new
+  family: ssd:nvme4-1tb
+  product: null
+- title: Disco SSD XPG Gammix S50 Lite 1Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|adata|gammix s50 lite|1000|nvme4|
+- title: Disco Solido SSD M2 Kingston NV3 PCIe 4.0 Gen 4x4 NVMe 1TB 6000MB/S SNV3S/1000G
+  store: pccompu
+  category: ssd
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|kingston|nv3|1000|nvme4|
+- title: Kingston SSD PCIe NVMe NV3 1Tb GEN 4.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|kingston|nv3|1000|nvme4|
+- title: Solido Ssd Nvme LEXAR NQ780 1Tb 2280 M2 Para Notebooks y Pcs
+  store: infinit
+  category: ssd
+  store_brand: LEXAR
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|lexar|nq780|1000|nvme4|
+- title: Ssd Nvme Adata L900 Pro 1tb 2280 M.2 7400/6000
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|adata|legend 900 pro|1000|nvme4|
+- title: Ssd Nvme Adata Legend 900 1tb 2280 M.2 7000/4700
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-1tb
+  product: ssd|adata|legend 900|1000|nvme4|
+- title: DISCO SSD M.2 CORSAIR MP600 MINI 2TB PCIE 4.0 NVME 2230 CSSD-F2000GBMP600MNR2
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|corsair|mp600 mini|2000|nvme4|
+- title: DISCO SSD M.2 KINGSTON 2TB SNV3S/2000G
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|kingston|nv3|2000|nvme4|
+- title: Disco SSD ADATA Legend 860 2Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|legend 860|2000|nvme4|
+- title: Disco SSD ADATA Legend 900P 2Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|legend 900 pro|2000|nvme4|
+- title: Disco SSD ADATA Legend 960 2Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|legend 960|2000|nvme4|
+- title: Disco SSD ADATA XPG Gammix S70 2Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|gammix s70|2000|nvme4|
+- title: Disco SSD Kingston NV3 2Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|kingston|nv3|2000|nvme4|
+- title: Kingston SSD PCIe NVMe NV3 2Tb GEN 4.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|kingston|nv3|2000|nvme4|
+- title: SSD NVMe Adata L 900 Pro 2TB M.2 7400/6500
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|legend 900 pro|2000|nvme4|
+- title: Ssd NVMe Adata Legend 960 2TB M.2 2280 7400/6800
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|legend 960|2000|nvme4|
+- title: Ssd Nvme Adata Legend 860 2tb 2280 M.2 6000/5000
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|legend 860|2000|nvme4|
+- title: Ssd Nvme Adata Xpg S70 2tb 2280 M2 7400/6800
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-2tb
+  product: ssd|adata|gammix s70|2000|nvme4|
+- title: Disco SSD ADATA Legend 900P 4Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-4tb
+  product: ssd|adata|legend 900 pro|4000|nvme4|
+- title: Disco SSD Kingston NV3 4Tb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:nvme4-4tb
+  product: ssd|kingston|nv3|4000|nvme4|
+- title: Kingston SSD PCIe NVMe NV3 4Tb GEN 4.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-4tb
+  product: ssd|kingston|nv3|4000|nvme4|
+- title: Ssd Nvme Adata L900 Pro 4tb 2280 M.2 7400/6500
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-4tb
+  product: ssd|adata|legend 900 pro|4000|nvme4|
+- title: WD SSD NVMe SN850P 4Tb Gen 4 PC/PS5 Heatsink
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-4tb
+  product: ssd|western digital|black sn850p|4000|nvme4|disipador
+- title: DISCO SSD M.2 CORSAIR MP600 GS 500GB PCIE 4.0 NVME CSSD-F0500GBMP600GS
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-500gb
+  product: ssd|corsair|mp600 gs|500|nvme4|
+- title: Disco SSD ADATA Legend 860 500Gb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-500gb
+  product: ssd|adata|legend 860|500|nvme4|
+- title: Disco SSD Kingston NV3 500Gb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:nvme4-500gb
+  product: ssd|kingston|nv3|500|nvme4|
+- title: Disco Solido SSD M2 Kingston NV3 PCIe 4.0 NVMe 500 GB SNV3S/500G
+  store: pccompu
+  category: ssd
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ssd:nvme4-500gb
+  product: ssd|kingston|nv3|500|nvme4|
+- title: Kingston SSD PCIe NVMe NV3 500Gb GEN 4.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-500gb
+  product: ssd|kingston|nv3|500|nvme4|
+- title: Ssd Nvme Adata Legend 860 500gb 2280 M.2 5000/3000
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-500gb
+  product: ssd|adata|legend 860|500|nvme4|
+- title: Disco SSD ADATA Legend 900 512Gb M.2 NVMe PCIe 4.0
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:nvme4-512gb
+  product: ssd|adata|legend 900|512|nvme4|
+- title: Ssd Nvme Adata Legend 900 512gb 2280 M.2 6200/2300
+  store: tecnocity
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme4-512gb
+  product: ssd|adata|legend 900|512|nvme4|
+- title: DISCO SSD M.2 CORSAIR 2TB MP700 PRO HYDRO X CSSD-F2000GBMP700PHX
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme5-2tb
+  product: ssd|corsair|mp700 pro|2000|nvme5|hydro x
+- title: HikSemi Future Core SSD PCIe NVMe 2048Gb GEN 5.0
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme5-2tb
+  product: ssd|hiksemi|future core|2000|nvme5|
+- title: NUEVO SSD Kingston FURY Renegade G5 PCIe 5.0 NVMe M.2 2Tb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme5-2tb
+  product: ssd|kingston|fury renegade g5|2000|nvme5|
+- title: DISCO SSD M.2 CORSAIR MP700 ELITE 4TB PCIE 5.0 NVME SIN DISIPADOR CSSD-F4000GBMP700ENH
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:nvme5-4tb
+  product: ssd|corsair|mp700 elite|4000|nvme5|
+- title: DISCO SSD 2.5 PATRIOT BURST ELITE 1.92TB SATA III PBE192TS25SSDR
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-1-92tb
+  product: ssd|patriot|burst elite|1920|sata|
+- title: Disco SSD Biostar 128Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: Biostar
+  status: family_only
+  condition: new
+  family: ssd:sata-128gb
+  product: null
+- title: Solido M.2 128GB Sk Hynix 2280 Sata 6.0 Gb/s
+  store: infinit
+  category: ssd
+  store_brand: VARIAS MARCAS
+  status: family_only
+  condition: new
+  family: ssd:sata-128gb
+  product: null
+- title: Disco SSD Hiksemi Wave 1Tb 2.5 SATA
+  store: laaca
+  category: ssd
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ssd:sata-1tb
+  product: ssd|hiksemi|wave|1000|sata|
+- title: Hiksemi Wave SSD 1024Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-1tb
+  product: ssd|hiksemi|wave|1000|sata|
+- title: DISCO SSD 2.5 PATRIOT BURST ELITE 240GB SATA III PBE240GS25SSDR
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|patriot|burst elite|240|sata|
+- title: DISCO SSD 2.5 SATA NETAC SA500 240GB SATA III NT01SA500-240-S3X
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|netac|sa500|240|sata|
+- title: DISCO SSD 240GB 2.5" SATA PATRIOT
+  store: hardpc
+  category: ssd
+  store_brand: PATRIOT
+  status: family_only
+  condition: new
+  family: ssd:sata-240gb
+  product: null
+- title: DISCO SSD 240GB KINGSTON A400 SATA 2.5
+  store: hardpc
+  category: ssd
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|kingston|a400|240|sata|
+- title: Disco SSD Kingston A400 240Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|kingston|a400|240|sata|
+- title: Disco SSD Patriot Burst Elite 240Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: Patriot
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|patriot|burst elite|240|sata|
+- title: Hiksemi Wave SSD 240Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|hiksemi|wave|240|sata|
+- title: KINGSTON A400 DISCO SSD 240Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|kingston|a400|240|sata|
+- title: SSD MSI Spatium S270 240GB 2.5»
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|msi|spatium s270|240|sata|
+- title: Solido Ssd NETAC 240Gb SA500 2.5 Sata3 6.0Gbps Para Notebooks y Pcs
+  store: infinit
+  category: ssd
+  store_brand: NETAC
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|netac|sa500|240|sata|
+- title: Ssd PATRIOT Burst Elite 240Gb 2.5 Sata3 6 Gbps
+  store: infinit
+  category: ssd
+  store_brand: PATRIOT
+  status: matched
+  condition: new
+  family: ssd:sata-240gb
+  product: ssd|patriot|burst elite|240|sata|
+- title: Disco SSD ADATA Ultimate SU650 256GB SATA 2.5″
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:sata-256gb
+  product: ssd|adata|ultimate su650|256|sata|
+- title: Disco SSD Hiksemi Wave 256Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ssd:sata-256gb
+  product: ssd|hiksemi|wave|256|sata|
+- title: Disco Solido SSD Adata Ultimate SU650 256GB 2.5'' 3D NAND SATA 6Gb/s
+  store: pccompu
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:sata-256gb
+  product: ssd|adata|ultimate su650|256|sata|
+- title: Hiksemi Wave SSD 256Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-256gb
+  product: ssd|hiksemi|wave|256|sata|
+- title: Ssd Adata Ultimate Su650 256gb 2.5″ Sata
+  store: pcparts
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-256gb
+  product: ssd|adata|ultimate su650|256|sata|
+- title: DISCO SSD 2.5 SATA NETAC SA500 2TB SATA III NT01SA500-2T0-S3X
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-2tb
+  product: ssd|netac|sa500|2000|sata|
+- title: DISCO SSD 2.5" PATRIOT P210 2TB P210S2TB25
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-2tb
+  product: ssd|patriot|p210|2000|sata|
+- title: DISCO SSD M.2 SATA NETAC N535N 2TB 2280 NT01N535N-002T-N8X
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-2tb
+  product: ssd|netac|n535n|2000|sata|
+- title: Disco SSD Patriot P210 2Tb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: Patriot
+  status: matched
+  condition: new
+  family: ssd:sata-2tb
+  product: ssd|patriot|p210|2000|sata|
+- title: Ssd Solido M.2 Sata NETAC N535N 2Tb 2280
+  store: infinit
+  category: ssd
+  store_brand: NETAC
+  status: matched
+  condition: new
+  family: ssd:sata-2tb
+  product: ssd|netac|n535n|2000|sata|
+- title: DISCO SSD 2.5 PATRIOT BURST ELITE 480GB SATA III PBE480GS25SSDR
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|patriot|burst elite|480|sata|
+- title: Disco SSD HPE P40502-B21 480Gb 2.5″ SATA SFF
+  store: laaca
+  category: ssd
+  store_brand: HP
+  status: family_only
+  condition: new
+  family: ssd:sata-480gb
+  product: null
+- title: Disco SSD Kingston A400 480GB
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|kingston|a400|480|sata|
+- title: Disco SSD MSI Spatium S270 480Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|msi|spatium s270|480|sata|
+- title: KINGSTON A400 disco ssd 480Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|kingston|a400|480|sata|
+- title: SSD MSI Spatium S270 480GB 2.5»
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|msi|spatium s270|480|sata|
+- title: Solido Ssd KINGSTON 480Gb A400 Sata3 6.0Gbps Para Notebook y Pc
+  store: infinit
+  category: ssd
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|kingston|a400|480|sata|
+- title: Solido Ssd PATRIOT Burst Elite 480Gb 2.5 Sata3 6.0Gbps Para Notebooks y Pcs
+  store: infinit
+  category: ssd
+  store_brand: PATRIOT
+  status: matched
+  condition: new
+  family: ssd:sata-480gb
+  product: ssd|patriot|burst elite|480|sata|
+- title: Disco SSD ADATA Ultimate SU650 512GB SATA 2.5″
+  store: laaca
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|adata|ultimate su650|512|sata|
+- title: Disco SSD Hiksemi Wave 512Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|hiksemi|wave|512|sata|
+- title: Disco SSD Patriot P210 512Gb 2.5 SATA
+  store: laaca
+  category: ssd
+  store_brand: Patriot
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|patriot|p210|512|sata|
+- title: Disco Solido SSD Adata Ultimate SU650 512GB 2.5'' 3D NAND SATA 6Gb/s
+  store: pccompu
+  category: ssd
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|adata|ultimate su650|512|sata|
+- title: Disco Solido SSD ValueTech Pro 512GB SATA3 2.5" VTP512GSSD1
+  store: pccompu
+  category: ssd
+  store_brand: VALUETECH
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|valuetech|pro|512|sata|
+- title: Hiksemi Wave SSD 512Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|hiksemi|wave|512|sata|
+- title: Ssd Adata Ultimate Su650 512gb 2.5″ Sata
+  store: pcparts
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-512gb
+  product: ssd|adata|ultimate su650|512|sata|
+- title: DISCO SSD 2.5 PATRIOT BURST ELITE 960GB SATA III PBE960GS25SSDR
+  store: banifox
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|patriot|burst elite|960|sata|
+- title: DISCO SSD 960GB KINGSTON A400
+  store: hardpc
+  category: ssd
+  store_brand: KINGSTON
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|kingston|a400|960|sata|
+- title: Disco SSD Hiksemi Wave 960Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: HikSemi
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|hiksemi|wave|960|sata|
+- title: Disco SSD Kingston A400 960Gb
+  store: laaca
+  category: ssd
+  store_brand: Kingston
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|kingston|a400|960|sata|
+- title: Disco SSD Patriot Burst Elite 960Gb 2.5″ SATA
+  store: laaca
+  category: ssd
+  store_brand: Patriot
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|patriot|burst elite|960|sata|
+- title: Hiksemi Wave SSD 960Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|hiksemi|wave|960|sata|
+- title: KINGSTON A400 disco ssd 960Gb
+  store: thot
+  category: ssd
+  status: matched
+  condition: new
+  family: ssd:sata-960gb
+  product: ssd|kingston|a400|960|sata|

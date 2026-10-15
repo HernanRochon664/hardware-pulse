@@ -1,143 +1,84 @@
 """
-Entity resolver for hardware-pulse.
+Entity resolution: store title -> (condition, family, exact product).
 
-Responsibilities:
-- Orchestrate matching strategies in priority order: exact → regex → fuzzy
-- Produce ResolvedListing objects from RawListing inputs
-- Flag unresolved listings for manual review
+Pipeline per listing:
+1. The category comes from the store category that was scraped (never guessed).
+2. Condition: open box / used / refurbished titles are not "new".
+3. Rejects: accessories, hard drives, coolers... sharing the store category.
+4. Category parser (strict, no fuzzy matching).
+5. Identity: family always; exact product only when brand + line/model are known.
 
-Does NOT:
-- Load the catalog (caller responsibility)
-- Persist results to database
-- Modify raw listings
+Statuses:
+- matched      exact product fingerprint, shared across stores
+- family_only  family known, product line unknown: own product, never merged
+- rejected     not a product of this category
+- unparsed     could not extract the required specs (shown in "Estado de datos")
 """
 
 from __future__ import annotations
 
-import logging
+from collections.abc import Callable
+from dataclasses import dataclass, field
 
-from src.domain.models import RawListing, ResolvedListing
-from src.entities.catalog import Catalog
-from src.entities.matcher import exact_match, fuzzy_match, regex_match
-from src.entities.normalizer import extract_brand, extract_variant
+from src.domain.models import Category, Condition
+from src.entities.mpn import extract_mpn
+from src.entities.specs import Parsed, ParseFailure
+from src.entities.specs.cpu import parse_cpu
+from src.entities.specs.gpu import parse_gpu
+from src.entities.specs.ram import parse_ram
+from src.entities.specs.ssd import parse_ssd
+from src.entities.taxonomy import Taxonomy, load_taxonomy
 
-logger = logging.getLogger(__name__)
+# Bump whenever parsing rules or the taxonomy change in a way that should
+# re-resolve every stored listing.
+RESOLVER_VERSION = "2.0.0"
 
-# ---------------------------------------------------------------------------
-# Resolution pipeline
-# ---------------------------------------------------------------------------
+Parser = Callable[[str, str | None, Taxonomy], Parsed | ParseFailure]
 
-
-def resolve(listing: RawListing, catalog: Catalog) -> ResolvedListing:
-    """
-    Resolve a RawListing to a canonical product identity.
-
-    Applies matching strategies in order of confidence:
-    1. exact_match  → confidence 1.0
-    2. regex_match  → confidence 0.9
-    3. fuzzy_match  → confidence ≥ threshold (default 0.8)
-    4. no match     → canonical_product_id=None, flagged for review
-
-    Args:
-        listing: Raw scraped listing from any source.
-        catalog: Loaded canonical catalog (dict[sku, metadata]).
-
-    Returns:
-        ResolvedListing with canonical identity and match metadata.
-        canonical_product_id is None if no strategy succeeded.
-    """
-    title = listing.title
-
-    # Strategy 1: exact match (substring of normalized title vs normalized SKU)
-    sku, score = exact_match(title, catalog)
-    if sku is not None:
-        logger.debug("Exact match: %r → %r", title, sku)
-        return _build_resolved(listing, catalog, sku, score, matched_by="exact")
-
-    # Strategy 2: regex extraction + catalog validation
-    sku, score = regex_match(title, catalog)
-    if sku is not None:
-        logger.debug("Regex match: %r → %r (score=%.2f)", title, sku, score)
-        return _build_resolved(listing, catalog, sku, score, matched_by="regex")
-
-    # Strategy 3: fuzzy similarity fallback
-    sku, score = fuzzy_match(title, catalog)
-    if sku is not None:
-        logger.debug("Fuzzy match: %r → %r (score=%.2f)", title, sku, score)
-        return _build_resolved(listing, catalog, sku, score, matched_by="fuzzy")
-
-    # No match, flag for manual review
-    logger.debug("No match: %r", title)
-    return _build_resolved(listing, catalog, None, 0.0, matched_by=None)
+PARSERS: dict[Category, Parser] = {
+    Category.GPU: parse_gpu,
+    Category.CPU: parse_cpu,
+    Category.RAM: parse_ram,
+    Category.SSD: parse_ssd,
+}
 
 
-def resolve_batch(
-    listings: list[RawListing],
-    catalog: Catalog,
-) -> list[ResolvedListing]:
-    """
-    Resolve a batch of listings against the catalog.
+@dataclass
+class Resolution:
+    status: str
+    condition: Condition
+    parsed: Parsed | None = None
+    mpn: str | None = None
+    notes: list[str] = field(default_factory=list)
 
-    Args:
-        listings: List of raw listings from scrapers.
-        catalog:  Loaded canonical catalog.
-
-    Returns:
-        List of ResolvedListing, one per input listing, in order.
-        Listings that could not be resolved have canonical_product_id=None.
-    """
-    resolved = [resolve(listing, catalog) for listing in listings]
-
-    matched = sum(1 for r in resolved if r.canonical_product_id is not None)
-    logger.info(
-        "Resolved %d/%d listings (%.0f%%)",
-        matched,
-        len(listings),
-        100 * matched / len(listings) if listings else 0,
-    )
-    return resolved
+    @property
+    def notes_text(self) -> str:
+        return "; ".join(self.notes)
 
 
-# ---------------------------------------------------------------------------
-# Internal builder
-# ---------------------------------------------------------------------------
+def resolve_title(
+    category: Category,
+    title: str,
+    store_brand: str | None = None,
+    taxonomy: Taxonomy | None = None,
+) -> Resolution:
+    tax = taxonomy or load_taxonomy()
+    condition = tax.condition(title)
+    reason = tax.reject_reason(category, title)
+    if reason:
+        return Resolution("rejected", condition, notes=[f"reject:{reason}"])
 
+    result = PARSERS[category](title, tax.normalize_brand(store_brand), tax)
+    if isinstance(result, ParseFailure):
+        # "not_*" failures mean the item is not this kind of product at all.
+        status = "rejected" if result.reason.startswith("not_") else "unparsed"
+        return Resolution(status, condition, notes=[result.reason])
 
-def _build_resolved(
-    listing: RawListing,
-    catalog: Catalog,
-    sku: str | None,
-    confidence: float,
-    matched_by: str | None,
-) -> ResolvedListing:
-    """
-    Build a ResolvedListing from a RawListing and match results.
-
-    Brand is extracted independently from the title, it's an AIB brand
-    (ASUS, MSI, Gigabyte...) not the chip manufacturer (NVIDIA, AMD).
-    The chip manufacturer comes from the catalog via brand_family.
-    """
-    brand = extract_brand(listing.title)
-    variant = extract_variant(listing.title, brand)
-
-    return ResolvedListing(
-        # Traceability fields from RawListing
-        source=listing.source,
-        url=str(listing.url),
-        timestamp=listing.timestamp,
-        title=listing.title,
-        price=listing.price,
-        currency=listing.currency,
-        seller=listing.seller,
-        item_id=listing.item_id,
-        condition=listing.condition,
-        available_quantity=listing.available_quantity,
-        base_price=listing.base_price,
-        # Entity resolution results
-        canonical_product_id=sku,
-        confidence_score=confidence,
-        matched_by=matched_by,
-        # Optional enrichment
-        brand=brand,
-        variant=variant,
+    status = "matched" if result.fingerprint else "family_only"
+    return Resolution(
+        status,
+        condition,
+        parsed=result,
+        mpn=extract_mpn(title),
+        notes=list(result.notes),
     )

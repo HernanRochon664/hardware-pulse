@@ -1,129 +1,98 @@
+"""
+Domain types shared across scraping, resolution, storage and the dashboard.
+"""
+
+from __future__ import annotations
+
+import html
+import re
 from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, field_validator
-
-# ---------------------------------------------------------------------------
-# Enums
-# ---------------------------------------------------------------------------
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
-class Currency(StrEnum):
-    UYU = "UYU"
-    USD = "USD"
+class Category(StrEnum):
+    GPU = "gpu"
+    CPU = "cpu"
+    RAM = "ram"
+    SSD = "ssd"
+
+    @property
+    def label(self) -> str:
+        return CATEGORY_LABELS[self]
+
+
+CATEGORY_LABELS = {
+    Category.GPU: "Tarjetas de video",
+    Category.CPU: "Procesadores",
+    Category.RAM: "Memorias RAM",
+    Category.SSD: "Discos SSD",
+}
 
 
 class Condition(StrEnum):
     NEW = "new"
+    OPEN_BOX = "open_box"
     USED = "used"
+    REFURBISHED = "refurbished"
 
 
-class Source(StrEnum):
-    THOT = "thot"
-    BANIFOX = "banifox"
-    PCCOMPU = "pccompu"
+class Currency(StrEnum):
+    USD = "USD"
+    UYU = "UYU"
 
 
-# ---------------------------------------------------------------------------
-# Raw listing
-# Represents a listing exactly as collected from the source.
-# No enrichment, no inference. Only light type coercion.
-# ---------------------------------------------------------------------------
+class Platform(StrEnum):
+    WOOCOMMERCE = "woocommerce"
+    SME = "sme"
+    NOPCOMMERCE = "nopcommerce"
 
 
-class RawListing(BaseModel):
-    # --- Identity ---
-    source: Source
+_WS = re.compile(r"\s+")
+
+
+def clean_text(value: str) -> str:
+    """Unescape HTML entities and collapse whitespace."""
+    return _WS.sub(" ", html.unescape(value)).strip()
+
+
+class ScrapedListing(BaseModel):
+    """One product card/offer as published by a store, with light normalization only."""
+
+    store_id: str
+    category: Category
     url: str
-    timestamp: datetime
-
-    # --- Core fields (always present) ---
     title: str
-    price: float
+    price: float = Field(gt=0)
+    regular_price: float | None = Field(default=None, gt=0)
     currency: Currency
-    seller: str
-
-    # --- Optional fields ---
-    item_id: str | None = None
-    condition: Condition | None = None
-    available_quantity: int | None = None
-    base_price: float | None = None
+    in_stock: bool | None = None
+    stock_qty: int | None = Field(default=None, ge=0)
+    store_sku: str | None = None
+    brand: str | None = None
+    image_url: str | None = None
+    scraped_at: datetime
 
     @field_validator("title")
     @classmethod
-    def title_must_not_be_empty(cls, v: str) -> str:
-        if not v.strip():
+    def _clean_title(cls, value: str) -> str:
+        value = clean_text(value)
+        if not value:
             raise ValueError("title must not be empty")
-        return v.strip()
+        return value
 
-    @field_validator("price", "base_price")
+    @field_validator("brand", "store_sku")
     @classmethod
-    def price_must_be_positive(cls, v: float | None) -> float | None:
-        if v is not None and v <= 0:
-            raise ValueError("price must be positive")
-        return v
+    def _clean_optional(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        value = clean_text(value)
+        return value or None
 
-
-# ---------------------------------------------------------------------------
-# Resolved listing
-# Represents a listing that has been matched to a canonical product.
-# Used by the entity resolution pipeline before price snapshot creation.
-# ---------------------------------------------------------------------------
-
-
-class ResolvedListing(BaseModel):
-    # --- Traceability ---
-    source: Source
-    url: str
-    timestamp: datetime
-
-    # --- Core fields ---
-    title: str
-    price: float
-    currency: Currency
-    seller: str
-
-    # --- Optional raw traceability ---
-    item_id: str | None = None
-    condition: Condition | None = None
-    available_quantity: int | None = None
-    base_price: float | None = None
-
-    # --- Resolution result ---
-    canonical_product_id: str | None = None
-    confidence_score: float = 0.0
-    matched_by: str | None = None
-
-    # --- Enrichment ---
-    brand: str | None = None
-    variant: str | None = None
-
-    # --- Normalized price (set by pipeline, not by resolution) ---
-    price_usd: float | None = None
-
-
-# ---------------------------------------------------------------------------
-# Price snapshot
-# Represents a normalized, enriched record ready for storage and analysis.
-# Produced by the pipeline after entity resolution and currency conversion.
-# ---------------------------------------------------------------------------
-
-
-class PriceSnapshot(BaseModel):
-    # --- Traceability ---
-    source: Source
-    listing_id: str
-    timestamp: datetime
-
-    # --- Resolved identity ---
-    canonical_product_id: str  # e.g. "RTX 4070"
-    seller: str
-
-    # --- Normalized price ---
-    price: float
-    currency: Currency
-    price_usd: float  # always present after normalization
-
-    # --- Optional context ---
-    availability: int | None = None
-    condition: Condition | None = None
+    @model_validator(mode="after")
+    def _drop_meaningless_regular_price(self) -> ScrapedListing:
+        # A "regular" price only matters when it is above the selling price.
+        if self.regular_price is not None and self.regular_price <= self.price:
+            self.regular_price = None
+        return self

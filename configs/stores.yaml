@@ -1,0 +1,120 @@
+# ---------------------------------------------------------------------------
+# Stores tracked by Hardware Pulse.
+#
+# platform:
+#   woocommerce  -> WooCommerce Store API (JSON). Category entries are category
+#                   slugs; children are included by the API. "search:<text>"
+#                   uses a full-text search instead (for stores without a
+#                   component category tree).
+#   sme          -> PCCompu/HardPC/Infinit e-commerce platform (HTML). Entries
+#                   are category paths, exactly as linked from the store menu.
+#   nopcommerce  -> nopCommerce (HTML). Entries are category paths.
+#
+# Prices are published in USD with IVA included by every store below
+# (verified on 2026-10-14); tax_included is kept explicit for future stores.
+# Use `python -m src.cli discover-categories <store>` to inspect a store.
+# ---------------------------------------------------------------------------
+
+defaults:
+  request_delay: 1.5
+  timeout: 30
+  max_pages: 60
+
+stores:
+  thot:
+    name: Thot Computación
+    base_url: https://thotcomputacion.com.uy
+    platform: woocommerce
+    categories:
+      gpu: [tarjetas-de-video]
+      cpu: [procesadores]
+      ram: [memorias]
+      ssd: [discos-ssd, ssd-m-2, discos-externos]
+
+  laaca:
+    name: Laaca
+    base_url: https://laaca.com.uy
+    platform: woocommerce
+    categories:
+      gpu: [tarjetas-de-video]
+      cpu: [amd, intel]
+      ram: [memoria-ram]
+      ssd: [solidos-ssd]
+
+  netpc:
+    name: NetPC
+    base_url: https://netpc.uy
+    platform: woocommerce
+    categories:
+      gpu: ["search:tarjeta de video"]
+
+  obsidian:
+    name: Obsidian
+    base_url: https://obsidian.uy
+    platform: woocommerce
+    categories:
+      gpu: [tarjetas-graficas-nuevas]
+      cpu: [cpu]
+
+  pcparts:
+    name: PCParts
+    base_url: https://pcparts.com.uy
+    platform: woocommerce
+    categories:
+      gpu: [gpu]
+      cpu: [cpu]
+      ssd: [ssds]
+
+  tecnocity:
+    name: Tecnocity
+    base_url: https://tecnocity.com.uy
+    platform: woocommerce
+    categories:
+      gpu: [tarjetas-de-video]
+      cpu: [cpu]
+      ram: [memoria-ram]
+      ssd: [discos]
+
+  pccompu:
+    name: PCCompu
+    base_url: https://www.pccompu.com.uy
+    platform: sme
+    categories:
+      gpu: [/catalogo/componentes/tarjetas-de-video/]
+      cpu: [/catalogo/componentes/procesadores/]
+      ram: [/catalogo/componentes/memoria-ram/]
+      ssd:
+        - /catalogo/componentes/almacenamiento/discos-solidos-ssd-y-m2/
+        - /catalogo/accesorios/almacenamiento-externo/discos-externos/
+
+  hardpc:
+    name: HardPC
+    base_url: https://www.hardpc.com.uy
+    platform: sme
+    categories:
+      gpu: [/catalogo/componentes/tarjeta-de-video/hardpc/]
+      cpu: [/catalogo/componentes/procesadores/hardpc/]
+      ram: [/catalogo/componentes/memorias/hardpc/]
+      ssd: [/catalogo/componentes/discos/hardpc/]
+
+  infinit:
+    name: Infinit
+    base_url: https://www.infinit.com.uy
+    platform: sme
+    categories:
+      gpu: [/catalogo/hardware/tarjetas-graficas/infinit/]
+      cpu: [/catalogo/hardware/procesadores/infinit/]
+      ram: [/catalogo/hardware/memorias-ram/infinit/]
+      ssd:
+        - /catalogo/hardware/almacenamiento/solidos-ssd-nvme/infinit/
+        - /catalogo/hardware/almacenamiento/discos-usb/infinit/
+
+  banifox:
+    name: Banifox
+    base_url: https://www.banifox.com
+    platform: nopcommerce
+    categories:
+      gpu: [/tarjetas-de-video]
+      cpu: [/procesadores]
+      ram: [/memorias-ram]
+      ssd: [/ssd-m2-nvme, /ssd-2-5, /discos-externos-usb-usb-c]
