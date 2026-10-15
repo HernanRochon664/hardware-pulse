@@ -38,7 +38,7 @@ def _conn() -> sqlite3.Connection:
     return connect(_database_file(), readonly=True)
 
 
-def _query(sql: str, params: tuple | dict = ()) -> pd.DataFrame:
+def _query(sql: str, params: list | dict | None = None) -> pd.DataFrame:
     conn = _conn()
     try:
         return pd.read_sql_query(sql, conn, params=params)
@@ -88,9 +88,8 @@ def catalog() -> pd.DataFrame:
         "SELECT product_id, date, min_usd FROM product_daily "
         "WHERE date >= date('now', '-30 days') ORDER BY product_id, date"
     )
-    series = spark.groupby("product_id")["min_usd"].apply(list)
-    df["sparkline"] = df["id"].map(series)
-    df["sparkline"] = df["sparkline"].apply(lambda v: v if isinstance(v, list) else [])
+    series = spark.groupby("product_id")["min_usd"].apply(list).to_dict()
+    df["sparkline"] = [series.get(i, []) for i in df["id"].tolist()]
     return df
 
 
@@ -106,7 +105,7 @@ def product(product_id: int) -> dict | None:
         LEFT JOIN product_stats s ON s.product_id = p.id
         WHERE p.id = ?
         """,
-        (product_id,),
+        [product_id],
     )
     if df.empty:
         return None
@@ -148,7 +147,7 @@ def offers(product_id: int) -> pd.DataFrame:
         WHERE l.product_id = ?
         ORDER BY is_current DESC, latest.price_usd
         """,
-        (product_id,),
+        [product_id],
     )
 
 
@@ -163,7 +162,7 @@ def price_periods(product_id: int) -> pd.DataFrame:
         JOIN stores st ON st.id = l.store_id
         WHERE l.product_id = ? ORDER BY p.valid_from
         """,
-        (product_id,),
+        [product_id],
     )
 
 
@@ -171,7 +170,7 @@ def price_periods(product_id: int) -> pd.DataFrame:
 def product_daily(product_id: int) -> pd.DataFrame:
     return _query(
         "SELECT date, min_usd, n_stores FROM product_daily WHERE product_id = ? ORDER BY date",
-        (product_id,),
+        [product_id],
     )
 
 
@@ -198,8 +197,8 @@ def families() -> pd.DataFrame:
         "SELECT family_id, date, min_usd, median_usd FROM family_daily "
         "WHERE date >= date('now', '-90 days') ORDER BY family_id, date"
     )
-    spark = daily.groupby("family_id")["min_usd"].apply(list)
-    df["sparkline"] = df["id"].map(spark).apply(lambda v: v if isinstance(v, list) else [])
+    spark = daily.groupby("family_id")["min_usd"].apply(list).to_dict()
+    df["sparkline"] = [spark.get(i, []) for i in df["id"].tolist()]
 
     def change_30d(values: list) -> float | None:
         if len(values) < 2 or not values[0]:
@@ -207,7 +206,7 @@ def families() -> pd.DataFrame:
         window = values[-31:]
         return (window[-1] - window[0]) / window[0]
 
-    df["change_30d"] = df["sparkline"].apply(change_30d)
+    df["change_30d"] = df["sparkline"].apply(change_30d).astype(float)
     df["specs"] = df["specs_json"].apply(lambda s: json.loads(s or "{}"))
     return df
 
@@ -217,7 +216,7 @@ def family_daily(family_id: str) -> pd.DataFrame:
     return _query(
         "SELECT date, min_usd, p25_usd, median_usd, n_products FROM family_daily "
         "WHERE family_id = ? ORDER BY date",
-        (family_id,),
+        [family_id],
     )
 
 
@@ -225,7 +224,7 @@ def family_daily(family_id: str) -> pd.DataFrame:
 def signal(product_id: int) -> dict | None:
     df = _query(
         "SELECT * FROM signals WHERE entity_type = 'product' AND entity_id = ?",
-        (str(product_id),),
+        [str(product_id)],
     )
     if df.empty:
         return None

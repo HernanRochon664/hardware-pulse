@@ -37,21 +37,22 @@ with st.container(horizontal=True):
 
 cols = st.columns(4)
 cols[0].metric("Productos con precio", f"{len(catalog):,}".replace(",", "."))
-cols[1].metric("Ofertas comparadas", f"{int(catalog['n_offers'].sum()):,}".replace(",", "."))
+n_offers = sum(int(v) for v in catalog["n_offers"].tolist() if v == v)
+cols[1].metric("Ofertas comparadas", f"{n_offers:,}".replace(",", "."))
 cols[2].metric("Tiendas al día", f"{status['stores_ok']} de {status['stores_total']}")
 cols[3].metric(
     "Comparables en 2+ tiendas", f"{int((catalog['n_stores'] > 1).sum()):,}".replace(",", ".")
 )
 
-drops = catalog[catalog["change_7d"] <= -0.03].sort_values("change_7d").head(8)
-lows = catalog[catalog["is_historic_low"] == 1].sort_values("change_30d").head(8)
+drops = catalog.loc[catalog["change_7d"] <= -0.03].sort_values(by=["change_7d"]).head(8)
+lows = catalog.loc[catalog["is_historic_low"] == 1].sort_values(by=["change_30d"]).head(8)
 
 st.subheader("Bajaron en los últimos 7 días")
 if drops.empty:
     st.info("Esta semana no hubo bajas de precio de 3% o más.")
 else:
     grid = st.columns(4)
-    for i, (_, row) in enumerate(drops.iterrows()):
+    for i, row in enumerate(drops.to_dict(orient="records")):
         with grid[i % 4]:
             product_card(row, rate)
 
@@ -60,6 +61,6 @@ if lows.empty:
     st.info("Ningún producto está hoy en su precio más bajo registrado.")
 else:
     grid = st.columns(4)
-    for i, (_, row) in enumerate(lows.iterrows()):
+    for i, row in enumerate(lows.to_dict(orient="records")):
         with grid[i % 4]:
             product_card(row, rate)

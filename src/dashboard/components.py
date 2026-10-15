@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
 from src.dashboard import data
-from src.dashboard.formatting import ago, money, pct
+from src.dashboard.formatting import ago, html, money, pct
 from src.domain.models import CATEGORY_LABELS, Category
 from src.settings import LOCAL_TZ, from_iso
 
@@ -52,7 +54,7 @@ def freshness_banner() -> None:
         st.caption(f":material/check_circle: {text}")
 
 
-def badges(row: dict | pd.Series) -> None:
+def badges(row: Mapping[str, Any]) -> None:
     """Deal badges: always icon + text, never color alone."""
     if row.get("is_historic_low"):
         st.badge("Mínimo histórico", icon=":material/trending_down:", color="green")
@@ -77,10 +79,11 @@ def badges(row: dict | pd.Series) -> None:
         st.badge("Señal: buen momento", icon=":material/shopping_cart:", color="green")
 
 
-def product_card(row: pd.Series, rate: float | None) -> None:
+def product_card(row: Mapping[str, Any], rate: float | None) -> None:
     with st.container(border=True):
-        if isinstance(row.get("image_url"), str) and row["image_url"]:
-            st.image(row["image_url"], width=140)
+        image = row.get("image_url")
+        if isinstance(image, str) and image:
+            st.image(image, width=140)
         st.caption(
             f"{row.get('brand') or ''} · {row.get('family') or category_label(row['category'])}"
         )
@@ -90,7 +93,7 @@ def product_card(row: pd.Series, rate: float | None) -> None:
             query_params={"p": str(int(row["id"]))},
         )
         st.markdown(
-            f"<div class='hp-price-small'>{money(row['best_price_usd'], rate)}</div>",
+            html(f"<div class='hp-price-small'>{money(row['best_price_usd'], rate)}</div>"),
             unsafe_allow_html=True,
         )
         extra = f" · +{int(row['n_stores']) - 1} tiendas" if row["n_stores"] > 1 else ""
@@ -120,12 +123,12 @@ def history_chart(periods: pd.DataFrame, daily: pd.DataFrame, days: int | None) 
     """Lowest price (step line) plus each store's price history in a muted tone."""
     fig = go.Figure()
     cutoff = pd.Timestamp.now() - pd.Timedelta(days=days) if days else None
-    for store, group in periods[periods["condition"] == "new"].groupby("store"):
+    for store, group in periods.loc[periods["condition"] == "new"].groupby("store"):
         xs, ys = [], []
-        for row in group.itertuples():
-            start, end = _local(pd.Series([row.valid_from, row.last_seen]))
+        for row in group.to_dict(orient="records"):
+            start, end = _local(pd.Series([row["valid_from"], row["last_seen"]]))
             xs += [start, end, None]
-            ys += [row.price_usd, row.price_usd, None]
+            ys += [row["price_usd"], row["price_usd"], None]
         trace_x = pd.Series(xs)
         if cutoff is not None:
             ys = [y if (x is None or x >= cutoff) else None for x, y in zip(xs, ys, strict=True)]

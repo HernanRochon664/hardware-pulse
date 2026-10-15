@@ -29,7 +29,7 @@ st.caption(
 )
 
 rows = []
-for store_id, store in sorted(status["stores"].items(), key=lambda kv: kv[1]["name"]):
+for _store_id, store in sorted(status["stores"].items(), key=lambda kv: kv[1]["name"]):
     for category, run in sorted(store["categories"].items()):
         rows.append(
             {

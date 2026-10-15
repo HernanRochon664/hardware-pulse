@@ -7,7 +7,7 @@ import streamlit as st
 
 from src.dashboard import data
 from src.dashboard.components import RANGES, badges, category_label, history_chart, product_card
-from src.dashboard.formatting import ago, money, pct, short_date
+from src.dashboard.formatting import ago, html, md, money, pct, short_date
 
 CONDITION_LABELS = {"open_box": "Open box", "used": "Usado", "refurbished": "Reacondicionado"}
 SPEC_LABELS = {
@@ -62,7 +62,7 @@ with right:
                 regular_usd = best["price_usd"] * best["regular_price"] / best["price"]
                 before = f"<span class='hp-before'>{money(regular_usd, rate)}</span>"
             st.markdown(
-                f"<div class='hp-price'>{money(best['price_usd'], rate)}{before}</div>",
+                html(f"<div class='hp-price'>{money(best['price_usd'], rate)}{before}</div>"),
                 unsafe_allow_html=True,
             )
             st.markdown(f"en **{best['store']}** · visto {ago(best['last_seen_at'])}")
@@ -74,7 +74,9 @@ with right:
             )
             if len(current) > 1:
                 spread = current["price_usd"].max() - best["price_usd"]
-                st.caption(f"{len(current)} ofertas · la más cara cuesta {money(spread, rate)} más")
+                st.caption(
+                    md(f"{len(current)} ofertas · la más cara cuesta {money(spread, rate)} más")
+                )
         with st.container(horizontal=True):
             badges(product)
 
@@ -95,35 +97,41 @@ with right:
             "Es una estimación del modelo, no una garantía.",
             icon=":material/insights:",
         )
+    else:
+        st.caption(
+            ":material/insights: Señal comprar/esperar no disponible para este producto "
+            "(falta historial o el modelo no está publicado)."
+        )
 
 st.subheader("Ofertas")
 if offers.empty:
     st.info("Sin ofertas registradas.")
 else:
+    records = offers.to_dict(orient="records")
     table = pd.DataFrame(
         {
             "Tienda": offers["store"],
             "Precio": offers["price_usd"].map(lambda v: money(v, rate)),
             "Antes": [
-                money(r.price_usd * r.regular_price / r.price, rate)
-                if pd.notna(r.regular_price) and r.regular_price > r.price
+                money(r["price_usd"] * r["regular_price"] / r["price"], rate)
+                if pd.notna(r["regular_price"]) and r["regular_price"] > r["price"]
                 else ""
-                for r in offers.itertuples()
+                for r in records
             ],
             "Estado": [
-                CONDITION_LABELS.get(r.condition)
+                CONDITION_LABELS.get(r["condition"])
                 or (
                     "Disponible"
-                    if r.is_current == 1
+                    if r["is_current"] == 1
                     else "Sin stock"
-                    if r.in_stock == 0
+                    if r["in_stock"] == 0
                     else "Precio dudoso"
-                    if isinstance(r.quality_issue, str)
+                    if isinstance(r["quality_issue"], str)
                     else "Ya no publicado"
-                    if r.is_active == 0
+                    if r["is_active"] == 0
                     else "Desactualizado"
                 )
-                for r in offers.itertuples()
+                for r in records
             ],
             "Visto": offers["last_seen_at"].map(ago),
             "Publicación en la tienda": offers["title"],
@@ -179,11 +187,11 @@ if specs:
 
 if product.get("family_id"):
     alternatives = data.family_products(product["family_id"])
-    alternatives = alternatives[alternatives["id"] != product["id"]].head(4)
+    alternatives = alternatives.loc[alternatives["id"] != product["id"]].head(4)
     if not alternatives.empty:
         st.subheader(f"Otros modelos de {product['family']}")
         grid = st.columns(4)
-        for i, (_, row) in enumerate(alternatives.iterrows()):
+        for i, row in enumerate(alternatives.to_dict(orient="records")):
             with grid[i % 4]:
                 product_card(row, rate)
 

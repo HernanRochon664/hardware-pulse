@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import math
 
+import pandas as pd
 import streamlit as st
 
 from src.dashboard import data
 from src.dashboard.components import category_label, product_card
-from src.dashboard.formatting import money
+from src.dashboard.formatting import column_range, md, money
 from src.domain.models import Category
 from src.entities.text import fold
 
@@ -38,7 +39,7 @@ with st.sidebar:
         format_func=category_label,
         default=params.get("cat") if params.get("cat") in categories else None,
     )
-    pool = catalog if not cat else catalog[catalog["category"] == cat]
+    pool: pd.DataFrame = catalog if not cat else catalog.loc[catalog["category"] == cat]
     family_names = sorted(pool["family"].dropna().unique())
     families = st.multiselect(
         "Familia / chip",
@@ -54,41 +55,43 @@ with st.sidebar:
     multi_store = st.toggle("Solo comparables en 2+ tiendas", value=False)
     deals = st.toggle("Solo en mínimo histórico o en baja", value=False)
     if not pool.empty:
-        lo, hi = float(pool["best_price_usd"].min()), float(pool["best_price_usd"].max())
+        lo, hi = column_range(pool, "best_price_usd")
         lo, hi = math.floor(lo), math.ceil(hi)
         price_range = st.slider("Precio (U$S)", lo, max(hi, lo + 1), (lo, max(hi, lo + 1)))
     else:
         price_range = (0, 0)
 
-df = pool
+df: pd.DataFrame = pool
 if query:
     terms = fold(query).split()
     haystack = (
         df["name"].fillna("") + " " + df["family"].fillna("") + " " + df["brand"].fillna("")
     ).map(fold)
-    df = df[haystack.apply(lambda text: all(t in text for t in terms))]
+    df = df.loc[haystack.apply(lambda text: all(t in text for t in terms))]
 if families:
-    df = df[df["family"].isin(families)]
+    df = df.loc[df["family"].isin(families)]
 if brands:
-    df = df[df["brand"].isin(brands)]
+    df = df.loc[df["brand"].isin(brands)]
 if stores:
-    df = df[df["best_store_id"].isin(stores)]
+    df = df.loc[df["best_store_id"].isin(stores)]
 if multi_store:
-    df = df[df["n_stores"] > 1]
+    df = df.loc[df["n_stores"] > 1]
 if deals:
-    df = df[(df["is_historic_low"] == 1) | (df["change_7d"] <= -0.03)]
-df = df[(df["best_price_usd"] >= price_range[0]) & (df["best_price_usd"] <= price_range[1])]
+    df = df.loc[(df["is_historic_low"] == 1) | (df["change_7d"] <= -0.03)]
+df = df.loc[(df["best_price_usd"] >= price_range[0]) & (df["best_price_usd"] <= price_range[1])]
 
 top = st.columns([2, 1, 1])
 sort = top[1].selectbox("Ordenar", list(SORTS))
 size = top[2].selectbox("Por página", PAGE_SIZES)
 column, ascending = SORTS[sort]
-df = df.sort_values(column, ascending=ascending, na_position="last")
+df = df.sort_values(by=[column], ascending=ascending, na_position="last")
 
 pages = max(1, math.ceil(len(df) / size))
 top[0].markdown(
-    f"**{len(df)} productos**"
-    + (f" · desde {money(df['best_price_usd'].min(), rate)}" if len(df) else "")
+    md(
+        f"**{len(df)} {'producto' if len(df) == 1 else 'productos'}**"
+        + (f" · desde {money(column_range(df, 'best_price_usd')[0], rate)}" if len(df) else "")
+    )
 )
 
 if df.empty:
@@ -97,7 +100,7 @@ else:
     page = st.number_input("Página", 1, pages, 1) if pages > 1 else 1
     view = df.iloc[(page - 1) * size : page * size]
     grid = st.columns(4)
-    for i, (_, row) in enumerate(view.iterrows()):
+    for i, row in enumerate(view.to_dict(orient="records")):
         with grid[i % 4]:
             product_card(row, rate)
     if pages > 1:

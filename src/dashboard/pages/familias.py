@@ -7,7 +7,7 @@ import streamlit as st
 
 from src.dashboard import data
 from src.dashboard.components import RANGES, category_label, family_chart, product_card
-from src.dashboard.formatting import currency, money
+from src.dashboard.formatting import column_range, currency, md, money
 from src.domain.models import Category
 
 rate = data.usd_uyu()
@@ -28,8 +28,8 @@ if view.empty:
     st.info("Sin familias con precio en esta categoría.")
     st.stop()
 
-view = view.copy()
-per_gb = view["specs"].apply(lambda s: s.get("capacity_gb"))
+view = pd.DataFrame(view).copy()
+per_gb = pd.Series(view["specs"]).apply(lambda s: s.get("capacity_gb"))
 if cat in ("ram", "ssd"):
     view["usd_per_gb"] = view["min_usd"] / per_gb
 factor = rate if currency() == "UYU" and rate else 1.0
@@ -47,7 +47,7 @@ if "usd_per_gb" in view:
     table["U$S por GB"] = view["usd_per_gb"].round(2)
 prefix = "$ " if factor != 1.0 else "U$S "
 selection = st.dataframe(
-    table.sort_values("Desde"),
+    table.sort_values(by=["Desde"]),
     hide_index=True,
     on_select="rerun",
     selection_mode="single-row",
@@ -62,17 +62,16 @@ st.caption("Elegí una fila para ver el detalle de la familia.")
 
 rows = selection.selection.rows if selection else []
 if rows:
-    family = view.sort_values("min_usd").iloc[rows[0]]
+    family = view.sort_values(by=["min_usd"]).iloc[rows[0]]
     st.subheader(family["name"])
     daily = data.family_daily(family["id"])
     if not daily.empty:
         choice = st.segmented_control("Rango", list(RANGES), default="90 días", key="fam_range")
         st.plotly_chart(family_chart(daily, RANGES[choice or "90 días"]), use_container_width=True)
     products = data.family_products(family["id"])
-    st.markdown(
-        f"**{len(products)} modelos** desde {money(products['best_price_usd'].min(), rate)}"
-    )
+    cheapest = column_range(products, "best_price_usd")[0]
+    st.markdown(md(f"**{len(products)} modelos** desde {money(cheapest, rate)}"))
     grid = st.columns(4)
-    for i, (_, row) in enumerate(products.head(12).iterrows()):
+    for i, row in enumerate(products.head(12).to_dict(orient="records")):
         with grid[i % 4]:
             product_card(row, rate)

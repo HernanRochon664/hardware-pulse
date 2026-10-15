@@ -4,11 +4,30 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+import pandas as pd
 import streamlit as st
 
 from src.settings import LOCAL_TZ, from_iso
 
 CURRENCIES = ("USD", "UYU")
+
+
+def md(text: str) -> str:
+    """Escape dollar signs so Streamlit markdown never renders 'U$S … $' as LaTeX."""
+    return text.replace("$", "\\$")
+
+
+def html(text: str) -> str:
+    """Same as ``md`` for raw HTML blocks, where a backslash escape would show literally."""
+    return text.replace("$", "&#36;")
+
+
+def column_range(df: pd.DataFrame, column: str) -> tuple[float, float]:
+    """Min and max of a numeric column (NaN when it has no values)."""
+    values = [float(v) for v in df[column].tolist() if v is not None and v == v]
+    if not values:
+        return float("nan"), float("nan")
+    return min(values), max(values)
 
 
 def currency() -> str:

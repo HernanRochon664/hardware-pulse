@@ -10,7 +10,7 @@ import streamlit as st
 
 from src.dashboard import data
 from src.dashboard.components import freshness_banner, inject_css
-from src.dashboard.formatting import CURRENCIES
+from src.dashboard.formatting import CURRENCIES, md
 
 st.set_page_config(
     page_title="Hardware Pulse · precios de hardware en Uruguay",
@@ -53,7 +53,7 @@ with st.sidebar:
     )
     rate = data.usd_uyu()
     if rate:
-        st.caption(f"Cotización usada: 1 U$S = $ {rate:.2f}".replace(".", ","))
+        st.caption(md(f"Cotización usada: 1 U$S = $ {rate:.2f}".replace(".", ",")))
     freshness_banner()
     st.caption("Precios publicados por cada tienda, en dólares con IVA incluido.")
 
