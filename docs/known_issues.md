@@ -28,7 +28,3 @@ The nopCommerce listing pages do not show availability, so Banifox offers have
 
 If a store starts returning errors only from GitHub Actions, the planned fallback
 is a self-hosted runner for that store.
-
-## `src/ml/pipeline.py` is an unused stub
-
-The ML orchestration lives in `src/ml/signals.py`. The old stub should be deleted.
