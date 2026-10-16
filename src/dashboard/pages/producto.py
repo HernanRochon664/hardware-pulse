@@ -5,7 +5,7 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from src.dashboard import data
+from src.dashboard import data, importing
 from src.dashboard.components import RANGES, badges, category_label, history_chart, product_card
 from src.dashboard.formatting import ago, html, md, money, pct, short_date
 
@@ -79,6 +79,14 @@ with right:
                 )
         with st.container(horizontal=True):
             badges(product)
+
+    best_offer = current.iloc[0] if not current.empty else None
+    importing.product_section(
+        product,
+        float(best_offer["price_usd"]) if best_offer is not None else None,
+        str(best_offer["store"]) if best_offer is not None else None,
+        rate,
+    )
 
     signal = data.signal(int(product["id"]))
     if signal:

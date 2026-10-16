@@ -33,6 +33,14 @@ navigation = st.navigation(
                 visibility="hidden",
             ),
         ],
+        "Herramientas": [
+            st.Page(
+                f"{PAGES}/importar.py",
+                title="¿Comprar acá o importar?",
+                icon=":material/flight_land:",
+                url_path="importar",
+            ),
+        ],
         "Transparencia": [
             st.Page(f"{PAGES}/estado.py", title="Estado de datos", icon=":material/monitor_heart:"),
             st.Page(

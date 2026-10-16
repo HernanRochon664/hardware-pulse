@@ -261,7 +261,7 @@ def quote_shipment(
         )
     if real_kg > limits.max_weight_kg + _EPS:
         reasons.append(f"pesa {kg(real_kg)}: pasa los {kg(limits.max_weight_kg)} por envío")
-    if regime is Regime.FRANCHISE and pool is not None:
+    if regime is Regime.FRANCHISE and pool is not None and not reasons:
         if pool.shipments_left < 1:
             reasons.append(f"{pool.holder} no tiene envíos de franquicia disponibles este año")
         elif invoice > pool.usd_left + _EPS:
