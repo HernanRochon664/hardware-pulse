@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# Estimated shipping weight (kg, product in its retail box) and box size (cm)
+# for the import calculator, used only when the real ones are unknown. The
+# calculator always labels them "estimado" and lets the user edit them; the
+# bookmarklet brings the real values from the store page when it shows them.
+#
+# rules: matched against the product family id (e.g. "gpu:rtx-5070-ti-16gb"),
+# first match wins, so more specific patterns go first ("rtx-5070-ti" before
+# "rtx-5070"). Each category ends with a catch-all.
+# ---------------------------------------------------------------------------
+
+profiles:
+  gpu_xl: {label: "GPU tope de gama", weight_kg: 3.8, dims_cm: [47, 31, 15]}
+  gpu_l: {label: "GPU gama alta", weight_kg: 2.8, dims_cm: [43, 28, 13]}
+  gpu_m: {label: "GPU gama media", weight_kg: 2.0, dims_cm: [38, 25, 11]}
+  gpu_s: {label: "GPU gama de entrada", weight_kg: 1.4, dims_cm: [33, 22, 9]}
+  gpu_xs: {label: "GPU básica / perfil bajo", weight_kg: 0.8, dims_cm: [26, 18, 7]}
+  cpu_workstation: {label: "Procesador de workstation", weight_kg: 0.9, dims_cm: [20, 15, 10]}
+  cpu: {label: "Procesador en caja", weight_kg: 0.45, dims_cm: [15, 12, 9]}
+  ram_sodimm: {label: "Memoria SODIMM", weight_kg: 0.08, dims_cm: [14, 9, 2]}
+  ram: {label: "Kit de memoria DIMM", weight_kg: 0.18, dims_cm: [16, 12, 3]}
+  ssd_external: {label: "SSD externo", weight_kg: 0.2, dims_cm: [15, 11, 4]}
+  ssd_sata: {label: "SSD SATA 2,5\"", weight_kg: 0.15, dims_cm: [15, 11, 3]}
+  ssd_m2: {label: "SSD M.2", weight_kg: 0.08, dims_cm: [14, 9, 2]}
+  generic: {label: "Producto genérico", weight_kg: 1.0, dims_cm: [30, 20, 10]}
+
+rules:
+  - {pattern: '^gpu:(rtx-(3090|4090|5090)|rtx-(4080|5080)|rx-(6900|6950|7900)|titan)', profile: gpu_xl}
+  - {pattern: '^gpu:(rtx-(3080|4070-ti|5070-ti)|rx-(6800|7800|9070))', profile: gpu_l}
+  - {pattern: '^gpu:(rtx-(3060-ti|3070|4060-ti|4070|5060-ti|5070)|rx-(6700|6750|7700|9060-xt)|arc-(a7|b5))', profile: gpu_m}
+  - {pattern: '^gpu:(rtx-(2060|3050|3060|4060|5050|5060)|gtx-16|rx-(5500|5600|5700|6500|6600|7600)|arc-a[35])', profile: gpu_s}
+  - {pattern: '^gpu:(gt-|gtx-(7|9|10)|rx-[45][0-9]{2}-|rx-6400|r[57]-)', profile: gpu_xs}
+  - {pattern: '^gpu:', profile: gpu_m}
+  - {pattern: '^cpu:(amd-ryzen-threadripper|intel-xeon)', profile: cpu_workstation}
+  - {pattern: '^cpu:', profile: cpu}
+  - {pattern: '^ram:.*-sodimm$', profile: ram_sodimm}
+  - {pattern: '^ram:', profile: ram}
+  - {pattern: '^ssd:external', profile: ssd_external}
+  - {pattern: '^ssd:sata', profile: ssd_sata}
+  - {pattern: '^ssd:', profile: ssd_m2}
+
+# Used when the family is unknown (free-form items).
+category_defaults:
+  gpu: gpu_m
+  cpu: cpu
+  ram: ram
+  ssd: ssd_m2

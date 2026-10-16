@@ -1,0 +1,91 @@
+# ---------------------------------------------------------------------------
+# US stores and buying routes for the import calculator.
+#
+# registry_status: whether the company that issues the invoice is in the DNA
+# registry of US sellers (needed since 2026-11-03 for the IVA exemption of
+# shipments up to USD 200): listed / not_listed / uncertain. "uncertain" is
+# computed as not exempt and the calculator shows how much the exemption would save.
+# sales_tax_exemption_program: the store accepts a forwarding agent certificate
+# (DR-14 FAA) to remove Florida sales tax when the courier provides one.
+# search_url: {query} is the MPN when known, otherwise the product name.
+# ---------------------------------------------------------------------------
+
+registry:
+  source_url: https://www.aduanas.gub.uy/innovaportal/file/28873/1/control.empresas.pdf
+  checked_at: 2026-10-15
+
+stores:
+  amazon:
+    name: Amazon (vendido por Amazon.com)
+    registry_status: listed
+    registry_entry: AMAZON.COM, INC.
+    sales_tax_exemption_program: true
+    search_url: https://www.amazon.com/s?k={query}
+    hosts: [amazon.com]
+    note: "Solo cuando la ficha dice «Vendido por Amazon.com»."
+
+  amazon_marketplace:
+    name: Amazon (vendedor externo)
+    registry_status: uncertain
+    sales_tax_exemption_program: false
+    search_url: https://www.amazon.com/s?k={query}
+    note: "La factura la emite el vendedor externo: el registro de Amazon.com no lo cubre."
+
+  newegg:
+    name: Newegg
+    registry_status: listed
+    registry_entry: NEWEGG INC.
+    sales_tax_exemption_program: true
+    search_url: https://www.newegg.com/p/pl?d={query}
+    hosts: [newegg.com]
+    note: "Solo lo que vende Newegg; los vendedores externos de su marketplace no están cubiertos."
+
+  bhphoto:
+    name: B&H Photo
+    registry_status: listed
+    registry_entry: B & H FOTO & ELECTRONICS CORP.
+    sales_tax_exemption_program: true
+    search_url: https://www.bhphotovideo.com/c/search?q={query}
+    hosts: [bhphotovideo.com]
+
+  bestbuy:
+    name: Best Buy
+    registry_status: listed
+    registry_entry: BEST BUY CO., INC.
+    sales_tax_exemption_program: true
+    search_url: https://www.bestbuy.com/site/searchpage.jsp?st={query}
+    hosts: [bestbuy.com]
+
+  microcenter:
+    name: Micro Center
+    registry_status: listed
+    registry_entry: MICRO CENTER SALES CORPORATION
+    sales_tax_exemption_program: false
+    search_url: https://www.microcenter.com/search/search_results.aspx?Ntt={query}
+    hosts: [microcenter.com]
+
+  assisted:
+    name: Compra asistida de un courier
+    registry_status: listed
+    sales_tax_exemption_program: false
+    note: >-
+      El courier compra por vos y factura su empresa en EE. UU., que figura en el
+      registro (Grinbox Corp, Netbox Corp, Miami Box, United States Xpress, Eshop
+      Miami, pedido.miami). Sirve para vendedores no registrados. Consultá la comisión.
+
+  other:
+    name: Otra tienda de EE. UU.
+    registry_status: not_listed
+    sales_tax_exemption_program: false
+    note: "Si no está en el registro de Aduanas, el envío paga IVA aunque sea de menos de USD 200."
+
+# Routes whose final price already includes freight and Uruguayan taxes.
+all_in:
+  tiendamia:
+    name: Tiendamia (precio final)
+    site: https://tiendamia.com.uy
+    note: "Ingresá el precio final puesto en Uruguay. Xipron Inc. (Tiendamia) está registrada; usa una de tus franquicias."
+  amazon_direct:
+    name: Amazon con envío directo
+    site: https://www.amazon.com
+    note: "Ingresá el total del checkout, que incluye el envío y el depósito de impuestos de importación (Amazon devuelve la diferencia si sobra)."

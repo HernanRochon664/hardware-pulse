@@ -1,0 +1,70 @@
+# ---------------------------------------------------------------------------
+# Uruguayan tax rules for international postal shipments (courier / Correo),
+# used by the "¿comprar acá o importar?" calculator (src/crossborder/).
+#
+# A rule set applies to shipments released by customs on or after valid_from
+# (the franchise is computed on the release date, not the purchase date).
+# Every number has a source. When re-checking, update verified_at and the
+# sources; when the law changes, add a new rule set instead of editing the old one.
+# ---------------------------------------------------------------------------
+
+rule_sets:
+  - id: decreto-50-026
+    name: Ley 20.446 y Decreto 50/026
+    valid_from: 2026-05-01
+    verified_at: 2026-10-16
+
+    # Arts. 3-4: up to 3 shipments per calendar year and USD 800 in total per
+    # adult with a Uruguayan ID, personal use, paid with an international card
+    # in the name of the buyer and recipient. Exempt from tariffs, taxed with IVA.
+    franchise:
+      annual_usd_cap: 800
+      max_shipments: 3
+      max_invoice_usd: 800
+      max_weight_kg: 20
+      iva_rate: 0.22
+      # TO 2023, Título 10, art. 13 lit. B inc. 3 (added by Ley 20.446 art. 660):
+      # for postal shipments IVA is computed on the invoice or declared value and
+      # can never be less than USD 20, unless every good in it is exempt.
+      iva_min_usd: 20
+
+    # Art. 3: shipments sent by a seller with fiscal residence in a country with
+    # a trade agreement covering postal shipments (today only the US, TIFA) are
+    # exempt from every tax, up to USD 200 per shipment. They still use one of the
+    # 3 shipments and their value counts toward the USD 800. Since 2026-11-03 the
+    # invoice issuer must be in the DNA registry (configs/us_stores.yaml).
+    treaty:
+      countries: [US]
+      max_invoice_usd: 200
+      registry_required_from: 2026-11-03
+
+    # Art. 2: single 60% payment on the invoice or declared value, minimum USD 20
+    # per shipment, replaces every other import tax. No yearly limit. Art. 15: a
+    # shipment that does not meet the franchise conditions goes entirely to this
+    # regime (the two regimes are never combined in one shipment).
+    single_tax:
+      rate: 0.60
+      min_usd: 20
+      max_invoice_usd: 800
+      max_weight_kg: 20
+
+    # Art. 5: the value is the total of the original invoice, including every
+    # charge on it (price, US sales tax, the store's shipping to the warehouse).
+    # The courier's international freight is not part of it.
+
+    sources:
+      decree:
+        label: Decreto 50/026 (texto oficial)
+        url: https://medios.presidencia.gub.uy/legal/2026/decretos/03/mef_297.pdf
+      iva_postal:
+        label: TO 2023 Título 10 art. 13 lit. B (IVA de envíos postales, mínimo USD 20)
+        url: https://impo.com.uy/bases/todgi2023/101-2024/13_T10
+      franchise:
+        label: Aduanas — Régimen de franquicia desde el 1/5/2026
+        url: https://www.aduanas.gub.uy/innovaportal/v/28221/1/innova.front/
+      faq:
+        label: MEF — Preguntas frecuentes sobre franquicias (24/04/2026)
+        url: https://www.gub.uy/ministerio-economia-finanzas/comunicacion/noticias/guia-preguntas-frecuentes-sobre-regimen-envios-postales-franquicias
+      registry:
+        label: Aduanas — Registro de vendedores de EE. UU. (15/10/2026)
+        url: https://www.aduanas.gub.uy/innovaportal/file/28873/1/control.empresas.pdf

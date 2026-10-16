@@ -24,6 +24,12 @@ DATA_DIR = PROJECT_ROOT / "data"
 STORES_CONFIG_PATH = CONFIG_DIR / "stores.yaml"
 TAXONOMY_PATH = CONFIG_DIR / "taxonomy.yaml"
 
+# Import calculator ("¿comprar acá o importar?"), see src/crossborder/.
+IMPORT_RULES_PATH = CONFIG_DIR / "import_rules.yaml"
+COURIERS_PATH = CONFIG_DIR / "couriers.yaml"
+US_STORES_PATH = CONFIG_DIR / "us_stores.yaml"
+SHIPPING_PROFILES_PATH = CONFIG_DIR / "shipping_profiles.yaml"
+
 # Uruguay has no daylight saving time since 2015 (UTC-3 all year).
 LOCAL_TZ = ZoneInfo("America/Montevideo")
 
