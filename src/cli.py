@@ -192,7 +192,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     def store_filters(p: argparse.ArgumentParser) -> None:
         p.add_argument("--stores", help="comma separated store ids (default: all enabled)")
-        p.add_argument("--categories", help="comma separated: gpu,cpu,ram,ssd")
+        p.add_argument(
+            "--categories", help="comma separated: " + ",".join(c.value for c in Category)
+        )
         p.add_argument("--run-id")
 
     p = sub.add_parser("run", help="full pipeline")

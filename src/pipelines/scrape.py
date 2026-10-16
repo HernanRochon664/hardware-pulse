@@ -7,6 +7,11 @@ For each (store, category):
 3. The run is classified (ok / empty / anomaly / error). Only an "ok" run
    deactivates listings that disappeared from the store (rule 2): a failed or
    partial scrape never makes products vanish.
+
+Categories are scraped in the order of ``Category``. A URL that a store lists
+in two categories is kept in the first one and skipped in the others, so a
+listing never flips between categories (the first four categories keep their
+URLs when new ones are added).
 """
 
 from __future__ import annotations
@@ -23,6 +28,7 @@ from src.pipelines.fx import ensure_fx_rate, to_usd
 from src.scrapers.base import StoreAdapter, build_adapter
 from src.settings import local_date, utcnow
 from src.storage import repository
+from src.storage.repository import canonical_url
 
 logger = logging.getLogger(__name__)
 
@@ -63,12 +69,14 @@ def scrape_stores(
     usd_uyu = ensure_fx_rate(conn, local_date(now), now)
 
     results: list[ScrapeResult] = []
+    order = list(Category)
     for store in selected:
         adapter = adapter_factory(store)
-        for category in store.categories:
+        claimed: dict[str, Category] = {}  # canonical URL -> category that kept it
+        for category in sorted(store.categories, key=order.index):
             if categories and category not in categories:
                 continue
-            results.append(_scrape_one(conn, adapter, store, category, run_id, usd_uyu))
+            results.append(_scrape_one(conn, adapter, store, category, run_id, usd_uyu, claimed))
     return results
 
 
@@ -79,14 +87,21 @@ def _scrape_one(
     category: Category,
     run_id: str,
     usd_uyu: float | None,
+    claimed: dict[str, Category] | None = None,
 ) -> ScrapeResult:
     started = utcnow()
     clock = time.monotonic()
     run = repository.start_scrape_run(conn, run_id, store.id, category, started)
     result = ScrapeResult(store.id, category, status="running")
     seen: set[int] = set()
+    claimed = {} if claimed is None else claimed
+    skipped = 0
     try:
         for listing in adapter.fetch_category(category, started):
+            url = canonical_url(listing.url)
+            if claimed.setdefault(url, category) is not category:
+                skipped += 1
+                continue
             price_usd = to_usd(listing.price, listing.currency, usd_uyu)
             if price_usd is None:
                 logger.warning("%s: no FX rate to convert %s", store.id, listing.url)
@@ -101,6 +116,10 @@ def _scrape_one(
         result.error = f"{type(exc).__name__}: {exc}"[:500]
         logger.error("%s/%s failed: %s", store.id, category.value, result.error)
 
+    if skipped:
+        logger.info(
+            "%s/%s: %d URLs already listed in another category", store.id, category, skipped
+        )
     if result.error:
         result.status = "error"
     else:
@@ -122,7 +141,7 @@ def _scrape_one(
         error=result.error,
     )
     logger.info(
-        "%-10s %-3s %-7s found=%d new=%d changed=%d delisted=%d (%.1fs)",
+        "%-10s %-11s %-7s found=%d new=%d changed=%d delisted=%d (%.1fs)",
         store.id,
         category.value,
         result.status,

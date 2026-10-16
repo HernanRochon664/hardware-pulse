@@ -29,7 +29,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
-from src.domain.models import Category
+from src.domain.models import LEGACY_CATEGORIES, Category
 from src.entities.resolver import resolve_title
 from src.settings import PROJECT_ROOT, from_iso, local_date, to_iso
 from src.storage.repository import canonical_url
@@ -97,7 +97,7 @@ def guess_category(title: str) -> Category | None:
             status = resolve_title(category, title).status
             if status in ("matched", "family_only"):
                 return category
-    for category in Category:
+    for category in LEGACY_CATEGORIES:  # v1 only tracked these four
         if resolve_title(category, title).status in ("matched", "family_only"):
             return category
     return None

@@ -13,6 +13,11 @@
 # Prices are published in USD with IVA included by every store below
 # (verified on 2026-10-14); tax_included is kept explicit for future stores.
 # Use `python -m src.cli discover-categories <store>` to inspect a store.
+#
+# Motherboard, cooler, psu, case and monitor sources were added on 2026-10-16
+# (only categories with 10+ products per store: a small source that empties
+# out marks the run as degraded). A URL listed in two categories of one store
+# is kept in the first one, in the order of src/domain/models.py:Category.
 # ---------------------------------------------------------------------------
 
 defaults:
@@ -30,6 +35,11 @@ stores:
       cpu: [procesadores]
       ram: [memorias]
       ssd: [discos-ssd, ssd-m-2, discos-externos]
+      motherboard: [motherboards]
+      cooler: [cooling]
+      psu: [fuentes]
+      case: [gabinetes]
+      monitor: [monitores]
 
   laaca:
     name: Laaca
@@ -40,6 +50,11 @@ stores:
       cpu: [amd, intel]
       ram: [memoria-ram]
       ssd: [solidos-ssd]
+      motherboard: [placas-madre]
+      cooler: [coolers, water-cooling-procesadores]
+      psu: [fuentes]
+      case: [gabinetes]
+      monitor: [monitores-monitores]
 
   netpc:
     name: NetPC
@@ -64,6 +79,11 @@ stores:
       gpu: [gpu]
       cpu: [cpu]
       ssd: [ssds]
+      motherboard: [motherboards]
+      cooler: [fans-y-coolers]
+      psu: [fuentes-de-poder]
+      case: [gabinetes]
+      monitor: [monitores]
 
   tecnocity:
     name: Tecnocity
@@ -74,6 +94,11 @@ stores:
       cpu: [cpu]
       ram: [memoria-ram]
       ssd: [discos]
+      motherboard: [motherboards]
+      cooler: [refrigeracion]
+      psu: [fuentes]
+      case: [gabinetes]
+      monitor: [monitores]
 
   pccompu:
     name: PCCompu
@@ -86,6 +111,13 @@ stores:
       ssd:
         - /catalogo/componentes/almacenamiento/discos-solidos-ssd-y-m2/
         - /catalogo/accesorios/almacenamiento-externo/discos-externos/
+      motherboard: [/catalogo/componentes/motherboard/]
+      cooler:
+        - /catalogo/componentes/refrigeracion-y-coolers/coolers-para-cpu/
+        - /catalogo/componentes/refrigeracion-y-coolers/refrigeracion-liquida/
+      psu: [/catalogo/componentes/fuentes-ups-y-reguladores/fuentes-para-pc/]
+      case: [/catalogo/componentes/gabinetes/]
+      monitor: [/catalogo/monitores/]
 
   hardpc:
     name: HardPC
@@ -96,6 +128,10 @@ stores:
       cpu: [/catalogo/componentes/procesadores/hardpc/]
       ram: [/catalogo/componentes/memorias/hardpc/]
       ssd: [/catalogo/componentes/discos/hardpc/]
+      motherboard: [/catalogo/componentes/motherboard/hardpc/]
+      psu: [/catalogo/componentes/fuentes/hardpc/]
+      case: [/catalogo/componentes/gabinetes/hardpc/]
+      monitor: [/catalogo/monitores/monitores/hardpc/]
 
   infinit:
     name: Infinit
@@ -108,6 +144,15 @@ stores:
       ssd:
         - /catalogo/hardware/almacenamiento/solidos-ssd-nvme/infinit/
         - /catalogo/hardware/almacenamiento/discos-usb/infinit/
+      motherboard: [/catalogo/hardware/motherboards/infinit/]
+      cooler:
+        - /catalogo/hardware/refrigeracion/ventiladores/infinit/
+        - /catalogo/hardware/refrigeracion/ref-liquida/infinit/
+      psu: [/catalogo/hardware/fuentes/infinit/]
+      case: [/catalogo/hardware/gabinetes/infinit/]
+      monitor:
+        - /catalogo/gamer/monitores-gamer/infinit/
+        - /catalogo/imagen-audio/monitores/infinit/
 
   banifox:
     name: Banifox
