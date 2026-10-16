@@ -86,6 +86,19 @@ a baseline (drop rate per category × above/below the 30-day median) and
 stored as JSON (no pickle). The "Señal" page shows the latest backtest even when
 the gate keeps it unpublished, which is the case with the current history.
 
+### ¿Comprar acá o importar?
+
+Each product page shows the US price below which importing is worth it, and a
+calculator with the landed cost line by line: US sales tax, courier freight by weight
+band, TFSPU, handling, card fee and the Uruguayan tax under the 2026 regime (franchise of
+3 shipments / USD 800 per year with 22% IVA and a USD 20 minimum, no tax for US
+registered sellers up to USD 200, 60% single tax otherwise). The "Importar" page also
+plans several products at once: an exact optimizer decides what to buy here, what to
+import and how to split it into shipments, including relatives' franchises. US prices
+are typed by the user or sent by a bookmarklet from Amazon, Newegg, B&H or Best Buy; no
+store is scraped and no paid API is used. Rules, tariffs and their sources live in
+`configs/` and are documented in [`docs/importacion.md`](docs/importacion.md).
+
 ## Running it
 
 ```bash
