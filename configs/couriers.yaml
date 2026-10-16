@@ -1,0 +1,145 @@
+# ---------------------------------------------------------------------------
+# Courier tariffs (US warehouse -> Uruguay) used by the import calculator.
+#
+# Only couriers whose tariff is published on their own site are listed
+# (source_kind: official). Re-check them every couple of months: update the
+# numbers, verified_at and the notes. The calculator warns when a tariff is
+# older than 60 days.
+#
+# Weight bands:
+#   flat_usd     a fixed price, matched on the real weight (e.g. "1 to 899 g")
+#   per_kg_usd   price per kg of the whole chargeable weight, matched on the
+#                weight rounded up to weight_step_kg
+# tfspu_rate:   Tasa de Financiamiento del Servicio Postal Universal (Ley 19.009
+#               art. 15): 10% of the courier's service price, IVA excluded.
+#               tfspu_on_handling says whether the courier applies it to the
+#               handling fee too (Urubox and Aerobox state "del flete").
+# sales_tax_rate: of the county where the warehouse is (Miami-Dade: 6% state +
+#               1% county surtax). tax_free_certificate: the courier provides a
+#               Florida forwarding agent certificate (DR-14 FAA) that removes the
+#               sales tax at stores with an exemption program (Amazon ATEP, eBay,
+#               Best Buy, Newegg, B&H).
+# ---------------------------------------------------------------------------
+
+couriers:
+  gripper:
+    name: Gripper
+    site: https://www.gripper.com.uy
+    source_url: https://www.gripper.com.uy/tarifas
+    source_kind: official
+    verified_at: 2026-10-16
+    warehouse: Opa-locka, FL (Miami-Dade)
+    sales_tax_rate: 0.07
+    tax_free_certificate: false
+    transit_days: [3, 7]
+    weight_step_kg: 0.1
+    weight_step_published: false
+    bands:
+      - {up_to_kg: 0.899, flat_usd: 19.80}
+      - {up_to_kg: 5.0, per_kg_usd: 21.90}
+      - {up_to_kg: 20.0, per_kg_usd: 16.50}
+    handling_usd: 5.0
+    handling_iva: false
+    tfspu_rate: 0.10
+    tfspu_on_handling: true
+    delivery:
+      montevideo_usd: null
+      interior_usd: 4.0
+      interior_per_extra_kg_usd: 0.5
+      iva: false
+    notes:
+      - "Gestión de USD 5 por envío consolidado (hasta 5 paquetes; USD 1 por cada paquete extra)."
+      - "No publica regla de peso volumétrico ni de redondeo: se asume redondeo cada 100 g."
+
+  grinbox:
+    name: Grinbox
+    site: https://www.grinbox.uy
+    source_url: https://www.grinbox.uy/preguntas-frecuentes
+    source_kind: official
+    verified_at: 2026-10-16
+    warehouse: Miami, FL 33196 (Miami-Dade)
+    sales_tax_rate: 0.07
+    tax_free_certificate: true
+    transit_days: [5, 9]
+    weight_step_kg: 0.1
+    weight_step_published: true
+    bands:
+      - {up_to_kg: 20.0, per_kg_usd: 22.0}
+    handling_usd: 4.0
+    handling_iva: false
+    tfspu_rate: 0.10
+    tfspu_on_handling: true
+    notes:
+      - "USD 2,20 cada 100 g y USD 4 de manejo por paquete consolidado; la tasa URSEC (10%) va aparte."
+      - "Un vuelo por semana (fin de semana): pedidos hasta el viernes 16 h salen el domingo."
+      - "Tax Free: su certificado DR-14 FAA registrado en Amazon, eBay, Best Buy, Newegg o B&H elimina el sales tax."
+
+  aerobox:
+    name: Aerobox
+    site: https://aerobox.com.uy
+    source_url: https://aerobox.com.uy/tarifas/
+    source_kind: official
+    verified_at: 2026-10-16
+    warehouse: Miami (Doral), FL (Miami-Dade)
+    sales_tax_rate: 0.07
+    tax_free_certificate: false
+    transit_days: [3, 7]
+    weight_step_kg: 0.1
+    weight_step_published: true
+    bands:
+      - {up_to_kg: 0.5, flat_usd: 11.99}
+      - {up_to_kg: 0.6, flat_usd: 15.50}
+      - {up_to_kg: 5.0, per_kg_usd: 23.50}
+      - {up_to_kg: 10.0, per_kg_usd: 20.50}
+      - {up_to_kg: 20.0, per_kg_usd: 17.50}
+    handling_usd: 5.0
+    handling_iva: true
+    tfspu_rate: 0.10
+    tfspu_on_handling: false
+    volumetric:
+      divisor_cm3_per_kg: 5000
+      divisor_published: false
+      free_ratio: 2.0
+      surcharge_per_kg_usd: 10.0
+    insurance:
+      rate: 0.03
+      min_usd: 33.0
+    notes:
+      - "Tarifa publicada vigente desde el 1/8/2022."
+      - "No cobra volumen hasta el doble del peso real; por encima, USD 10 por kilo de volumen extra (divisor no publicado: se asume 5000)."
+      - "Seguro opcional: 3% del valor FOB, mínimo USD 33."
+      - "Vuelos lunes y viernes."
+
+  urubox:
+    name: Urubox
+    site: https://www.urubox.com.uy
+    source_url: https://www.urubox.com.uy/tarifas-envios.html
+    source_kind: official
+    verified_at: 2026-10-16
+    warehouse: Miami, FL (Miami-Dade)
+    sales_tax_rate: 0.07
+    tax_free_certificate: false
+    transit_days: [3, 5]
+    weight_step_kg: 0.1
+    weight_step_published: false
+    bands:
+      - {up_to_kg: 0.199, flat_usd: 10.90}
+      - {up_to_kg: 0.499, flat_usd: 15.90}
+      - {up_to_kg: 0.699, flat_usd: 18.90}
+      - {up_to_kg: 0.999, flat_usd: 20.90}
+      - {up_to_kg: 4.99, per_kg_usd: 19.90}
+      - {up_to_kg: 9.99, per_kg_usd: 17.90}
+      - {up_to_kg: 19.99, per_kg_usd: 16.50}
+      - {up_to_kg: 40.0, per_kg_usd: 15.90}
+    handling_usd: 5.0
+    handling_iva: false
+    tfspu_rate: 0.10
+    tfspu_on_handling: false
+    delivery:
+      montevideo_usd: 5.0
+      interior_usd: 5.0
+      interior_per_extra_kg_usd: 0.0
+      iva: true
+    notes:
+      - "Manejo de USD 5 por paquete enviado desde Miami, sin importar cuántas compras consolide."
+      - "No publica regla de peso volumétrico ni de redondeo: se asume redondeo cada 100 g."

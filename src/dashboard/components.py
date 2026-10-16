@@ -198,4 +198,42 @@ def family_chart(daily: pd.DataFrame, days: int | None) -> go.Figure:
     return _layout(fig, height=340)
 
 
+def cost_waterfall(labels: list[str], amounts: list[float], local_usd: float | None) -> go.Figure:
+    """Landed cost line by line (horizontal waterfall) against the best local price (USD)."""
+    texts = [money(amount, cur="USD") for amount in amounts]
+    fig = go.Figure(
+        go.Waterfall(
+            orientation="h",
+            y=[*labels, "Total puesto en Uruguay"],
+            x=[*amounts, 0],
+            measure=["relative"] * len(amounts) + ["total"],
+            text=[*texts, money(sum(amounts), cur="USD")],
+            textinfo="text",
+            textposition="outside",
+            increasing={"marker": {"color": SERIES_1}},
+            decreasing={"marker": {"color": SERIES_1}},
+            totals={"marker": {"color": SERIES_2}},
+            connector={"line": {"color": MUTED, "width": 1}},
+            hovertemplate="%{y}: U$S %{x:,.2f}<extra></extra>",
+        )
+    )
+    if local_usd:
+        fig.add_vline(
+            x=local_usd,
+            line_dash="dot",
+            line_color=MUTED,
+            annotation_text="Mejor precio en Uruguay",
+            annotation_position="top",
+        )
+    fig.update_layout(
+        height=110 + 38 * (len(labels) + 1),
+        margin={"l": 8, "r": 70, "t": 40, "b": 30},
+        showlegend=False,
+        separators=",.",
+        xaxis={"title": None, "tickprefix": "U$S ", "gridcolor": GRID, "zeroline": False},
+        yaxis={"title": None, "autorange": "reversed"},
+    )
+    return fig
+
+
 RANGES = {"30 días": 30, "90 días": 90, "180 días": 180, "Todo": None}

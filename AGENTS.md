@@ -23,6 +23,9 @@
 - Stores: `configs/stores.yaml` (platform, categories, delays)
 - Taxonomy: `configs/taxonomy.yaml` (brands, lines, modifiers, condition/accessory words)
 - Paths and time zone: `src/settings.py` (`HP_DB_PATH`, `HP_DATA_URL`)
+- Import calculator (`src/crossborder/`, docs/importacion.md): `configs/import_rules.yaml`,
+  `couriers.yaml`, `us_stores.yaml`, `shipping_profiles.yaml`. When a rule or tariff changes,
+  update the number, its source and `verified_at`; add a new rule set for new laws.
 
 ## Rules
 - Never merge products by guessing; extend the gold set when changing resolution.

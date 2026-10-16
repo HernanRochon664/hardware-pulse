@@ -74,6 +74,23 @@ stronger regularization helped. Platt calibration and recent-window training
 did not reach a positive skill. The model is retrained weekly and will publish
 itself once clean v2 history makes it beat the baseline.
 
+## ADR-08: "¿Comprar acá o importar?" as versioned rules and an exact optimizer
+
+**Context.** The 2026 postal regime (Ley 20.446, Decreto 50/026) made importing a
+calculation with traps: IVA with a USD 20 minimum, a USD 200 exemption that the US sales
+tax can break, 3 shipments and USD 800 per year, and the 60% regime when the franchise
+does not fit. Amazon closed its public API in 2026 and paid data sources were ruled out.
+**Decision.** A pure engine (`src/crossborder/`) with the rules, courier tariffs, the DNA
+registry and package profiles in YAML, each number with its source and check date. The
+US price comes from the user, helped by search links and a bookmarklet that runs in the
+user's browser (no scraping). Several products are planned by an exact subset DP that also
+uses relatives' franchises. Risks (warranty, returns, delays) stay out of the total; the
+verdict asks for a minimum saving instead. No schema change: everything is computed in
+the dashboard. Details in [`importacion.md`](importacion.md).
+**Consequences.** Tariffs and rules need a periodic manual check (the UI warns after 60
+days). Without automatic US prices the catalog shows a target price per product instead of
+"import saves X%".
+
 ## ADR-07: Import the v1 history once, as `origin='legacy'`
 
 **Decision.** `import-legacy` walks the git commits that contain the v1 DB,
