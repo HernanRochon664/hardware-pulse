@@ -8,6 +8,7 @@ import streamlit as st
 from src.dashboard import data
 from src.dashboard.components import category_label
 from src.dashboard.formatting import ago, local_datetime
+from src.pipelines.aggregate import FRESH_HOURS
 
 STATUS_LABELS = {
     "ok": "OK",
@@ -49,8 +50,9 @@ for store in stores:
 st.subheader("Tiendas")
 if status.get("stores_paused"):
     st.caption(
-        "Las tiendas **pausadas** no se leen por ahora; sus precios anteriores quedan en el "
-        "historial pero no cuentan para el precio actual."
+        "Las tiendas **pausadas** no se leen por ahora. Sus últimos precios se siguen "
+        f"mostrando hasta {FRESH_HOURS} h después de la última lectura; después quedan solo "
+        "en el historial."
     )
 st.dataframe(
     pd.DataFrame(rows),
