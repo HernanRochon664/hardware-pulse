@@ -1,0 +1,49 @@
+name: Import data freshness
+
+# Monthly: if courier tariffs, import rules or the DNA registry of the import
+# calculator were last checked more than 60 days ago, open (or update) an issue
+# with the checklist. See docs/importacion.md, "Maintenance".
+
+on:
+  schedule:
+    - cron: "0 13 1 * *" # 1st of each month, 10:00 UYT
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  TITLE: "Revisar tarifas y reglas de la calculadora de importación"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - run: uv sync --locked --no-dev
+
+      - name: Find stale data
+        run: uv run python -m src.crossborder.freshness > stale.md
+
+      - name: Open or update the issue
+        run: |
+          if [ ! -s stale.md ]; then
+            echo "Everything was checked in the last 60 days."
+            exit 0
+          fi
+          number=$(gh issue list --state open --search "in:title \"$TITLE\"" \
+            --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file stale.md
+          else
+            gh issue create --title "$TITLE" --body-file stale.md
+          fi

@@ -56,6 +56,12 @@ saving (default: the larger of USD 25 and 10%) before saying "conviene importar"
 
 ## Maintenance
 
+`.github/workflows/freshness.yml` runs on the 1st of each month (and on demand): when any
+tariff, rule set or the registry was checked more than 60 days ago, it opens or updates the
+issue "Revisar tarifas y reglas de la calculadora de importación" with a checklist
+(`python -m src.crossborder.freshness` prints the same locally). Close the issue after
+updating the files.
+
 - **Couriers** (`configs/couriers.yaml`): re-check the official tariff pages every couple of
   months, update the numbers and `verified_at`. The calculator warns after 60 days. Only
   couriers with a published tariff are listed.
