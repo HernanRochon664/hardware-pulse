@@ -30,6 +30,16 @@ rejects:
         "elements", "bandeja", "gabinete", "nas", "memoria usb", "ssd flash", "pendrive",
         "ahv300", "hm800", "barracuda", "ironwolf", "wd red", "dock", "clonador",
         "duplicador", "caddy", "adaptador", "enclosure", "carry disk", "tarjeta para"]
+  motherboard: ["pila", "bateria", "combo", "kit actualizacion", "kit de actualizacion"]
+  cooler: ["pasta termica", "thermal paste", "pad termico", "thermal pad", "hub",
+           "controlador", "control remoto", "soporte", "bracket", "kit de montaje",
+           "para gabinete", "para gabinetes", "kit 3 fan", "kit 3 fanes", "pack fan"]
+  psu: ["ups", "regulador", "estabilizador", "cargador", "notebook", "laptop", "cable",
+        "extension", "adaptador", "tester", "power bank"]
+  case: ["tira led", "riser", "soporte", "kit de cables", "filtro", "teclado", "combo",
+         "perifericos", "t/m/p"]
+  monitor: ["soporte", "brazo", "base para", "proyector", "televisor", "para pos",
+            "limpiador", "protector de pantalla"]
 
 brands:
   # name: [aliases...]  (aliases are folded, whole-token)
@@ -73,6 +83,71 @@ brands:
   Seagate: [seagate]
   Toshiba: [toshiba]
   HPE: [hpe]
+  # Catalog expansion (motherboard, cooler, psu, case, monitor). The parsers of
+  # the first four categories restrict brands to their own lists, so these
+  # names never change how GPUs, CPUs, RAM or SSDs are read.
+  AMD: [amd]
+  Intel: [intel]
+  ECS: [ecs, elitegroup]
+  NZXT: [nzxt]
+  DeepCool: [deepcool, deep cool]
+  Cooler Master: [cooler master, coolermaster]
+  Thermalright: [thermalright]
+  Arctic: [arctic]
+  Noctua: [noctua]
+  be quiet!: [be quiet, bequiet]
+  Lian Li: [lian li, lianli]
+  ID-Cooling: [id cooling, idcooling]
+  Cougar: [cougar]
+  Antec: [antec]
+  Thermaltake: [thermaltake]
+  Montech: [montech]
+  Redragon: [redragon]
+  Razer: [razer]
+  DarkFlash: [darkflash, dark flash]
+  Gamemax: [gamemax]
+  Sharkoon: [sharkoon]
+  Aerocool: [aerocool]
+  Alseye: [alseye]
+  Sama: [sama]
+  Gamma: [gamma]
+  XYZ: [xyz]
+  Seasonic: [seasonic]
+  Perseo: [perseo]
+  Comstar: [comstar]
+  Xtreme: [xtreme]
+  Shot Gaming: [shot gaming, shot]
+  Teros: [teros]
+  Zumax: [zumax]
+  Azza: [azza]
+  StarkGear: [starkgear, stark gear]
+  Hovxjzk: [hovxjzk]
+  X-Lizzard: [x lizzard, xlizzard]
+  NSX: [nsx]
+  Marvo: [marvo]
+  ESgaming: [esgaming]
+  Xigmatek: [xigmatek]
+  Gravity: [gravity]
+  Spartan: [spartan]
+  A4Tech: [a4tech, a4 tech]
+  Raidmax: [raidmax]
+  Phanteks: [phanteks]
+  Fractal Design: [fractal design, fractal]
+  LG: [lg]
+  Dell: [dell, alienware]
+  ViewSonic: [viewsonic]
+  AOC: [aoc]
+  BenQ: [benq]
+  Philips: [philips]
+  Xiaomi: [xiaomi]
+  Solarmax: [solarmax]
+  Lenovo: [lenovo]
+  HP: [hp]
+  Acer: [acer]
+  Dahua: [dahua]
+  Nova: [nova]
+  Koorui: [koorui]
+  Ocom: [ocom]
 
 # Brands whose GPUs have no product lines in practice (one board per chip):
 # products are identified by chip + VRAM + modifiers.
@@ -394,3 +469,646 @@ ssd_models:
     970 EVO Plus: {aliases: ["970 evo plus"], iface: nvme3}
     870 EVO: {aliases: ["870 evo"], iface: sata}
     T7: {aliases: [t7], iface: external}
+
+# ===========================================================================
+# Catalog expansion (2026-10): motherboard, cooler, psu, case, monitor.
+# Built from the real titles of 7 stores on 2026-10-16. Same rule as above:
+# when a store publishes something new, add it here and to the gold set.
+# ===========================================================================
+
+# Brands accepted per new category (on top of the brands of its model tables).
+category_brands:
+  motherboard: [ASUS, Gigabyte, MSI, ASRock, Biostar, NZXT, ECS, Arktek]
+  cooler: [AMD, Intel, Arctic, Noctua, NZXT, Lian Li, ID-Cooling, Thermaltake, Montech,
+           Redragon, Razer, DarkFlash, Gamemax, Sharkoon, Aerocool, XYZ, Alseye, Sama, Gamma]
+  psu: [Perseo, Comstar, Xtreme, Arktek, Shot Gaming, Teros, Zumax, Azza, StarkGear, EVGA,
+        NZXT, Lian Li, Aerocool, Hovxjzk, Gamemax]
+  case: [NZXT, Lian Li, Montech, Fractal Design, Phanteks, Xigmatek, Gravity, Perseo, Teros,
+         Shot Gaming, X-Lizzard, NSX, Marvo, XYZ, ESgaming, Stark Gear, Comstar, Spartan,
+         A4Tech, Raidmax, Aerocool, Gamemax, Sharkoon]
+  monitor: [Samsung, LG, Dell, ViewSonic, AOC, BenQ, Philips, Xiaomi, Teros, Solarmax, Lenovo,
+            HP, Gigabyte, MSI, ASUS, Acer, Thermaltake, Perseo, Comstar, Gravity, Shot Gaming,
+            Dahua, Hikvision, Nova, ASRock, Koorui, Ocom, Razer, Corsair, Redragon]
+
+# --- Motherboards ------------------------------------------------------------
+# chipset: [socket, memory]. memory is null when boards of that chipset exist
+# with DDR4 and with DDR5 (the title must say which one).
+board_chipsets:
+  A320: [AM4, DDR4]
+  B350: [AM4, DDR4]
+  X370: [AM4, DDR4]
+  B450: [AM4, DDR4]
+  X470: [AM4, DDR4]
+  A520: [AM4, DDR4]
+  B550: [AM4, DDR4]
+  X570: [AM4, DDR4]
+  A620: [AM5, DDR5]
+  B650: [AM5, DDR5]
+  B650E: [AM5, DDR5]
+  X670: [AM5, DDR5]
+  X670E: [AM5, DDR5]
+  B840: [AM5, DDR5]
+  B850: [AM5, DDR5]
+  X870: [AM5, DDR5]
+  X870E: [AM5, DDR5]
+  H310: [LGA1151, DDR4]
+  B360: [LGA1151, DDR4]
+  B365: [LGA1151, DDR4]
+  H370: [LGA1151, DDR4]
+  Z370: [LGA1151, DDR4]
+  Z390: [LGA1151, DDR4]
+  H410: [LGA1200, DDR4]
+  B460: [LGA1200, DDR4]
+  H470: [LGA1200, DDR4]
+  Z490: [LGA1200, DDR4]
+  H510: [LGA1200, DDR4]
+  B560: [LGA1200, DDR4]
+  H570: [LGA1200, DDR4]
+  Z590: [LGA1200, DDR4]
+  H610: [LGA1700, null]
+  B660: [LGA1700, null]
+  H670: [LGA1700, null]
+  Z690: [LGA1700, null]
+  B760: [LGA1700, null]
+  H770: [LGA1700, null]
+  Z790: [LGA1700, null]
+  H810: [LGA1851, DDR5]
+  B860: [LGA1851, DDR5]
+  Z890: [LGA1851, DDR5]
+
+# Words of board names: canonical (display) -> aliases (folded tokens). A
+# board title may only contain these, the chipset code, brand, socket, memory,
+# Wi-Fi, color and the noise words below; any other word keeps the board as
+# family_only (it may be a variant we do not know).
+board_words:
+  ROG: [rog]
+  Strix: [strix]
+  Crosshair: [crosshair]
+  Hero: [hero]
+  Apex: [apex]
+  Extreme: [extreme]
+  TUF: [tuf]
+  Gaming: [gaming, gamer]
+  Prime: [prime]
+  ProArt: [proart]
+  Creator: [creator]
+  AYW: [ayw]
+  Plus: [plus]
+  Pro: [pro]
+  Pro-A: [pro-a]
+  EVO: [evo]
+  Infinity: [infinity]
+  EX: [ex]
+  V5: [v5]
+  CSM: [csm]
+  II: [ii]
+  III: [iii]
+  Aorus: [aorus]
+  Elite: [elite]
+  Master: [master]
+  Stealth: [stealth]
+  Tachyon: [tachyon]
+  Aero: [aero]
+  X3D: [x3d]
+  Wood: [wood]
+  Dark: [dark]
+  Eagle: [eagle]
+  UD: [ud]
+  DS3H: [ds3h]
+  D3HP: [d3hp]
+  D3H: [d3h]
+  S2H: [s2h]
+  S3H: [s3h]
+  AX: [ax]
+  AC: [ac]
+  X: [x]
+  MAG: [mag]
+  MPG: [mpg]
+  MEG: [meg]
+  Tomahawk: [tomahawk]
+  Mortar: [mortar]
+  Carbon: [carbon]
+  Edge: [edge]
+  Ace: [ace]
+  Godlike: [godlike]
+  Max: [max]
+  RS: [rs]
+  PG: [pg]
+  Riptide: [riptide]
+  Lightning: [lightning]
+  Sonic: [sonic]
+  Steel: [steel, st]
+  Legend: [legend]
+  Phantom: [phantom]
+  Challenger: [challenger]
+  Rock: [rock]
+  LiveMixer: [livemixer]
+  Nova: [nova]
+  Taichi: [taichi]
+  Lite: [lite]
+  Aqua: [aqua]
+  Pro4: [pro4]
+  HDV: [hdv]
+  HVS: [hvs]
+  HDVP: [hdvp]
+  M.2+: [m.2+, m2+]
+  ARGB: [argb]
+  SE: [se]
+  Gen5: [gen5]
+  Valkyrie: [valkyrie]
+  DJ: [dj]
+  R1.0: [r1.0, r1]
+  R2.0: [r2.0, r2]
+  R3.0: [r3.0, r3]
+  R4.0: [r4.0, r4]
+  V2: [v2]
+
+# Descriptive words some stores append to the title (ignored).
+board_noise: [motherboard, mother, mainboard, placa, madre, board, mobo, amd, intel, socket,
+  lga, soporta, ryzen, 5ta, gen, gen., generacion, generaciones, para, pcie, pci-e, usb,
+  usb-c, tipo, c, hdmi, displayport, dp, dvi, vga, lan, gigabit, 2.5g, bluetooth, aura, sync,
+  rgb, creadores, de, del, contenido, y, streaming, m.2, m2, 2x, 3x, 4x, dimm, a-series,
+  series, serie2, ultra, solo, sin, con, transf, transformador, bancos, 12va, 13va, 14va, g10,
+  g12, nuevo, oem, edition, kit, d-sub, core, integrado, va, dual, bando, usb4, wireless,
+  chipset, compatible, incluye, ram, ddr, slots, nvme, sata, audio, hd, red, rj45]
+
+# --- Monitors ------------------------------------------------------------------
+# Product lines, only for display names (the identity is the model code).
+monitor_lines:
+  Samsung:
+    Odyssey Ark: {aliases: ["odyssey ark"]}
+    Odyssey 3D: {aliases: ["odyssey 3d"]}
+    Odyssey G3: {aliases: ["odyssey g3", "odyssey g30"]}
+    Odyssey G4: {aliases: ["odyssey g4", "odyssey g40"]}
+    Odyssey G5: {aliases: ["odyssey g5", "odyssey g50"]}
+    Odyssey G6: {aliases: ["odyssey g6", "odyssey g60"]}
+    Odyssey G7: {aliases: ["odyssey g7", "odyssey g70"]}
+    Odyssey G8: {aliases: ["odyssey g8", "odyssey g80"]}
+    Odyssey G9: {aliases: ["odyssey g9", "odyssey g90"]}
+    ViewFinity S6: {aliases: ["viewfinity s6"]}
+    ViewFinity S7: {aliases: ["viewfinity s7"]}
+    ViewFinity S8: {aliases: ["viewfinity s8"]}
+    ViewFinity S9: {aliases: ["viewfinity s9"]}
+    Smart Monitor M5: {aliases: ["smart m5"]}
+    Smart Monitor M7: {aliases: ["smart m7"]}
+    Smart Monitor M8: {aliases: ["smart m8"]}
+    Essential S3: {aliases: ["essential s3", "essencial s3"]}
+  LG:
+    UltraGear: {aliases: [ultragear, "ultra gear"]}
+    UltraWide: {aliases: [ultrawide]}
+  ASUS:
+    ROG Strix: {aliases: ["rog strix"]}
+    ROG Swift: {aliases: ["rog swift"]}
+    TUF Gaming: {aliases: ["tuf gaming", tuf]}
+    ProArt: {aliases: [proart]}
+    ZenScreen: {aliases: [zenscreen]}
+  MSI:
+    MAG: {aliases: [mag]}
+    MPG: {aliases: [mpg]}
+    PRO: {aliases: ["pro mp", "msi pro"]}
+    Optix: {aliases: [optix]}
+  Acer:
+    Nitro: {aliases: [nitro]}
+    Predator: {aliases: [predator]}
+  Gigabyte:
+    Aorus: {aliases: [aorus]}
+  Dell:
+    Alienware: {aliases: [alienware]}
+    UltraSharp: {aliases: [ultrasharp]}
+  Lenovo:
+    ThinkVision: {aliases: [thinkvision]}
+    Legion: {aliases: [legion]}
+  Perseo:
+    Hermes: {aliases: [hermes]}
+
+# --- Power supplies -------------------------------------------------------------
+# Series per brand. "{n}" is the wattage inside the model code (UD750GM). rating
+# and modular are the series defaults, used only when the title does not say.
+psu_series:
+  Gigabyte:
+    UD GM: {aliases: ["ud{n}gm", "gp-ud{n}gm"], rating: gold, modular: full}
+    P G: {aliases: ["p{n}g", "gp-p{n}g", "p-p{n}g"], rating: gold}
+    P SS: {aliases: ["p{n}ss", "gp-p{n}ss"], rating: silver}
+    P BS: {aliases: ["p{n}bs", "gp-p{n}bs"], rating: bronze}
+    P B: {aliases: ["p{n}b", "pb{n}b", "gp-p{n}b"], rating: bronze}
+    AE PM: {aliases: ["ae{n}pm", "gp-ae{n}pm"], rating: platinum, modular: full}
+  Corsair:
+    CX: {aliases: ["cx{n}"], rating: bronze}
+    RM e: {aliases: ["rm{n}e"], rating: gold, modular: full}
+    RM x: {aliases: ["rm{n}x"], rating: gold, modular: full}
+    HX i: {aliases: ["hx{n}i"], rating: platinum, modular: full}
+  be quiet!:
+    Pure Power 13 M: {aliases: ["pure power 13 m", "pure power 13m", "13m"], rating: gold, modular: full}
+    Pure Power 12 M: {aliases: ["pure power 12 m", "pure power 12m"], rating: gold, modular: full}
+    Pure Power 12: {aliases: ["pure power 12"], rating: gold}
+    Power Zone 2: {aliases: ["power zone 2"], rating: platinum, modular: full}
+    Dark Power 14: {aliases: ["dark power 14"], rating: titanium, modular: full}
+    Dark Power Pro 13: {aliases: ["dark power pro 13"], rating: titanium, modular: full}
+    System Power 11: {aliases: ["system power 11"], rating: bronze}
+  ASUS:
+    ROG Thor III: {aliases: ["rog thor {n}p3", "thor {n}p3", "thor platinum iii", "thor titanium iii"], modular: full}
+    ROG Strix: {aliases: ["rog strix {n}p", "rog strix {n}g", "rog strix"], modular: full}
+    TUF Gaming EVO: {aliases: ["tuf gaming {n}g evo", "tuf-gaming-evo", "tuf gaming evo"], modular: full}
+    TUF Gaming: {aliases: ["tuf gaming {n}g", "tuf gaming", "tuf"]}
+    Prime AP G: {aliases: ["prime ap-{n}g", "ap-{n}g"], rating: gold}
+    Prime: {aliases: ["prime"]}
+  DeepCool:
+    PF X: {aliases: ["pf{n}x"]}
+    PF D: {aliases: ["pf{n}d"]}
+    PF: {aliases: ["pf{n}"]}
+    PS G: {aliases: ["ps{n}g"], rating: gold, modular: full}
+    PS P: {aliases: ["ps{n}p"], rating: platinum, modular: full}
+    PK D: {aliases: ["pk{n}d"], rating: bronze}
+    PN M: {aliases: ["pn{n}m"], rating: gold, modular: full}
+  Cougar:
+    Atlas: {aliases: ["atlas {n}", "atlas"], rating: bronze}
+    STC: {aliases: ["stc{n}", "stc {n}", "stc"], rating: white}
+    XTC: {aliases: ["xtc{n}", "xtc {n}", "xtc"], rating: white}
+    GEX: {aliases: ["gex{n}", "gex {n}"], rating: gold, modular: full}
+  MSI:
+    MAG A BN: {aliases: ["a{n}bn"], rating: bronze}
+    MAG A GN: {aliases: ["a{n}gn"], rating: gold}
+    MAG A GL: {aliases: ["a{n}gl"], rating: gold, modular: full}
+    MEG Ai P: {aliases: ["ai{n}p"], rating: platinum, modular: full}
+  ADATA:
+    XPG Core Reactor II VE: {aliases: ["core reactor ii ve", "core reactor 2 ve"], rating: gold, modular: full}
+    XPG Core Reactor II: {aliases: ["core reactor ii", "core reactor 2"], rating: gold, modular: full}
+    XPG Kyber: {aliases: ["kyber {n}", "kyber"], rating: gold}
+    XPG Probe: {aliases: ["probe {n}b", "probe"], rating: bronze}
+    XPG Pylon: {aliases: ["pylon"], rating: bronze}
+  Seasonic:
+    Prime TX: {aliases: ["prime tx-{n}", "tx-{n}"], rating: titanium, modular: full}
+    Prime PX: {aliases: ["prime px-{n}", "px-{n}"], rating: platinum, modular: full}
+    Focus GX: {aliases: ["focus gx-{n}"], rating: gold, modular: full}
+    RCore GX: {aliases: ["rcore"], rating: gold, modular: full}
+    G12 GC: {aliases: ["g12 gc-{n}", "gc-{n}"], rating: gold}
+    A12: {aliases: ["a12"], rating: white}
+    S12III: {aliases: ["s12iii"], rating: bronze}
+  Antec:
+    CSK DC: {aliases: ["csk{n}dc"], rating: bronze}
+    CSK: {aliases: ["csk{n}"], rating: bronze}
+    GSK: {aliases: ["gsk{n}"], rating: gold, modular: full}
+    HCG Pro: {aliases: ["hcg{n} pro"], rating: platinum, modular: full}
+    NeoECO: {aliases: ["ne{n}g", "neoeco"], rating: gold}
+    Atom V: {aliases: ["atom v{n}"]}
+  Cooler Master:
+    Elite NEX: {aliases: ["elite nex n{n}", "elite nex"]}
+    MWE: {aliases: ["mwe {n}", "mwe"]}
+    MPE: {aliases: ["mpe"]}
+    X Mighty: {aliases: ["x mighty"], rating: platinum, modular: full}
+    Elite: {aliases: ["elite"]}
+  Thermaltake:
+    Toughpower GT: {aliases: ["toughpower gt"], rating: gold, modular: full}
+    Toughpower GF: {aliases: ["toughpower gf"], rating: gold, modular: full}
+    Smart Pro: {aliases: ["smart pro"]}
+    Smart BX1: {aliases: ["smart bx1"], rating: bronze}
+  Sharkoon:
+    Rebel P10: {aliases: ["rebel p10"], rating: silver}
+    Rebel P15: {aliases: ["rebel p15"], rating: gold}
+    Rebel P20 SFX: {aliases: ["rebel p20 sfx"], rating: platinum, modular: full}
+    Rebel P20: {aliases: ["rebel p20"], rating: gold, modular: full}
+    Rebel P30: {aliases: ["rebel p30"], rating: gold, modular: full}
+    SHP: {aliases: ["shp{n}"], rating: bronze}
+  Gamemax:
+    GX: {aliases: ["gx-{n}", "gx{n}"], rating: gold, modular: full}
+    RGB Pro: {aliases: ["rgb {n} pro"], rating: gold, modular: full}
+  ASRock:
+    PRO X1P: {aliases: ["pro x1p"], rating: gold}
+    PRO: {aliases: ["pro {n}g"]}
+  Aerocool:
+    Cylon: {aliases: ["cylon"], rating: white}
+    KCAS: {aliases: ["kcas-{n}", "kcas"], rating: bronze}
+  Perseo:
+    ATX-P: {aliases: ["atx{n}w-p"]}
+  Teros:
+    TE: {aliases: ["te-1325g"]}
+  EVGA:
+    BR: {aliases: ["{n} br"], rating: bronze}
+
+# --- CPU coolers ------------------------------------------------------------------
+# kind: aio | air_tower (one tower) | air_dual (two towers) | air_low (top-flow,
+# stock or low profile). The radiator of an AIO comes from the title ("240mm",
+# LE360) or from the model (radiator: when the code hides it, LT720 = 360).
+cooler_models:
+  DeepCool:
+    LE V2: {aliases: ["le{n} v2"], kind: aio}
+    LE300: {aliases: [le300], kind: aio, radiator: 120}
+    LE: {aliases: ["le{n}"], kind: aio}
+    LS520S Zero Dark: {aliases: [ls520s, ls520], kind: aio, radiator: 240}
+    LS720S Zero Dark: {aliases: [ls720s, ls720], kind: aio, radiator: 360}
+    LT720: {aliases: [lt720], kind: aio, radiator: 360}
+    LT520: {aliases: [lt520], kind: aio, radiator: 240}
+    LT Vision: {aliases: ["lt{n} vision"], kind: aio}
+    LT: {aliases: ["lt{n}"], kind: aio}
+    LM: {aliases: ["lm{n}"], kind: aio}
+    LD: {aliases: ["ld{n}"], kind: aio}
+    LP: {aliases: ["lp{n}"], kind: aio}
+    Mystique: {aliases: [mystique], kind: aio}
+    Spartacus: {aliases: [spartacus], kind: aio}
+    Gammaxx L: {aliases: ["gammaxx l{n}"], kind: aio}
+    AK400 Digital SE: {aliases: ["ak400 digital se"], kind: air_tower}
+    AK400 Digital: {aliases: ["ak400 digital"], kind: air_tower}
+    AK400 G2: {aliases: ["ak400 g2"], kind: air_tower}
+    AK400: {aliases: [ak400], kind: air_tower}
+    AK500S Digital SE: {aliases: ["ak500s digital se", "ak500s digital"], kind: air_tower}
+    AK500 Digital: {aliases: ["ak500 digital"], kind: air_tower}
+    AK500: {aliases: [ak500], kind: air_tower}
+    AK620 Digital SE: {aliases: ["ak620 digital se"], kind: air_dual}
+    AK620 Digital: {aliases: ["ak620 digital"], kind: air_dual}
+    AK620: {aliases: [ak620], kind: air_dual}
+    AG400 G2 Plus: {aliases: ["ag400 g2 plus"], kind: air_tower}
+    AG400 G2: {aliases: ["ag400 g2"], kind: air_tower}
+    AG400 Digital: {aliases: ["ag400 digital"], kind: air_tower}
+    AG400: {aliases: [ag400], kind: air_tower}
+    AG620 G2: {aliases: ["ag620 g2"], kind: air_dual}
+    AG620 Digital: {aliases: ["ag620 digital"], kind: air_dual}
+    AG620: {aliases: [ag620], kind: air_dual}
+    Assassin IV: {aliases: ["assassin iv", "assassin 4"], kind: air_dual}
+    Assassin VC Elite: {aliases: ["assassin vc elite"], kind: air_dual}
+    AN600: {aliases: [an600], kind: air_low}
+    UD551: {aliases: [ud551], kind: air_low}
+    Alta 9: {aliases: ["alta 9"], kind: air_low}
+    CK-AM209 V2: {aliases: ["ck-am209 v2", "ckam209 v2"], kind: air_low}
+    CK-AM209: {aliases: ["ck-am209", ckam209], kind: air_low}
+  Cooler Master:
+    MasterLiquid Core II: {aliases: ["masterliquid {n} core ii", "masterliquid core ii"], kind: aio}
+    MasterLiquid Core: {aliases: ["masterliquid {n} core", "masterliquid core"], kind: aio}
+    MasterLiquid Atmos II: {aliases: ["atmos ii"], kind: aio}
+    MasterLiquid ML Vivid: {aliases: ["ml{n} vivid"], kind: aio}
+    MasterLiquid ML Mirror: {aliases: ["ml{n} mirror"], kind: aio}
+    MasterLiquid ML L Core: {aliases: ["ml{n}l core"], kind: aio}
+    MasterLiquid Core Nex: {aliases: ["liquid core nex", "core nex"], kind: aio}
+    Hyper 212 Spectrum V3: {aliases: ["hyper 212 spectrum v3"], kind: air_tower}
+    Hyper 212 Pro: {aliases: ["hyper 212 pro"], kind: air_tower}
+    Hyper 212 Black: {aliases: ["hyper 212 black"], kind: air_tower}
+    Hyper 212: {aliases: ["hyper 212"], kind: air_tower}
+    Hyper H410R: {aliases: ["hyper h410r", h410r], kind: air_tower}
+  Cougar:
+    Poseidon Elite: {aliases: ["poseidon elite"], kind: aio}
+    Poseidon Ultra: {aliases: ["poseidon ultra"], kind: aio}
+    Poseidon GT: {aliases: ["poseidon gt"], kind: aio}
+    Poseidon Vistek Pro: {aliases: ["poseidon vistek pro"], kind: aio}
+    Poseidon Vistek: {aliases: ["poseidon vistek"], kind: aio}
+    Helor: {aliases: [helor], kind: aio}
+    Forza 50 Essential: {aliases: ["forza 50 essential", "forza 50 mhp120 essential"], kind: air_tower}
+    Forza 50: {aliases: ["forza 50"], kind: air_tower}
+    Forza 85 Essential: {aliases: ["forza 85 essential", "forza 85 mhp120 essential"], kind: air_tower}
+    Forza 85: {aliases: ["forza 85"], kind: air_tower}
+    Forza 135: {aliases: ["forza 135"], kind: air_dual}
+  be quiet!:
+    Pure Rock 3 LX: {aliases: ["pure rock 3 lx"], kind: air_tower}
+    Pure Rock Slim 3: {aliases: ["pure rock slim 3"], kind: air_tower}
+    Pure Rock 3: {aliases: ["pure rock 3"], kind: air_tower}
+    Dark Rock Pro 5: {aliases: ["dark rock pro 5"], kind: air_dual}
+    Dark Rock 5: {aliases: ["dark rock 5"], kind: air_tower}
+    Pure Loop 3 LX: {aliases: ["pure loop 3 lx"], kind: aio}
+    Pure Loop 3: {aliases: ["pure loop 3"], kind: aio}
+    Light Loop: {aliases: ["light loop"], kind: aio}
+    Silent Loop 3: {aliases: ["silent loop 3"], kind: aio}
+  Antec:
+    Symphony: {aliases: [symphony], kind: aio}
+    Vortex LUM: {aliases: ["vortex lum"], kind: aio}
+    Vortex View: {aliases: ["vortex view"], kind: aio}
+    Vortex: {aliases: [vortex], kind: aio}
+    Luna: {aliases: [luna], kind: aio}
+    A400: {aliases: [a400], kind: air_tower}
+  Gigabyte:
+    Aorus Waterforce X II: {aliases: ["waterforce x ii"], kind: aio}
+    Aorus Waterforce X: {aliases: ["waterforce x"], kind: aio}
+    Aorus Waterforce II: {aliases: ["waterforce ii"], kind: aio}
+    Aorus Waterforce: {aliases: [waterforce], kind: aio}
+    Gaming: {aliases: [gaming], kind: aio}
+    Eagle: {aliases: [eagle], kind: aio}
+    GME: {aliases: ["gme {n}", gme], kind: aio}
+  MSI:
+    MAG CoreLiquid A13: {aliases: ["coreliquid a13"], kind: aio}
+    MAG CoreLiquid A12: {aliases: ["coreliquid a12"], kind: aio}
+    MAG CoreLiquid E: {aliases: ["coreliquid e{n}"], kind: aio}
+    MAG CoreLiquid I: {aliases: ["coreliquid i{n}"], kind: aio}
+    MAG CoreLiquid R V2: {aliases: ["coreliquid {n}r v2"], kind: aio}
+    MAG CoreLiquid: {aliases: [coreliquid], kind: aio}
+  ASUS:
+    TUF Gaming LC III: {aliases: ["tuf gaming lc iii"], kind: aio}
+    TUF Gaming LC: {aliases: ["tuf gaming lc"], kind: aio}
+    ROG Strix LC III: {aliases: ["strix lc iii"], kind: aio}
+    ROG Ryujin III: {aliases: ["ryujin iii"], kind: aio}
+    ROG Ryuo IV SLC: {aliases: ["ryuo iv"], kind: aio}
+    Prime LC: {aliases: ["prime lc"], kind: aio}
+  Corsair:
+    Nautilus RS: {aliases: ["nautilus {n} rs", "nautilus rs"], kind: aio}
+    iCUE Link Titan RX: {aliases: ["titan {n} rx", "titan rx"], kind: aio}
+    iCUE H100i Elite Capellix XT: {aliases: ["h100i elite capellix xt"], kind: aio, radiator: 240}
+    iCUE H150i Elite Capellix XT: {aliases: ["h150i elite capellix xt"], kind: aio, radiator: 360}
+  Thermalright:
+    Burst Assassin 120 Vision: {aliases: ["burst assassin 120 vision"], kind: air_tower}
+    Peerless Assassin 120: {aliases: ["peerless assassin 120", "peerless assassin"], kind: air_dual}
+    Phantom Spirit 120: {aliases: ["phantom spirit 120", "phantom spirit"], kind: air_dual}
+    Assassin X 120: {aliases: ["assassin x 120"], kind: air_tower}
+  Thermaltake:
+    TH Toughliquid: {aliases: [toughliquid], kind: aio}
+  ADATA:
+    XPG Maestro Plus 62DA: {aliases: ["maestro plus 62da"], kind: air_dual}
+    XPG Maestro Plus 42SA: {aliases: ["maestro plus 42sa"], kind: air_tower}
+  Gamma:
+    A40: {aliases: [a40], kind: air_tower}
+  AMD:
+    Wraith Stealth: {aliases: ["wraith stealth"], kind: air_low}
+    Wraith Prism: {aliases: ["wraith prism"], kind: air_low}
+    Wraith Spire: {aliases: ["wraith spire"], kind: air_low}
+  Intel:
+    Laminar: {aliases: [laminar], kind: air_low}
+  Sama:
+    KA200D: {aliases: [ka200d], kind: air_tower}
+    KA400D: {aliases: [ka400d], kind: air_tower}
+  Aerocool:
+    Cylon 4F: {aliases: ["cylon 4f"], kind: air_tower}
+    Mirage L: {aliases: ["mirage l{n}"], kind: aio}
+  Alseye:
+    M90: {aliases: [m90], kind: air_low}
+    M120D Plus II: {aliases: ["m120d plus ii"], kind: air_tower}
+  XYZ:
+    Aquapulse: {aliases: [aquapulse], kind: aio}
+    Aqua FU: {aliases: ["aqua fu{n}"], kind: aio}
+    Aqua W: {aliases: ["aqua {n}w"], kind: aio, white: true}
+    Aqua: {aliases: ["aqua {n}"], kind: aio}
+  Gamemax:
+    IceBurg Infinity: {aliases: ["iceburg {n} infinity", "iceburg"], kind: aio}
+  Sharkoon:
+    S80 RGB: {aliases: ["s80 rgb"], kind: aio}
+    S90 RGB: {aliases: ["s90 rgb"], kind: aio}
+  Razer:
+    Hanbo Chroma: {aliases: ["hanbo chroma"], kind: aio}
+  DarkFlash:
+    DX: {aliases: ["dx{n}"], kind: aio}
+
+# --- Cases ------------------------------------------------------------------------
+# Models per brand. The family of a case is its model (colors, RGB and bundled
+# PSU are products of that family). A brand without a listed model falls back to
+# a model code in the title (TE-1330G, GX-505).
+case_models:
+  Cougar:
+    MX600 Mini: {aliases: ["mx600 mini"]}
+    MX600: {aliases: [mx600]}
+    MX360: {aliases: [mx360]}
+    MX330-X: {aliases: [mx330-x, mx330x]}
+    MX220: {aliases: [mx220]}
+    MX110: {aliases: [mx110]}
+    FV270: {aliases: [fv270]}
+    FV150: {aliases: [fv150]}
+    Airface Eco: {aliases: ["airface eco"]}
+    Airface Flo: {aliases: ["airface flo"]}
+    Airface: {aliases: [airface]}
+    Purity: {aliases: [purity]}
+    Archon 2 Mesh: {aliases: ["archon 2 mesh"]}
+    Duoface Pro: {aliases: ["duoface pro"]}
+    Duoface: {aliases: [duoface]}
+    Dust 2: {aliases: ["dust 2"]}
+    Uniface Mini: {aliases: ["uniface mini"]}
+    Uniface: {aliases: [uniface]}
+    Omnyx: {aliases: [omnyx]}
+    CFV235 Mesh Vision: {aliases: ["cfv235 mesh vision"]}
+    CFV235 Mesh: {aliases: ["cfv235 mesh"]}
+    CFV235 Vision: {aliases: ["cfv235 vision"]}
+    CFV235: {aliases: [cfv235]}
+    Cratus: {aliases: [cratus]}
+  be quiet!:
+    Light Base 500 LX: {aliases: ["light base 500 lx"]}
+    Light Base 500: {aliases: ["light base 500"]}
+    Light Base 600 DX: {aliases: ["light base 600 dx"]}
+    Light Base 600 LX: {aliases: ["light base 600 lx"]}
+    Light Base 900 DX: {aliases: ["light base 900 dx"]}
+    Light Base 900 FX: {aliases: ["light base 900 fx"]}
+    Pure Base 501 Airflow Window: {aliases: ["pure base 501 airflow window"]}
+    Pure Base 501 DX: {aliases: ["pure base 501 dx"]}
+    Pure Base 501 LX: {aliases: ["pure base 501 lx"]}
+    Pure Base 501: {aliases: ["pure base 501"]}
+    Dark Base Pro 901: {aliases: ["dark base pro 901"]}
+    Dark Base Pro 701: {aliases: ["dark base pro 701"]}
+    Shadow Base 800: {aliases: ["shadow base 800"]}
+  DeepCool:
+    CC560 V2: {aliases: ["cc560 v2"]}
+    CC560: {aliases: [cc560]}
+    CC360: {aliases: [cc360]}
+    CH360 Digital: {aliases: ["ch360 digital", ch360]}
+    CH560 Digital: {aliases: ["ch560 digital", ch560]}
+    CH170 Digital: {aliases: ["ch170 digital", ch170]}
+    CH780: {aliases: [ch780]}
+    CL600: {aliases: [cl600]}
+    CL660: {aliases: [cl660]}
+    CG380: {aliases: [cg380]}
+    CG580 4F V2: {aliases: ["cg580 4f v2"]}
+    CG580: {aliases: [cg580]}
+    CG590: {aliases: [cg590]}
+    Matrexx 30: {aliases: ["matrexx 30"]}
+    Matrexx 50: {aliases: ["matrexx 50"]}
+    Matrexx 55 V4: {aliases: ["matrexx 55 v4"]}
+    Matrexx 55: {aliases: ["matrexx 55"]}
+  Corsair:
+    3500X RS-R: {aliases: ["3500x rs-r", "3500x rsr"]}
+    3500X: {aliases: [3500x]}
+    3000D Airflow: {aliases: ["3000d rgb airflow", "3000d airflow", 3000d]}
+    FRAME 4000D RS: {aliases: ["frame 4000d rs"]}
+    FRAME 4000D: {aliases: ["frame 4000d"]}
+    FRAME 4500X: {aliases: ["frame 4500x"]}
+    AIR 5400: {aliases: ["air 5400"]}
+  Antec:
+    C3: {aliases: [c3]}
+    C5 Curve: {aliases: ["c5 curve"]}
+    C7: {aliases: [c7]}
+    C8: {aliases: [c8]}
+    Flux Pro: {aliases: ["flux pro"]}
+    AX20 Elite: {aliases: ["ax20 elite", ax20]}
+    AX26 Elite: {aliases: [ax26]}
+    VX310: {aliases: [vx310]}
+    VCX300 Elite: {aliases: [vcx300]}
+    VSK10: {aliases: [vsk10]}
+  Gigabyte:
+    Aorus C500 Glass: {aliases: ["aorus c500 glass", "c500 glass"]}
+    Aorus C601 Glass: {aliases: ["aorus c601", c601]}
+    C500 Panoramic Stealth: {aliases: ["c500 panoramic stealth", "c500 panoramic"]}
+    C301 Glass: {aliases: ["c301 glass", c301]}
+    C201 Panoramic: {aliases: ["c201 panoramic", gb-c201p, c201p, c201]}
+    C200: {aliases: [c200]}
+    C103: {aliases: [c103]}
+    C102 Glass: {aliases: ["c102 glass", c102]}
+  MSI:
+    MAG Pano 110R PZ: {aliases: ["pano 110r", pano110r]}
+    MAG Pano 130R PZ: {aliases: ["pano 130r", pano130r]}
+    MAG Pano M100R PZ: {aliases: ["pano m100r"]}
+    MAG Forge 120A Airflow: {aliases: ["forge 120a"]}
+    MAG Forge 321R Airflow: {aliases: ["forge 321r"]}
+    MAG Forge M100A: {aliases: ["forge m100a"]}
+    MAG Gungnir 111R: {aliases: ["gungnir 111r"]}
+    MAG Vampiric 100R: {aliases: ["vampiric 100r"]}
+  ADATA:
+    XPG Invader X BTF: {aliases: ["invader x btf"]}
+    XPG Invader X: {aliases: ["invader x"]}
+    XPG Invader: {aliases: [invader]}
+    XPG Lander 500: {aliases: ["lander 500"]}
+    XPG Lander 501: {aliases: ["lander 501"]}
+    XPG Valor Air Plus: {aliases: ["valor air plus"]}
+    XPG Valor Air: {aliases: ["valor air"]}
+  Thermaltake:
+    View 51 TG: {aliases: ["view 51"]}
+    H100 TG: {aliases: [h100tg, "h100 tg", h100]}
+    Divider 170 TG: {aliases: ["divider 170"]}
+    View 31 TG: {aliases: ["view 31"]}
+    Core P6 TG: {aliases: ["core p6"]}
+  Sharkoon:
+    Rebel C50: {aliases: ["rebel c50"]}
+    Rebel C60: {aliases: ["rebel c60"]}
+    Rebel C80M: {aliases: ["rebel c80m"]}
+    Rebel C80G: {aliases: ["rebel c80g"]}
+    AK5G: {aliases: [ak5g]}
+    Wave: {aliases: [wave]}
+    VS8: {aliases: [vs8]}
+    HEX: {aliases: [hex]}
+    Pure Steel: {aliases: ["pure steel"]}
+    Elite Shark CA200M: {aliases: [ca200m]}
+    REV300: {aliases: [rev300]}
+    RGB LIT 200: {aliases: ["lit 200"]}
+    Slider: {aliases: [slider]}
+  Gamemax:
+    Siege: {aliases: [siege]}
+    Destroyer: {aliases: [destroyer]}
+  Cooler Master:
+    Elite 490: {aliases: ["elite 490"]}
+    MasterBox 520 Mesh: {aliases: ["masterbox 520 mesh"]}
+    MasterBox 520: {aliases: ["masterbox 520"]}
+    Sneaker-X: {aliases: [sneaker-x, sneakerx]}
+    MasterFrame 360 Panorama: {aliases: ["masterframe 360"]}
+  X-Lizzard:
+    GX-505: {aliases: [gx-505, gx505]}
+  NSX:
+    "802": {aliases: ["nsx 802"]}
+    902M: {aliases: [902m]}
+    Office Q5: {aliases: ["office q5"]}
+  Shot Gaming:
+    SUP-8012-4C: {aliases: [8012-4c]}
+    SUP-8012-80A: {aliases: [8012-80a]}
+    "8012": {aliases: ["gaming 8012"]}
+    8010-80A: {aliases: [8010-80a]}
+    "8192": {aliases: ["gaming 8192"]}
+    "8335": {aliases: ["gaming 8335"]}
+    FA3148: {aliases: [fa3148]}
+    SUP-230B: {aliases: [230b]}
+    SUP-420FW: {aliases: [420fw]}
+    SUP-901C: {aliases: [901c]}
+    SUP-K21305: {aliases: [k21305]}
+    C1903: {aliases: [c1903]}
+  Perseo:
+    Boro: {aliases: [boro]}
+    Hero: {aliases: [hero]}
+    365B: {aliases: [365b]}
+  XYZ:
+    Maverick Mesh: {aliases: ["maverick mesh"]}
+    Airone: {aliases: [airone]}
+    Tesseract X50: {aliases: ["tesseract x50"]}
+  Gravity:
+    GR08: {aliases: [gr08, rg08]}
+    GR13: {aliases: [gr13]}
+  ESgaming:
+    RA06: {aliases: [ra06]}
+    BK02: {aliases: [bk02]}
+  Xigmatek:
+    Medusa: {aliases: [medusa]}

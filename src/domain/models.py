@@ -17,6 +17,11 @@ class Category(StrEnum):
     CPU = "cpu"
     RAM = "ram"
     SSD = "ssd"
+    MOTHERBOARD = "motherboard"
+    COOLER = "cooler"
+    PSU = "psu"
+    CASE = "case"
+    MONITOR = "monitor"
 
     @property
     def label(self) -> str:
@@ -28,7 +33,16 @@ CATEGORY_LABELS = {
     Category.CPU: "Procesadores",
     Category.RAM: "Memorias RAM",
     Category.SSD: "Discos SSD",
+    Category.MOTHERBOARD: "Motherboards",
+    Category.COOLER: "Coolers de CPU",
+    Category.PSU: "Fuentes de poder",
+    Category.CASE: "Gabinetes",
+    Category.MONITOR: "Monitores",
 }
+
+# The four categories of v1 and of the first v2 catalog. Their resolution must not
+# change when new categories are added (see docs/decisions.md, ADR-09).
+LEGACY_CATEGORIES = (Category.GPU, Category.CPU, Category.RAM, Category.SSD)
 
 
 class Condition(StrEnum):

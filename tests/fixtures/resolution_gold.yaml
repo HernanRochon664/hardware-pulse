@@ -6125,3 +6125,2423 @@
   condition: new
   family: ssd:sata-960gb
   product: ssd|kingston|a400|960|sata|
+# --- Catalog expansion (2026-10-16): motherboard, cooler, psu, case, monitor.
+# Stratified sample of the 7 stores, every entry reviewed by hand.
+- title: MOTHERBOARD ASROCK H510M-HDV (1200)
+  store: hardpc
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:lga1200-h510-matx
+  product: motherboard|asrock|h510|matx|hdv|||ddr4|
+- title: MOTHERBOARD ASROCK J4005M (INCLUYE PROCESADOR J4005M)
+  store: hardpc
+  category: motherboard
+  store_brand: ASROCK
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: MOTHERBOARD ASUS H610M-E D4 PRIME (1700) 12VA
+  store: hardpc
+  category: motherboard
+  store_brand: ASUS
+  status: matched
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: motherboard|asus|h610|matx|e|prime||ddr4|
+- title: MOTHERBOARD ASUS PRIME H510M-K R2.0 (S1200)
+  store: hardpc
+  category: motherboard
+  store_brand: ASUS
+  status: matched
+  condition: new
+  family: motherboard:lga1200-h510-matx
+  product: motherboard|asus|h510|matx|k|prime+r2.0||ddr4|
+- title: MOTHERBOARD BIOSTAR H610MH (1700)
+  store: hardpc
+  category: motherboard
+  store_brand: BIOSTAR
+  status: family_only
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: null
+- title: MOTHERBOARD GIGABYTE H410M H V2 (1200)
+  store: hardpc
+  category: motherboard
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: motherboard:lga1200-h410-matx
+  product: motherboard|gigabyte|h410|matx|h|v2||ddr4|
+- title: MOTHERBOARD GIGABYTE H510M S2H (1200)
+  store: hardpc
+  category: motherboard
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: motherboard:lga1200-h510-matx
+  product: motherboard|gigabyte|h510|matx||s2h||ddr4|
+- title: MOTHERBOARD GIGABYTE H610M S2H (1700) 12VA
+  store: hardpc
+  category: motherboard
+  store_brand: GIGABYTE
+  status: family_only
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: null
+- title: MOTHERBOARD MSI A520M-A PRO (AM4)
+  store: hardpc
+  category: motherboard
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: motherboard:am4-a520-matx
+  product: motherboard|msi|a520|matx|a|pro||ddr4|
+- title: Motherboard ASROCK B650 PG Lightning AM5
+  store: infinit
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:am5-b650-atx
+  product: motherboard|asrock|b650|atx||lightning+pg||ddr5|
+- title: Motherboard ASROCK B760M Pro RS Intel Ddr5 Hdmi 2.1 DP 1.4 Usb 3.2 S1700
+  store: infinit
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||pro+rs||ddr5|
+- title: Motherboard ASROCK X670E PRO Series Rs R7 Ddr5 M.2 Wifi Socket Am5 Hdmi DisplayPort
+  store: infinit
+  category: motherboard
+  store_brand: ASROCK
+  status: family_only
+  condition: new
+  family: motherboard:am5-x670e-atx
+  product: null
+- title: Motherboard ASROCK Z790 PG Riptide Intel Ddr5 Hdmi 2.1 DP 1.4 Usb 3.2 S1700
+  store: infinit
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:lga1700-z790-atx
+  product: motherboard|asrock|z790|atx||pg+riptide||ddr5|
+- title: Motherboard ASUS TUF Gaming A620AM-Plus WiFi 6 AM5
+  store: infinit
+  category: motherboard
+  store_brand: ASUS
+  status: matched
+  condition: new
+  family: motherboard:am5-a620-matx
+  product: motherboard|asus|a620|matx|plus|gaming+tuf|wi-fi6|ddr5|
+- title: Motherboard BIOSTAR H610mh D5 S1700 Intel Ddr5 Hdmi D-Sub Usb 3.2
+  store: infinit
+  category: motherboard
+  store_brand: BIOSTAR
+  status: matched
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: motherboard|biostar|h610|matx|h|||ddr5|
+- title: Motherboard Foxconn SuperMicro X9SCL-F Socket LGA 1155/1151
+  store: infinit
+  category: motherboard
+  store_brand: FOXCONN
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Motherboard GIGABYTE B550M-K Micro Atx Socket Am4 Para Amd
+  store: infinit
+  category: motherboard
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: motherboard:am4-b550-matx
+  product: motherboard|gigabyte|b550|matx|k|||ddr4|
+- title: Motherboard GIGABYTE B760M-K LGA1700 Intel Core Ddr4 Hdmi Usb 3.2
+  store: infinit
+  category: motherboard
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|gigabyte|b760|matx|k|||ddr4|
+- title: Motherboard MSI H610M-S PRO Lga Socket S1700 Para Intel 12va 13va y 14va Generación
+  store: infinit
+  category: motherboard
+  store_brand: MSI
+  status: family_only
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: null
+- title: Gigabyte Motherboard
+  store: laaca
+  category: motherboard
+  store_brand: Gigabyte
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Motherboard ASRock B760M Steel Legend WiFi DDR5 LGA1700
+  store: laaca
+  category: motherboard
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||legend+steel|wi-fi|ddr5|
+- title: Motherboard ASRock X870E Nova WiFi AM5 DDR5 ATX
+  store: laaca
+  category: motherboard
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: motherboard:am5-x870e-atx
+  product: motherboard|asrock|x870e|atx||nova|wi-fi|ddr5|
+- title: Motherboard ASUS EX-B760M-V5 DDR4 LGA1700
+  store: laaca
+  category: motherboard
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asus|b760|matx|v5|||ddr4|
+- title: Motherboard ASUS Prime B650EM-A DDR5 AM5
+  store: laaca
+  category: motherboard
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: motherboard:am5-b650e-matx
+  product: motherboard|asus|b650e|matx|a|prime||ddr5|
+- title: Motherboard Asrock B550m Phantom Gaming 4 Ddr4 Am4
+  store: laaca
+  category: motherboard
+  store_brand: Asrock
+  status: matched
+  condition: new
+  family: motherboard:am4-b550-matx
+  product: motherboard|asrock|b550|matx||4+gaming+phantom||ddr4|
+- title: Motherboard Asus ROG Crosshair X870E Hero DDR5 AM5
+  store: laaca
+  category: motherboard
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: motherboard:am5-x870e-atx
+  product: motherboard|asus|x870e|atx||crosshair+hero+rog||ddr5|
+- title: Motherboard Gigabyte B840M Gaming X WiFi 6E DDR5 AM5
+  store: laaca
+  category: motherboard
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: motherboard:am5-b840-matx
+  product: motherboard|gigabyte|b840|matx||gaming+x|wi-fi6e|ddr5|
+- title: Motherboard Gigabyte Z790M Aorus Elite AX Ice DDR5 LGA1700
+  store: laaca
+  category: motherboard
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: motherboard:lga1700-z790-matx
+  product: motherboard|gigabyte|z790|matx||aorus+ax+elite||ddr5|white
+- title: Motherboard MSI PRO Z790-P WIFI DDR5 LGA1700
+  store: laaca
+  category: motherboard
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: motherboard:lga1700-z790-atx
+  product: motherboard|msi|z790|atx|p|pro|wi-fi|ddr5|
+- title: Motherboard ASRock B550M-HDV Socket AM4 p/AMD Ryzen DDR4 mATX PCIe 4.0 M2
+  store: pccompu
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:am4-b550-matx
+  product: motherboard|asrock|b550|matx|hdv|||ddr4|
+- title: Motherboard ASRock B760M PG Riptide WiFi DDR5 LGA1700 Intel Gen. 12/13/14 M.2 mATX
+  store: pccompu
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||pg+riptide|wi-fi|ddr5|
+- title: Motherboard ASRock B760M Pro RS LGA1700 DDR5 Intel Gen. 12/13/14 M.2 mATX RGB M2
+  store: pccompu
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||pro+rs||ddr5|
+- title: Motherboard ASRock Z690 AQUA LGA 1700 DDR5 WiFi 6e Bluetooth
+  store: pccompu
+  category: motherboard
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: motherboard:lga1700-z690-atx
+  product: motherboard|asrock|z690|atx||aqua|wi-fi6e|ddr5|
+- title: Motherboard Arktek AK-G41M EL Intel Chipset G41 Socket LGA 775 DDR3
+  store: pccompu
+  category: motherboard
+  store_brand: ARKTEK
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Motherboard Asus Prime B650EM-A WiFi DDR5 Socket AM5 AMD 3x M.2 Aura Sync PCIe 5.0 USB-C HDMI 2x DisplayPort
+  store: pccompu
+  category: motherboard
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: motherboard:am5-b650e-matx
+  product: motherboard|asus|b650e|matx|a|prime|wi-fi|ddr5|
+- title: Motherboard Asus Prime H610M-K DDR5 Socket LGA1700 Intel M.2 PCIe 4.0 Gigabit LAN
+  store: pccompu
+  category: motherboard
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: motherboard|asus|h610|matx|k|prime||ddr5|
+- title: Motherboard MSI H610M-S Pro DDR4 Socket LGA1700 Intel Generación 12, 13, 14 M.2 PCIe 4.0 Gigabit LAN
+  store: pccompu
+  category: motherboard
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: motherboard|msi|h610|matx|s|pro||ddr4|
+- title: Motherboard MSI Pro B840M-B AMD Ryzen AM5 DDR5
+  store: pccompu
+  category: motherboard
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: motherboard:am5-b840-matx
+  product: motherboard|msi|b840|matx|b|pro||ddr5|
+- title: Motherboard Mini ITX ECS EliteGroup GLKD-I2-N4020 + Micro Procesador integrado Intel Dual Core N4020
+  store: pccompu
+  category: motherboard
+  store_brand: ECS Elitegroup
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Motherboard Asrock B550 Pg Riptide DDR4 Am4
+  store: pcparts
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am4-b550-atx
+  product: motherboard|asrock|b550|atx||pg+riptide||ddr4|
+- title: Motherboard Asrock B760m St Legend Wifi Ddr5 S1700
+  store: pcparts
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||legend+steel|wi-fi|ddr5|
+- title: Motherboard Asrock B860m-x D5 S1851
+  store: pcparts
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1851-b860-matx
+  product: motherboard|asrock|b860|matx|x|||ddr5|
+- title: Motherboard Asrock H670m Pro Rs S1700
+  store: pcparts
+  category: motherboard
+  status: family_only
+  condition: new
+  family: motherboard:lga1700-h670-matx
+  product: null
+- title: Motherboard Asrock X870 Pro Rs Wifi D5 Am5
+  store: pcparts
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-x870-atx
+  product: motherboard|asrock|x870|atx||pro+rs|wi-fi|ddr5|
+- title: Motherboard Asrock Z790 Steel Legend Wifi S1700
+  store: pcparts
+  category: motherboard
+  status: family_only
+  condition: new
+  family: motherboard:lga1700-z790-atx
+  product: null
+- title: Motherboard Asus Tuf Gaming Z790-plus Wifi D4 S170
+  store: pcparts
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-z790-atx
+  product: motherboard|asus|z790|atx|plus|gaming+tuf|wi-fi|ddr4|
+- title: Motherboard Gigabyte Z790M AORUS ELITE AX
+  store: pcparts
+  category: motherboard
+  status: family_only
+  condition: new
+  family: motherboard:lga1700-z790-matx
+  product: null
+- title: Motherboard Asrock B760m Pro Rs Ddr5 S1700
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||pro+rs||ddr5|
+- title: Motherboard Asrock B760m Pro Rs Ddr5 Wifi S1700
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asrock|b760|matx||pro+rs|wi-fi|ddr5|
+- title: Motherboard Asrock B850m Challenger Wifi Am5
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-b850-matx
+  product: motherboard|asrock|b850|matx||challenger|wi-fi|ddr5|
+- title: Motherboard Asrock H610m-hdv/m.2+ D5 S1700
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: motherboard|asrock|h610|matx|hdv|m.2+||ddr5|
+- title: Motherboard Asrock H810m-x WiFi S1851
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1851-h810-matx
+  product: motherboard|asrock|h810|matx|x||wi-fi|ddr5|
+- title: Motherboard Asrock X870 Challenger Wifi Am5
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-x870-atx
+  product: motherboard|asrock|x870|atx||challenger|wi-fi|ddr5|
+- title: Motherboard Asrock X870 Challenger Wifi White Am5
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-x870-atx
+  product: motherboard|asrock|x870|atx||challenger|wi-fi|ddr5|white
+- title: Motherboard Asrock X870 Taichi Creator Am5
+  store: tecnocity
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-x870-atx
+  product: motherboard|asrock|x870|atx||creator+taichi||ddr5|
+- title: Asus Prime H610M-K D5
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-h610-matx
+  product: motherboard|asus|h610|matx|k|prime||ddr5|
+- title: Mother Asus Prime A620M-K
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-a620-matx
+  product: motherboard|asus|a620|matx|k|prime||ddr5|
+- title: Mother Asus Prime B650EM-A AM5
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-b650e-matx
+  product: motherboard|asus|b650e|matx|a|prime||ddr5|
+- title: Mother Asus Prime B760M-K D4
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-matx
+  product: motherboard|asus|b760|matx|k|prime||ddr4|
+- title: Mother Asus Prime X870-P WiFi AM5
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-x870-atx
+  product: motherboard|asus|x870|atx|p|prime|wi-fi|ddr5|
+- title: Mother Gigabyte B760 DS3H AX V2 DDR5
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-b760-atx
+  product: motherboard|gigabyte|b760|atx||ax+ds3h+v2||ddr5|
+- title: Mother Gigabyte B860M D3HP
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1851-b860-matx
+  product: motherboard|gigabyte|b860|matx||d3hp||ddr5|
+- title: Mother Gigabyte X870 Aorus Infinity
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:am5-x870-atx
+  product: motherboard|gigabyte|x870|atx||aorus+infinity||ddr5|
+- title: Mother MSI Pro Z790-P WiFi DDR5 S1700
+  store: thot
+  category: motherboard
+  status: matched
+  condition: new
+  family: motherboard:lga1700-z790-atx
+  product: motherboard|msi|z790|atx|p|pro|wi-fi|ddr5|
+- title: Cooler DEEPCOOL AG620 Argb Blanco Para Intel y AMD
+  store: infinit
+  category: cooler
+  store_brand: DEEPCOOL
+  status: matched
+  condition: new
+  family: cooler:air-dual
+  product: cooler|deepcool|ag620||white|rgb|
+- title: Disipador CPU ALSEYE M90 RGB Ventiladores 92mm Para Intel y Amd
+  store: infinit
+  category: cooler
+  store_brand: ALSEYE
+  status: matched
+  condition: new
+  family: cooler:air-low
+  product: cooler|alseye|m90|||rgb|
+- title: Disipador Cpu COUGAR Forza 50 Argb 120mm Para Intel y Amd
+  store: infinit
+  category: cooler
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|cougar|forza 50|||rgb|
+- title: Fan Cooler Shot Gaming 120mm Led Rgb Para Gabinete
+  store: infinit
+  category: cooler
+  store_brand: SHOT GAMING
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan Cooler Ventilador Sharkoon Shark Light Rgb 120mm 20 Leds
+  store: infinit
+  category: cooler
+  store_brand: SHARKOON
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Water Cooler Liquida BE QUIET! Light Loop 360mm
+  store: infinit
+  category: cooler
+  store_brand: BE QUIET!
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|be quiet!|light loop|360|||
+- title: Water Cooler Liquida BE QUIET! Silent Loop 3 360mm
+  store: infinit
+  category: cooler
+  store_brand: BE QUIET!
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|be quiet!|silent loop 3|360|||
+- title: Water Cooler Liquida CORSAIR NAUTILUS 240 RS Argb CW-9060094-WW Intel y AMD
+  store: infinit
+  category: cooler
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|corsair|nautilus rs|240||rgb|
+- title: Water Cooler Liquida CORSAIR NAUTILUS 360 RS Argb CW-9060095-WW Intel y AMD
+  store: infinit
+  category: cooler
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|corsair|nautilus rs|360||rgb|
+- title: Water Cooler Liquida CPU XYZ AQUAPULSE 360 Argb Socket Para Intel y AMD
+  store: infinit
+  category: cooler
+  store_brand: XYZ
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|xyz|aquapulse|360||rgb|
+- title: Water Cooler Liquida Cpu DEEPCOOL LE300 Rgb Inte S1700 Amd AM5
+  store: infinit
+  category: cooler
+  store_brand: DEEPCOOL
+  status: matched
+  condition: new
+  family: cooler:aio-120
+  product: cooler|deepcool|le300|120||rgb|
+- title: Water Cooler Liquida Cpu RAZER 360 HANBO CHROMA RGB Socket Para Intel y Amd
+  store: infinit
+  category: cooler
+  store_brand: RAZER
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|razer|hanbo chroma|360||rgb|
+- title: Cooler Deepcool AG400 ARGB BK
+  store: laaca
+  category: cooler
+  store_brand: Deepcool
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|deepcool|ag400|||rgb|
+- title: Disipador Cpu Cougar Forza 85 MHP120 Essential
+  store: laaca
+  category: cooler
+  store_brand: Cougar
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|cougar|forza 85 essential||||
+- title: Water Cooler be quiet! Light Loop 240mm Blanco
+  store: laaca
+  category: cooler
+  store_brand: Be quiet!
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|be quiet!|light loop|240|white||
+- title: Water Cooling ASUS ROG Strix LC III 360mm ARGB LCD
+  store: laaca
+  category: cooler
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|asus|rog strix lc iii|360||rgb|lcd
+- title: Water Cooling Cougar Poseidon Elite 240 Argb Bk
+  store: laaca
+  category: cooler
+  store_brand: Cougar
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|cougar|poseidon elite|240||rgb|
+- title: Water Cooling DeepCool LT360 Vision 360mm LCD ARGB
+  store: laaca
+  category: cooler
+  store_brand: Deepcool
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|deepcool|lt vision|360||rgb|lcd
+- title: Water Cooling DeepCool Mystique 240 240mm LCD
+  store: laaca
+  category: cooler
+  store_brand: Deepcool
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|deepcool|mystique|240|||lcd
+- title: Water Cooling DeepCool Spartacus 420 420mm LCD
+  store: laaca
+  category: cooler
+  store_brand: Deepcool
+  status: matched
+  condition: new
+  family: cooler:aio-420
+  product: cooler|deepcool|spartacus|420|||lcd
+- title: Water Cooling Gigabyte Aorus Waterforce X 240
+  store: laaca
+  category: cooler
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|gigabyte|aorus waterforce x|240|||
+- title: Water Cooling Gigabyte Eagle 360 360mm ARGB
+  store: laaca
+  category: cooler
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|gigabyte|eagle|360||rgb|
+- title: Watercooling XYZ AQUA 240W
+  store: laaca
+  category: cooler
+  store_brand: XYZ
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|xyz|aqua w|240|white||
+- title: Disipador Fan Cooler de Aire para CPU Aerocool Cylon 4F ARGB Intel y AMD - Blanco
+  store: pccompu
+  category: cooler
+  store_brand: AEROCOOL
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|aerocool|cylon 4f||white|rgb|
+- title: Fan Cooler Disipador de CPU DeepCool Alta 9 para Intel Socket LGA 1851 / 1700
+  store: pccompu
+  category: cooler
+  store_brand: DEEPCOOL
+  status: matched
+  condition: new
+  family: cooler:air-low
+  product: cooler|deepcool|alta 9||||
+- title: Water Cooling Ref Liquida Asus Prime LC360 ARGB para CPU - Blanca
+  store: pccompu
+  category: cooler
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|asus|prime lc|360|white|rgb|
+- title: Water Cooling Refrigeracion Liquida Asus Prime LC240 ARGB para CPU - Negra
+  store: pccompu
+  category: cooler
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|asus|prime lc|240||rgb|
+- title: Water Cooling Refrigeracion Líquida Corsair Nautilus 240 RS LCD con Pantalla Personalizable - Blanco
+  store: pccompu
+  category: cooler
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|corsair|nautilus rs|240|white||lcd
+- title: Water Cooling Refrigeracion Líquida Cougar Poseidon Elite 360 ARGB 3x Fanes RGB Intel y AMD - Blanco
+  store: pccompu
+  category: cooler
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|cougar|poseidon elite|360|white|rgb|
+- title: Water Cooling Refrigeracion Líquida Cougar Poseidon Vistek ARGB 240 2x Fanes Para Intel y AMD - Negro
+  store: pccompu
+  category: cooler
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|cougar|poseidon vistek|240||rgb|
+- title: Water Cooling Refrigeracion Líquida Cougar Poseidon Vistek Pro ARGB 360 con Pantalla Personalizable - Negro
+  store: pccompu
+  category: cooler
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|cougar|poseidon vistek pro|360||rgb|lcd
+- title: Water Cooling Refrigeracion Líquida Gamemax IceBurg 360 Infinity WH 3x Fanes ARGB Intel y AMD - Blanco
+  store: pccompu
+  category: cooler
+  store_brand: GAMEMAX
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|gamemax|iceburg infinity|360|white|rgb|
+- title: Water Cooling Refrigeracion Líquida Kit Sharkoon S80 RGB 240mm ARGB Para Intel y AMD - Negro
+  store: pccompu
+  category: cooler
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|sharkoon|s80 rgb|240||rgb|
+- title: AIO Gigabyte GAMING 360 BLACK
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|gigabyte|gaming|360|||
+- title: AORUS WATERFORCE X II 360
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|gigabyte|aorus waterforce x ii|360|||
+- title: Cooler DeepCool AG400 Blanco ARGB
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|deepcool|ag400||white|rgb|
+- title: Cooler DeepCool AG620 Digital Blanco ARGB
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-dual
+  product: cooler|deepcool|ag620 digital||white|rgb|
+- title: Disipador Cpu Cougar Forza 135 Mhp120
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-dual
+  product: cooler|cougar|forza 135||||
+- title: Disipador Cpu Cougar Forza 50 Argb Mhp120
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|cougar|forza 50|||rgb|
+- title: GIGABYTE GAMING 360 ICE
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|gigabyte|gaming|360|white||
+- title: Kit 3 fans RGB + HUB + Control remoto
+  store: pcparts
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Watercooling Liquid cooler antec vortex 240
+  store: pcparts
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|antec|vortex|240|||
+- title: Watercooling Liquid cooler symphony 240
+  store: pcparts
+  category: cooler
+  status: family_only
+  condition: new
+  family: cooler:aio-240
+  product: null
+- title: Watercooling Liquid cooler symphony 360 white
+  store: pcparts
+  category: cooler
+  status: family_only
+  condition: new
+  family: cooler:aio-360
+  product: null
+- title: Water Cooling Cougar Helor 360 Rgb
+  store: tecnocity
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|cougar|helor|360||rgb|
+- title: Cooler Cooler Master Hyper 212 PRO
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|cooler master|hyper 212 pro||||
+- title: Cooler DeepCool AK400 Digital SE White
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|deepcool|ak400 digital se||white||
+- title: Cooler DeepCool AK500S Digital SE Black
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:air-tower
+  product: cooler|deepcool|ak500s digital se||||
+- title: Cooler Master MF120 Halo White ARGB
+  store: thot
+  category: cooler
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Fan Cooler Be Quiet! Light Wings LX 120mm PWM HS Triple Pack Black
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan Cooler Be Quiet! Light Wings LX 120mm PWM HS Triple Pack White
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan Cooler Be quiet! Light Wings LX 120mm PWM Reverse White
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan Cooler be quiet! Pure Wings 3 White
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan DeepCool FL12 120mm Negro
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan Hub Deepcool SC700 ARGB 12 Puertos
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan Shot 120 Ring – Molex
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Fan hub Deepcool FH-04
+  store: thot
+  category: cooler
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Watercooling Antec Vortex View 360 ARGB Black
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|antec|vortex view|360||rgb|
+- title: Watercooling Cooler Master ML240 Vivid – Bomba ARGB con LCD Smart Display
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|cooler master|masterliquid ml vivid|240||rgb|lcd
+- title: Watercooling Cougar Poseidon Ultra 360 ARGB BK
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|cougar|poseidon ultra|360||rgb|
+- title: Watercooling Cougar Poseidon Ultra 360 ARGB white
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|cougar|poseidon ultra|360|white|rgb|
+- title: Watercooling Gigabyte Eagle 360 Black
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-360
+  product: cooler|gigabyte|eagle|360|||
+- title: Watercooling Gigabyte gaming 240 Black
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|gigabyte|gaming|240|||
+- title: Watercooling Gigabyte gaming 240 Ice
+  store: thot
+  category: cooler
+  status: matched
+  condition: new
+  family: cooler:aio-240
+  product: cooler|gigabyte|gaming|240|white||
+- title: FUENTE DE PODER 450W ANTEC 24 PINES 80 PLUS BRONZE
+  store: hardpc
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:450w-bronze
+  product: null
+- title: FUENTE DE PODER 450W GIGABYTE PB450B 80+ BRONZE
+  store: hardpc
+  category: psu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: psu:450w-bronze
+  product: psu|gigabyte|p b|450|bronze||
+- title: FUENTE DE PODER 500W PERSEO 80 PLUS BRONZE
+  store: hardpc
+  category: psu
+  store_brand: Perseo
+  status: family_only
+  condition: new
+  family: psu:500w-bronze
+  product: null
+- title: FUENTE DE PODER 550W GIGABYTE P550B 80 + BRONCE
+  store: hardpc
+  category: psu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: psu:550w-bronze
+  product: psu|gigabyte|p b|550|bronze||
+- title: FUENTE DE PODER 550W MSI 100/240 V 80 PLUS BRONCE
+  store: hardpc
+  category: psu
+  store_brand: MSI
+  status: family_only
+  condition: new
+  family: psu:550w-bronze
+  product: null
+- title: FUENTE DE PODER 600W ATX XTREME 24+4 PIN - CONECTOR SATA
+  store: hardpc
+  category: psu
+  store_brand: XTREME
+  status: family_only
+  condition: new
+  family: psu:600w-na
+  product: null
+- title: FUENTE DE PODER 650W EVGA BRONZE 80+
+  store: hardpc
+  category: psu
+  store_brand: EVGA
+  status: family_only
+  condition: new
+  family: psu:650w-bronze
+  product: null
+- title: FUENTE DE PODER 750W CORSAIR 80+ BRONCE
+  store: hardpc
+  category: psu
+  store_brand: Corsair
+  status: family_only
+  condition: new
+  family: psu:750w-bronze
+  product: null
+- title: FUENTE DE PODER 750W GIGABYTE GP-P750BS PLUS BRONZE
+  store: hardpc
+  category: psu
+  store_brand: GIGABYTE
+  status: matched
+  condition: new
+  family: psu:750w-bronze
+  product: psu|gigabyte|p bs|750|bronze||
+- title: Fuente De Poder ATX 3.1 SEASONIC RCore 850w 80 Plus Gold Gx-850 Full Modular PCI-e 5.1 SRP-CGX851
+  store: infinit
+  category: psu
+  store_brand: SEASONIC
+  status: matched
+  condition: new
+  family: psu:850w-gold
+  product: psu|seasonic|rcore gx|850|gold||
+- title: Fuente De Poder CORSAIR 1000w RM1000e 80 Plus Gold Full Modular LOW NOISE CP-9020297-NA
+  store: infinit
+  category: psu
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: psu:1000w-gold
+  product: psu|corsair|rm e|1000|gold||
+- title: Fuente De Poder COUGAR XTC 550w ARGB 80 Plus White Atx
+  store: infinit
+  category: psu
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: psu:550w-white
+  product: psu|cougar|xtc|550|white||
+- title: Fuente De Poder SEASONIC 700w 80 Plus White A12 Ssr-700ra
+  store: infinit
+  category: psu
+  store_brand: SEASONIC
+  status: matched
+  condition: new
+  family: psu:700w-white
+  product: psu|seasonic|a12|700|white||
+- title: Fuente De Poder SEASONIC Fanless 500w 80 Plus Platinum Px-500 Full Modular SSR-500PL
+  store: infinit
+  category: psu
+  store_brand: SEASONIC
+  status: matched
+  condition: new
+  family: psu:500w-platinum
+  product: psu|seasonic|prime px|500|platinum||
+- title: Fuente de Poder BE QUIET! Dark Power 14 1200W Titanium
+  store: infinit
+  category: psu
+  store_brand: BE QUIET!
+  status: matched
+  condition: new
+  family: psu:1200w-titanium
+  product: psu|be quiet!|dark power 14|1200|titanium||
+- title: Fuente de Poder BE QUIET! Pure Power 13 M 750W Plus Gold Modular
+  store: infinit
+  category: psu
+  store_brand: BE QUIET!
+  status: matched
+  condition: new
+  family: psu:750w-gold
+  product: psu|be quiet!|pure power 13 m|750|gold||
+- title: Fuente de Poder COMSTAR 500w Atx Generica Sata Molex Para Pc
+  store: infinit
+  category: psu
+  store_brand: GENERICO
+  status: family_only
+  condition: new
+  family: psu:500w-na
+  product: null
+- title: Fuente de Poder COMSTAR 600w Atx Generica Sata Molex Para Pc
+  store: infinit
+  category: psu
+  store_brand: COMSTAR
+  status: family_only
+  condition: new
+  family: psu:600w-na
+  product: null
+- title: Fuente ASUS TUF Gaming 1000G 1000W 80 Plus Gold ATX 3.1 Blanca
+  store: laaca
+  category: psu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: psu:1000w-gold
+  product: psu|asus|tuf gaming|1000|gold||white
+- title: Fuente Cooler Master ELITE 850W 80 Plus Gold modular ATX 3.1
+  store: laaca
+  category: psu
+  store_brand: Cooler Master
+  status: matched
+  condition: new
+  family: psu:850w-gold
+  product: psu|cooler master|elite|850|gold||
+- title: Fuente Corsair RM850e 850W 80 Plus Gold Modular
+  store: laaca
+  category: psu
+  store_brand: Corsair
+  status: matched
+  condition: new
+  family: psu:850w-gold
+  product: psu|corsair|rm e|850|gold||
+- title: Fuente Cougar Atlas 600 80 Plus Bronce
+  store: laaca
+  category: psu
+  store_brand: Cougar
+  status: matched
+  condition: new
+  family: psu:600w-bronze
+  product: psu|cougar|atlas|600|bronze||
+- title: Fuente GIGABYTE GP-UD1000GM PG5 ICE 1000W 80 Plus Gold modular blanca
+  store: laaca
+  category: psu
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: psu:1000w-gold
+  product: psu|gigabyte|ud gm|1000|gold|pg5|white
+- title: Fuente Perseo ATX650W-P 650W 80 Plus Gold Modular
+  store: laaca
+  category: psu
+  store_brand: Perseo
+  status: matched
+  condition: new
+  family: psu:650w-gold
+  product: psu|perseo|atx-p|650|gold||
+- title: Fuente Seasonic 500W 80 Plus
+  store: laaca
+  category: psu
+  store_brand: Seasonic
+  status: family_only
+  condition: new
+  family: psu:500w-white
+  product: null
+- title: Fuente XPG Core Reactor II VE 850W 80 Plus Gold ATX 3.1 Modular
+  store: laaca
+  category: psu
+  store_brand: ADATA
+  status: matched
+  condition: new
+  family: psu:850w-gold
+  product: psu|adata|xpg core reactor ii ve|850|gold||
+- title: Fuente be quiet! Dark Power 14 1200W Titanium
+  store: laaca
+  category: psu
+  store_brand: Be quiet!
+  status: matched
+  condition: new
+  family: psu:1200w-titanium
+  product: psu|be quiet!|dark power 14|1200|titanium||
+- title: Fuente be quiet! Power Zone 2 850W Platium Modular
+  store: laaca
+  category: psu
+  store_brand: Be quiet!
+  status: matched
+  condition: new
+  family: psu:850w-platinum
+  product: psu|be quiet!|power zone 2|850|platinum||
+- title: Fuente ATX 3.0 Sharkoon Rebel P30 1000W 80 Plus Gold PCIe Gen5 Modular Blanca
+  store: pccompu
+  category: psu
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: psu:1000w-gold
+  product: psu|sharkoon|rebel p30|1000|gold||white
+- title: Fuente ATX 3.1 Asus ROG Strix 1000W 80Plus Planinum PCIe 5.1 - Blanca
+  store: pccompu
+  category: psu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: psu:1000w-platinum
+  product: psu|asus|rog strix|1000|platinum||white
+- title: Fuente ATX 3.1 Asus TUF Gaming 1000W 80 Plus Gold PCIe 5.1 Full Modular - Blanca
+  store: pccompu
+  category: psu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: psu:1000w-gold
+  product: psu|asus|tuf gaming|1000|gold||white
+- title: Fuente ATX 3.1 Sharkoon Rebel P10 850W Reales Cybenetics Silver
+  store: pccompu
+  category: psu
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: psu:850w-silver
+  product: psu|sharkoon|rebel p10|850|silver||
+- title: Fuente ATX Corsair CX650 650w 80 Plus Bronce Fan Silencioso 120mm
+  store: pccompu
+  category: psu
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: psu:650w-bronze
+  product: psu|corsair|cx|650|bronze||
+- title: Fuente Gamer ATX 3.0 Asus TUF 750W 80 Plus Gold Full Modular PCIe 5.1
+  store: pccompu
+  category: psu
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: psu:750w-gold
+  product: psu|asus|tuf gaming|750|gold||
+- title: Fuente Gaming Zumax PSAZ-650W para PC 650w Reales 80 Plus Bronze
+  store: pccompu
+  category: psu
+  store_brand: ZUMAX
+  status: family_only
+  condition: new
+  family: psu:650w-bronze
+  product: null
+- title: Fuente SFX 3.1 Sharkoon Rebel P20 SFX 850W Reales Cybenetics Platinum Modular
+  store: pccompu
+  category: psu
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: psu:850w-platinum
+  product: psu|sharkoon|rebel p20 sfx|850|platinum||
+- title: Fuente StarkGear SGATX750W80P 750W Full Modular con Certificación 80 Plus Bronce
+  store: pccompu
+  category: psu
+  store_brand: STARKGEAR
+  status: family_only
+  condition: new
+  family: psu:750w-bronze
+  product: null
+- title: Fuente Adata Xpg 750w Kyber 80 Plus Gold Atx 3.1
+  store: pcparts
+  category: psu
+  status: matched
+  condition: new
+  family: psu:750w-gold
+  product: psu|adata|xpg kyber|750|gold||
+- title: Fuente Comstar 600w 220v
+  store: pcparts
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:600w-na
+  product: null
+- title: Fuente Cougar Atlas 550 80 Plus Bronce
+  store: pcparts
+  category: psu
+  status: matched
+  condition: new
+  family: psu:550w-bronze
+  product: psu|cougar|atlas|550|bronze||
+- title: Fuente Cougar Gex1050 Full Modular
+  store: pcparts
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1050w-gold
+  product: psu|cougar|gex|1050|gold||
+- title: Fuente Cougar Stc500w 80 Plus White
+  store: pcparts
+  category: psu
+  status: matched
+  condition: new
+  family: psu:500w-white
+  product: psu|cougar|stc|500|white||
+- title: Fuente Cougar Stc600 80 Plus White
+  store: pcparts
+  category: psu
+  status: matched
+  condition: new
+  family: psu:600w-white
+  product: psu|cougar|stc|600|white||
+- title: Fuente Gigabyte 850W PG5 80 Plus Gold Modular PCIe Gen 5.0
+  store: pcparts
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:850w-gold
+  product: null
+- title: Fuente Perseo 550w 80 Plus Bronze
+  store: pcparts
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:550w-bronze
+  product: null
+- title: Fuente Perseo 650w 80 Plus Bronze
+  store: pcparts
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:650w-bronze
+  product: null
+- title: Fuente Asus ROG Thor 1000P3 Gaming 1000W 80 Plus Platinum ATX 3.1
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1000w-platinum
+  product: psu|asus|rog thor iii|1000|platinum||
+- title: Fuente DeepCool PF450 450W 80 Plus ATX 2.4
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:450w-white
+  product: psu|deepcool|pf|450|white||
+- title: Fuente DeepCool PS1000P 1000W Platinum ATX 3.1 SFX
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1000w-platinum
+  product: psu|deepcool|ps p|1000|platinum||
+- title: Fuente DeepCool PS750G Gold ATX 3.1 750W negra
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:750w-gold
+  product: psu|deepcool|ps g|750|gold||
+- title: Fuente DeepCool PS850G Gold ATX 3.1 850W blanca
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:850w-gold
+  product: psu|deepcool|ps g|850|gold||white
+- title: Fuente DeepCool PS850G Gold ATX 3.1 850W negra
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:850w-gold
+  product: psu|deepcool|ps g|850|gold||
+- title: Fuente be quiet! Dark Power 14 850W Titanium ATX 3.1
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:850w-titanium
+  product: psu|be quiet!|dark power 14|850|titanium||
+- title: Fuente be quiet! Power Zone 2 1000W Platinum Modular ATX 3.1
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1000w-platinum
+  product: psu|be quiet!|power zone 2|1000|platinum||
+- title: Fuente be quiet! Pure Power 12 1000W Gold ATX 3.1
+  store: tecnocity
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1000w-gold
+  product: psu|be quiet!|pure power 12|1000|gold||
+- title: Fuente Antec 750w 80 plus Gold Semi Modular
+  store: thot
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:750w-gold
+  product: null
+- title: Fuente Antec GSK750 80 plus Gold Full Modular
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:750w-gold
+  product: psu|antec|gsk|750|gold||
+- title: Fuente Aorus GP-AE1000PM ICE PG5 80 Plus Platinum Full Modular
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1000w-platinum
+  product: psu|gigabyte|ae pm|1000|platinum|pg5|white
+- title: Fuente Aorus GP-AE850PM PG5 ICE 80 Plus Platinum Full Modular
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:850w-platinum
+  product: psu|gigabyte|ae pm|850|platinum|pg5|white
+- title: Fuente Cooler Master X Mighty Platinum 2000W
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:2000w-platinum
+  product: psu|cooler master|x mighty|2000|platinum||
+- title: Fuente Cooler Master XG Platinum Plus 850W
+  store: thot
+  category: psu
+  status: family_only
+  condition: new
+  family: psu:850w-platinum
+  product: null
+- title: Fuente Gigabyte GP-P550SS ICE 80 Plus Silver
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:550w-silver
+  product: psu|gigabyte|p ss|550|silver||white
+- title: Fuente Gigabyte UD750GM 80 Plus Gold Full Modular
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:750w-gold
+  product: psu|gigabyte|ud gm|750|gold||
+- title: Fuente MSI MEG AI1300P 80 Plus Platinum PCIe 5
+  store: thot
+  category: psu
+  status: matched
+  condition: new
+  family: psu:1300w-platinum
+  product: psu|msi|meg ai p|1300|platinum||
+- title: COMBO GABINETE A4 TECH TP704 (T/M/P)
+  store: hardpc
+  category: case
+  store_brand: A4 TECH
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: COMBO GABINETE COMSTAR CCSHEXIH (T/M/P)
+  store: hardpc
+  category: case
+  store_brand: COMSTAR
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: GABINETE ANTEC VSK10
+  store: hardpc
+  category: case
+  store_brand: ANTEC
+  status: matched
+  condition: new
+  family: case:antec-vsk10
+  product: case|antec|vsk10|||
+- title: GABINETE COUGAR MX360 RGB
+  store: hardpc
+  category: case
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: case:cougar-mx360
+  product: case|cougar|mx360||rgb|
+- title: GABINETE COUGAR PURITY RGB BLACK
+  store: hardpc
+  category: case
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: case:cougar-purity
+  product: case|cougar|purity||rgb|
+- title: GABINETE DEEPCOOL MATREXX 30
+  store: hardpc
+  category: case
+  store_brand: DEEPCOOL
+  status: matched
+  condition: new
+  family: case:deepcool-matrexx-30
+  product: case|deepcool|matrexx 30|||
+- title: GABINETE GRAVITY GR08 BLACK
+  store: hardpc
+  category: case
+  store_brand: GRAVITY
+  status: matched
+  condition: new
+  family: case:gravity-gr08
+  product: case|gravity|gr08|||
+- title: GABINETE GRAVITY GR13 BLACK
+  store: hardpc
+  category: case
+  store_brand: GRAVITY
+  status: matched
+  condition: new
+  family: case:gravity-gr13
+  product: case|gravity|gr13|||
+- title: GABINETE XIGMATEK MEDUSA ATX 1 FAN RGB CON FUENTE 450W 8P PC
+  store: hardpc
+  category: case
+  status: matched
+  condition: new
+  family: case:xigmatek-medusa
+  product: case|xigmatek|medusa||rgb|450
+- title: Gabinete X Lizzard GX-505 ATX 3 Fans RGB
+  store: hardpc
+  category: case
+  store_brand: X Lizzard
+  status: matched
+  condition: new
+  family: case:x-lizzard-gx-505
+  product: case|x-lizzard|gx-505||rgb|
+- title: Combo Gabinete COMSTAR GCOCS-CCSHEXIH con fuente de poder 550W Mid Tower Teclado Mouse y Parlantes
+  store: infinit
+  category: case
+  store_brand: COMSTAR
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Gabinete COUGAR Archon 2 Mesh 3 Fanes Preinstalados Lateral De Vidrio Templado
+  store: infinit
+  category: case
+  store_brand: COUGAR
+  status: matched
+  condition: new
+  family: case:cougar-archon-2-mesh
+  product: case|cougar|archon 2 mesh|||
+- title: Gabinete Gamer COOLER MASTER Masterbox 520 Mesh + 3 Fanes ARGB Atx Con Lateral De Vidrio Templado Blanco
+  store: infinit
+  category: case
+  store_brand: COOLER MASTER
+  status: matched
+  condition: new
+  family: case:cooler-master-masterbox-520-mesh
+  product: case|cooler master|masterbox 520 mesh|white|rgb|
+- title: Gabinete Gamer CORSAIR FRAME 4000D ARGB 3 Fanes 120mm USB-C Vidrio Templado CC-9011296-WW
+  store: infinit
+  category: case
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: case:corsair-frame-4000d
+  product: case|corsair|frame 4000d||rgb|
+- title: Gabinete Gamer Sharkoon Rgb Lit 200 2 Fanes 120mm Argb Hub 4 Port
+  store: infinit
+  category: case
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: case:sharkoon-rgb-lit-200
+  product: case|sharkoon|rgb lit 200||rgb|
+- title: Gabinete Gamer X-LIZZARD XZZ-GC-01 Argb 3 Fanes 120mm Argb Frente y Lateral Vidrio Templado
+  store: infinit
+  category: case
+  store_brand: X-LIZZARD
+  status: matched
+  condition: new
+  family: case:x-lizzard-xzz-gc-01
+  product: case|x-lizzard|xzz-gc-01||rgb|
+- title: Gabinete Gamer XYZ TESSERACT X 50 + 6 Fanes 120mm ARGB Usb y Audio Frontal Blanco
+  store: infinit
+  category: case
+  store_brand: XYZ
+  status: matched
+  condition: new
+  family: case:xyz-tesseract-x50
+  product: case|xyz|tesseract x50|white|rgb|
+- title: Gabinete SPARTAN 173G22 Combo Fuente 600W Teclado y Mouse Atx
+  store: infinit
+  category: case
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Gabinete THERMALTAKE CTE C750 Air Full Tower USB-C 3.2 + 3 Fanes 140mm Vidrio Templado CA-1X6-00F1WN-00
+  store: infinit
+  category: case
+  store_brand: THERMALTAKE
+  status: matched
+  condition: new
+  family: case:thermaltake-c750
+  product: case|thermaltake|c750|||
+- title: Gabinete THERMALTAKE Level 20 GT ARGB USB-C + 3 Fanes 200mm ARGB Laterales De Vidrio CA-1K9-00F1WN-02
+  store: infinit
+  category: case
+  store_brand: THERMALTAKE
+  status: matched
+  condition: new
+  family: case:thermaltake-ca-1k9-00f1wn-02
+  product: case|thermaltake|ca-1k9-00f1wn-02||rgb|
+- title: GABINETE AX85 ARGB
+  store: laaca
+  category: case
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Gabinete Corsair FRAME 4000D Blanco
+  store: laaca
+  category: case
+  store_brand: Corsair
+  status: matched
+  condition: new
+  family: case:corsair-frame-4000d
+  product: case|corsair|frame 4000d|white||
+- title: Gabinete Cougar Mx600 Rgb Black
+  store: laaca
+  category: case
+  store_brand: Cougar
+  status: matched
+  condition: new
+  family: case:cougar-mx600
+  product: case|cougar|mx600||rgb|
+- title: Gabinete DeepCool CL660
+  store: laaca
+  category: case
+  store_brand: Deepcool
+  status: matched
+  condition: new
+  family: case:deepcool-cl660
+  product: case|deepcool|cl660|||
+- title: Gabinete Deepcool CC560 V2
+  store: laaca
+  category: case
+  store_brand: Deepcool
+  status: matched
+  condition: new
+  family: case:deepcool-cc560-v2
+  product: case|deepcool|cc560 v2|||
+- title: Gabinete Gamer X-lizzard GX-505
+  store: laaca
+  category: case
+  store_brand: X-Lizzard
+  status: matched
+  condition: new
+  family: case:x-lizzard-gx-505
+  product: case|x-lizzard|gx-505|||
+- title: Gabinete MSI MAG PANO 110R PZ ATX Negro
+  store: laaca
+  category: case
+  store_brand: Thermaltake
+  status: matched
+  condition: new
+  family: case:msi-mag-pano-110r-pz
+  product: case|msi|mag pano 110r pz|||
+- title: Gabinete PC Stark Gear Wasp Combo Teclado Mouse Parlantes
+  store: laaca
+  category: case
+  store_brand: StarkGear
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Gabinete XYZ AIRONE blanco y negro
+  store: laaca
+  category: case
+  store_brand: XYZ
+  status: matched
+  condition: new
+  family: case:xyz-airone
+  product: case|xyz|airone|white||
+- title: Gabinete be quiet! Light Base 500 LX Blanco
+  store: laaca
+  category: case
+  store_brand: Be quiet!
+  status: matched
+  condition: new
+  family: case:be-quiet-light-base-500-lx
+  product: case|be quiet!|light base 500 lx|white||
+- title: Gabinete ATX Combo Shot Gaming Shot-60 Negro con Perifericos y Fuente de 600W
+  store: pccompu
+  category: case
+  store_brand: SHOT GAMING
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Gabinete Gamer Corsair Frame 4000D RS ARGB Mid Tower E-ATX Vidrio Templado Blanco
+  store: pccompu
+  category: case
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: case:corsair-frame-4000d-rs
+  product: case|corsair|frame 4000d rs|white|rgb|
+- title: Gabinete Gamer ESgaming BK02-WH (Blanco) 6 Fanes ARGB Vidrio Controladora + Fuente 850W 80 Plus Gold Full Modular
+  store: pccompu
+  category: case
+  store_brand: ESGAMING
+  status: matched
+  condition: new
+  family: case:esgaming-bk02
+  product: case|esgaming|bk02|white|rgb|850
+- title: Gabinete Gamer MSI MAG Pano M100R PZ Cristal Panoramico ARGB 4 Fanes - Blanco
+  store: pccompu
+  category: case
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: case:msi-mag-pano-m100r-pz
+  product: case|msi|mag pano m100r pz|white|rgb|
+- title: Gabinete Gamer Sharkoon Rebel C50 RGB Negro 4 Fanes ARGB Pre instalados Panel Vidrio Frente rejilla
+  store: pccompu
+  category: case
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: case:sharkoon-rebel-c50
+  product: case|sharkoon|rebel c50||rgb|
+- title: Gabinete Gaming ATX Corsair 3000D RGB Airflow 3 Fanes AR120 RGB - Blanco
+  store: pccompu
+  category: case
+  store_brand: CORSAIR
+  status: matched
+  condition: new
+  family: case:corsair-3000d-airflow
+  product: case|corsair|3000d airflow|white|rgb|
+- title: Gabinete MSI MAG Forge 321R Airflow Mid Tower 4 Fanes ARGB - Negro
+  store: pccompu
+  category: case
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: case:msi-mag-forge-321r-airflow
+  product: case|msi|mag forge 321r airflow||rgb|
+- title: Gabinete Sharkoon VS8 RGB Panel Vidrio 3 Fan 120mm - Blanco
+  store: pccompu
+  category: case
+  store_brand: SHARKOON
+  status: matched
+  condition: new
+  family: case:sharkoon-vs8
+  product: case|sharkoon|vs8|white|rgb|
+- title: Gabinete Antec C3 ARGB White
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:antec-c3
+  product: case|antec|c3|white|rgb|
+- title: Gabinete Cougar Cfv235 White
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-cfv235
+  product: case|cougar|cfv235|white||
+- title: Gabinete Cougar Duoface Pro Rgb
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-duoface-pro
+  product: case|cougar|duoface pro||rgb|
+- title: Gabinete Cougar Fv270 Rgb White
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-fv270
+  product: case|cougar|fv270|white|rgb|
+- title: Gabinete Cougar MX220 RGB – White
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-mx220
+  product: case|cougar|mx220|white|rgb|
+- title: Gabinete Cougar Uniface RGB Black
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-uniface
+  product: case|cougar|uniface||rgb|
+- title: Gabinete Cougar Uniface RGB White
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-uniface
+  product: case|cougar|uniface|white|rgb|
+- title: Gabinete Gigabyte C301 Glass
+  store: pcparts
+  category: case
+  status: matched
+  condition: new
+  family: case:gigabyte-c301-glass
+  product: case|gigabyte|c301 glass|||
+- title: Gabinete Antec Flux Pro Black
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:antec-flux-pro
+  product: case|antec|flux pro|||
+- title: Gabinete Cougar Cfv235 Black
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-cfv235
+  product: case|cougar|cfv235|||
+- title: Gabinete Cougar Purity Black
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-purity
+  product: case|cougar|purity|||
+- title: Gabinete DeepCool CH170 Digital ITX Vertical Blanco
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:deepcool-ch170-digital
+  product: case|deepcool|ch170 digital|white||
+- title: Gabinete be quiet! Light Base 600 DX ATX ARGB Blanco
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:be-quiet-light-base-600-dx
+  product: case|be quiet!|light base 600 dx|white|rgb|
+- title: Gabinete be quiet! Light Base 600 LX ATX ARGB Blanco
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:be-quiet-light-base-600-lx
+  product: case|be quiet!|light base 600 lx|white|rgb|
+- title: Gabinete be quiet! Light Base 900 DX ATX ARGB Blanco
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:be-quiet-light-base-900-dx
+  product: case|be quiet!|light base 900 dx|white|rgb|
+- title: Gabinete be quiet! Light Base 900 FX ATX ARGB Blanco
+  store: tecnocity
+  category: case
+  status: matched
+  condition: new
+  family: case:be-quiet-light-base-900-fx
+  product: case|be quiet!|light base 900 fx|white|rgb|
+- title: Gabinete Antec FLUX PRO Black
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:antec-flux-pro
+  product: case|antec|flux pro|||
+- title: Gabinete Antec P120 Crystal
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:antec-p120
+  product: case|antec|p120|||
+- title: Gabinete Cooler Master Elite 490 White
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:cooler-master-elite-490
+  product: case|cooler master|elite 490|white||
+- title: Gabinete Cooler Master HAF700
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:cooler-master-haf700
+  product: case|cooler master|haf700|||
+- title: Gabinete Cougar Dust 2 Iron Gray
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-dust-2
+  product: case|cougar|dust 2|gray||
+- title: Gabinete Cougar Purity BK
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:cougar-purity
+  product: case|cougar|purity|||
+- title: Gabinete Gigabyte C500 Panoramic Stealth
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:gigabyte-c500-panoramic-stealth
+  product: case|gigabyte|c500 panoramic stealth|||
+- title: Gabinete Gigabyte GB-C201P
+  store: thot
+  category: case
+  status: matched
+  condition: new
+  family: case:gigabyte-c201-panoramic
+  product: case|gigabyte|c201 panoramic|||
+- title: Tira Led Deepcool EA080
+  store: thot
+  category: case
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: Tira Led Deepcool EA160
+  store: thot
+  category: case
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: MONITOR 22" VIEWSONIC VA220-H (FHD, VGA/HDMI)
+  store: hardpc
+  category: monitor
+  store_brand: VIEWSONIC
+  status: matched
+  condition: new
+  family: monitor:22-fhd-hz-na-panel-na
+  product: monitor|viewsonic|va220h|22|fhd|
+- title: Monitor Acer V7 V277y 27"fhd Ips 4ms
+  store: hardpc
+  category: monitor
+  store_brand: ACER
+  status: matched
+  condition: new
+  family: monitor:27-fhd-hz-na-ips
+  product: monitor|acer|v277y|27|fhd|
+- title: Monitor Hikvision 22" Full HD IPS 100Hz
+  store: hardpc
+  category: monitor
+  store_brand: HIKVISION
+  status: family_only
+  condition: new
+  family: monitor:22-fhd-100-120hz-ips
+  product: null
+- title: Monitor Samsung Odyssey G6 27" Oled Qhd 240hz
+  store: hardpc
+  category: monitor
+  store_brand: SAMSUNG
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-200-280hz-oled
+  product: null
+- title: Monitor Samsung S9 27"IPS 5k 5120X2880 60Hz 5ms
+  store: hardpc
+  category: monitor
+  store_brand: SAMSUNG
+  status: family_only
+  condition: new
+  family: monitor:27-5k-60-75hz-ips
+  product: null
+- title: Monitor SamsungG5 32" curvo QHD 2560X1440, 165 HZ
+  store: hardpc
+  category: monitor
+  store_brand: SAMSUNG
+  status: family_only
+  condition: new
+  family: monitor:32-qhd-144-180hz-panel-na
+  product: null
+- title: Ocom Monitor Táctil Tm-1701 Para Pos 17.5"
+  store: hardpc
+  category: monitor
+  store_brand: Ocom
+  status: rejected
+  condition: new
+  family: null
+  product: null
+- title: ViewSonic - LED-backlit LCD monitor - 27" - 1920 x 1080 - IPS - HDMI / DisplayPort - Black
+  store: hardpc
+  category: monitor
+  store_brand: VIEWSONIC
+  status: family_only
+  condition: new
+  family: monitor:27-fhd-hz-na-ips
+  product: null
+- title: ViewSonic OMNI Gaming VX3418-2KPC - Monitor LED - gaming - curvado - 34" - 3440 x 1440 WQHD @ 144 Hz - MVA - 300 cd/m² -
+  store: hardpc
+  category: monitor
+  store_brand: VIEWSONIC
+  status: matched
+  condition: new
+  family: monitor:34-uwqhd-144-180hz-va
+  product: monitor|viewsonic|vx34182kpc|34|uwqhd|144
+- title: Monitor Gamer ASUS 21.5" IPS Full HD 100Hz 1Ms Eye Care Plus HDMI VGA
+  store: infinit
+  category: monitor
+  store_brand: ASUS
+  status: family_only
+  condition: new
+  family: monitor:22-fhd-100-120hz-ips
+  product: null
+- title: Monitor Gamer Curvo SAMSUNG Odyssey 27 G6 240Hz 1Ms QHd 1440p Panel VA FreeSync 2x Hdmi Dp Compatible Vesa 100x100
+  store: infinit
+  category: monitor
+  store_brand: SAMSUNG
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-200-280hz-va
+  product: null
+- title: Monitor Gamer LG 27 27G850A Ultragear UHD 3840 x 2160 Panel Ips 240Hz 1ms Hdmi Dp AMD FreeSync
+  store: infinit
+  category: monitor
+  store_brand: LG
+  status: matched
+  condition: new
+  family: monitor:27-uhd-200-280hz-ips
+  product: monitor|lg|27g850a|27|uhd|240
+- title: Monitor Gamer PERSEO 27 HERMES 2K 200hz 1ms Panel Ips 2k Qhd FreeSync Hdmi Dp Compatible Con Vesa 100x100 Parlantes
+  store: infinit
+  category: monitor
+  store_brand: PERSEO
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-200-280hz-ips
+  product: null
+- title: Monitor Gamer VIEWSONIC 22 VA220A-H 120Hz Panel VA 4ms FHD 1080p Hdmi Vga Compatible Vesa
+  store: infinit
+  category: monitor
+  store_brand: VIEWSONIC
+  status: matched
+  condition: new
+  family: monitor:22-fhd-100-120hz-va
+  product: monitor|viewsonic|va220ah|22|fhd|120
+- title: Monitor Gamer XIAOMI 27 Mini LED G PRO 27i WQHD 180Hz 1ms HDR
+  store: infinit
+  category: monitor
+  store_brand: XIAOMI
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-144-180hz-mini-led
+  product: null
+- title: Monitor Portable VIEWSONIC TD1655 15.6 60Hz Panel Ips Full Hd 1080p Mini Hdmi Usb-C
+  store: infinit
+  category: monitor
+  store_brand: VIEWSONIC
+  status: matched
+  condition: new
+  family: monitor:16-fhd-60-75hz-ips
+  product: monitor|viewsonic|td1655|16|fhd|60
+- title: Monitor SAMSUNG 27 LF27T450FQNXGO Profesional FHD 1080p 75Hz 5ms Panel Lcd Amd FreeSync Hdmi/Vga Vesa
+  store: infinit
+  category: monitor
+  store_brand: SAMSUNG
+  status: matched
+  condition: new
+  family: monitor:27-fhd-60-75hz-panel-na
+  product: monitor|samsung|f27t450|27|fhd|75
+- title: Monitor ACER Nitro 27″ 4K 160Hz IPS HDR 0.5ms
+  store: laaca
+  category: monitor
+  store_brand: Acer
+  status: family_only
+  condition: new
+  family: monitor:27-uhd-144-180hz-ips
+  product: null
+- title: Monitor ASUS TUF Gaming VG34VQL3A 34″ UWQHD 180Hz VA 1ms curvo
+  store: laaca
+  category: monitor
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: monitor:34-uwqhd-144-180hz-va
+  product: monitor|asus|vg34vql3a|34|uwqhd|180
+- title: Monitor Gigabyte MO27Q28G 27″ QHD OLED 280Hz 0.03ms
+  store: laaca
+  category: monitor
+  store_brand: Gigabyte
+  status: matched
+  condition: new
+  family: monitor:27-qhd-200-280hz-oled
+  product: monitor|gigabyte|mo27q28g|27|qhd|280
+- title: Monitor Samsung ViewFinity S8 LS27H802 27″ 5K 60Hz IPS
+  store: laaca
+  category: monitor
+  store_brand: Samsung
+  status: matched
+  condition: new
+  family: monitor:27-5k-60-75hz-ips
+  product: monitor|samsung|s27h802|27|5k|60
+- title: Monitor Teros TE-2417S 24″ 1080p 144Hz IPS 1ms
+  store: laaca
+  category: monitor
+  store_brand: TEROS
+  status: matched
+  condition: new
+  family: monitor:24-fhd-144-180hz-ips
+  product: monitor|teros|te2417s|24|fhd|144
+- title: Monitor Teros TE-2790G 27″ 1440p 240Hz QD-OLED 0.03ms blanco
+  store: laaca
+  category: monitor
+  store_brand: TEROS
+  status: matched
+  condition: new
+  family: monitor:27-qhd-200-280hz-oled
+  product: monitor|teros|te2790g|27|qhd|240
+- title: Monitor Xiaomi 27″ 200Hz
+  store: laaca
+  category: monitor
+  store_brand: Xiaomi
+  status: family_only
+  condition: new
+  family: monitor:27-res-na-200-280hz-panel-na
+  product: null
+- title: Monitor Xiaomi G Pro 27″ QHD 180Hz Mini LED HDR
+  store: laaca
+  category: monitor
+  store_brand: Xiaomi
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-144-180hz-mini-led
+  product: null
+- title: Monitor curvo Viewsonic VX3418-2KPC 1440p 180Hz VA 1ms
+  store: laaca
+  category: monitor
+  store_brand: Viewsonic
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Monitor Gamer LED IPS ASRock Challenger CL27FFA 27'' Full HD 120Hz 1ms Flicker Free Technology
+  store: pccompu
+  category: monitor
+  store_brand: ASROCK
+  status: matched
+  condition: new
+  family: monitor:27-fhd-100-120hz-ips
+  product: monitor|asrock|cl27ffa|27|fhd|120
+- title: Monitor Gamer LED Rapid IPS MSI MAG 245F X24 24'' Full HD 240Hz 0.5ms HDR AI Vision FreeSync HDMI DisplayPort
+  store: pccompu
+  category: monitor
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: monitor:24-fhd-200-280hz-ips
+  product: monitor|msi|245fx24|24|fhd|240
+- title: Monitor Gamer LED Rapid IPS MSI MAG 275QF E20 27'' WQHD 2K 200Hz 0.5ms HDR G-Sync FreeSync HDMI DisplayPort
+  store: pccompu
+  category: monitor
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: monitor:27-qhd-200-280hz-ips
+  product: monitor|msi|275qfe20|27|qhd|200
+- title: Monitor LED Fast IPS Asus TUF Gaming VG279Q3A-J 27'' FHD 1080p 180Hz 1ms AMD FreeSync Premium y G-Sync
+  store: pccompu
+  category: monitor
+  store_brand: Asus
+  status: matched
+  condition: new
+  family: monitor:27-fhd-144-180hz-ips
+  product: monitor|asus|vg279q3aj|27|fhd|180
+- title: Monitor LED IPS MSI Pro MP242 E14A 24" Full HD 144Hz 1ms VESA Game Ready Parlantes HDMI/VGA/DisplayPort
+  store: pccompu
+  category: monitor
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: monitor:24-fhd-144-180hz-ips
+  product: monitor|msi|mp242e14a|24|fhd|144
+- title: Monitor LED IPS Portatil Shot Gaming SG156PM02 15.6'' Full HD 1080p 16:9 60Hz Vesa Mini HDMI y USB Tipo C
+  store: pccompu
+  category: monitor
+  store_brand: SHOT GAMING
+  status: matched
+  condition: new
+  family: monitor:16-fhd-60-75hz-ips
+  product: monitor|shot gaming|sg156pm02|16|fhd|60
+- title: Monitor LED IPS Shot Gaming SG27F17 27'' Full HD 1080p 100Hz 3ms Vesa DisplayPort / HDMI
+  store: pccompu
+  category: monitor
+  store_brand: SHOT GAMING
+  status: matched
+  condition: new
+  family: monitor:27-fhd-100-120hz-ips
+  product: monitor|shot gaming|sg27f17|27|fhd|100
+- title: Monitor OLED MSI MAG 271QPX QD-OLED 27'' WQHD Quad HD 360Hz 0.03ms AMD FreeSync
+  store: pccompu
+  category: monitor
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: monitor:27-qhd-300hz-oled
+  product: monitor|msi|271qpx|27|qhd|360
+- title: Monitor OLED MSI MAG 272QP QD-OLED X24 27'' WQHD Quad HD 240Hz 0.03ms G-Sync AI Vision
+  store: pccompu
+  category: monitor
+  store_brand: MSI
+  status: matched
+  condition: new
+  family: monitor:27-qhd-200-280hz-oled
+  product: monitor|msi|272qpx24|27|qhd|240
+- title: MO27Q2A ICE OLED Gaming Monitor
+  store: pcparts
+  category: monitor
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Monitor Acer Nitro Xv272u V327″ WQHD 2k 180HZ 0.5
+  store: pcparts
+  category: monitor
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Monitor Acer V7 V277 Ebmipx 27″fhd Ips 4ms
+  store: pcparts
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:27-fhd-hz-na-ips
+  product: monitor|acer|v277|27|fhd|
+- title: Monitor Comstar 22″ Fhd Flat 100hz Hdmi+vga
+  store: pcparts
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:22-fhd-100-120hz-panel-na
+  product: null
+- title: Monitor Gigabyte M27Q 2K 165HZ IPS REF
+  store: pcparts
+  category: monitor
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Monitor Gigabyte MO27Q28G QHD 27″ 280hz OLED
+  store: pcparts
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:27-qhd-200-280hz-oled
+  product: monitor|gigabyte|mo27q28g|27|qhd|280
+- title: Monitor LED IPS Xiaomi 23.8″ FHD 100Hz
+  store: pcparts
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:24-fhd-100-120hz-ips
+  product: null
+- title: Monitor Perseo Hermes Flat 27″2k 180hz
+  store: pcparts
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-144-180hz-panel-na
+  product: null
+- title: Monitor Samsung Essencial 24″ IPS 5ms 75Hz
+  store: pcparts
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:24-res-na-60-75hz-ips
+  product: null
+- title: Monitor Samsung G5 27″QHD2560x1440,165hz 1ms
+  store: pcparts
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-144-180hz-panel-na
+  product: null
+- title: Monitor Samsung Ls34bg850slxzb Smart Odyssey G8 Ol
+  store: pcparts
+  category: monitor
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Monitor Samsung Odyssey G70b 32″4k Uhd Ips G-sync
+  store: pcparts
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:32-uhd-hz-na-ips
+  product: monitor|samsung|g70b|32|uhd|
+- title: Monitor Acer 27 V277E FHD IPS 4ms con DP
+  store: tecnocity
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:27-fhd-hz-na-ips
+  product: monitor|acer|v277e|27|fhd|
+- title: Monitor Acer 32 SA322QK 4k VA 60Hz
+  store: tecnocity
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:32-uhd-60-75hz-va
+  product: monitor|acer|sa322qk|32|uhd|60
+- title: Monitor Asus 27 VA27EHF Full HD IPS 100Hz 1ms
+  store: tecnocity
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:27-fhd-100-120hz-ips
+  product: monitor|asus|va27ehf|27|fhd|100
+- title: Monitor Samsung Essential S3 24 IPS FHD 100hz
+  store: tecnocity
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:24-fhd-100-120hz-ips
+  product: null
+- title: Monitor Samsung Odyssey Ark 55 Curvo VA 4K 165Hz
+  store: tecnocity
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:55-uhd-144-180hz-va
+  product: null
+- title: Monitor Samsung Odyssey G6 27 Oled Qhd 240hz
+  store: tecnocity
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:27-qhd-200-280hz-oled
+  product: null
+- title: Monitor Samsung Odyssey G8 32 Oled 4k 240hz G81sf
+  store: tecnocity
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:32-uhd-200-280hz-oled
+  product: monitor|samsung|g81sf|32|uhd|240
+- title: Monitor Samsung Smart M5 32 VA Fhd 60Hz
+  store: tecnocity
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:32-fhd-60-75hz-va
+  product: null
+- title: Monitor Samsung Odyssey G4 27″ FHD 240Hz 1ms
+  store: thot
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:27-fhd-200-280hz-panel-na
+  product: null
+- title: Monitor Samsung Odyssey G6 32″ QHD 2560×1440 240Hz 1ms
+  store: thot
+  category: monitor
+  status: family_only
+  condition: new
+  family: monitor:32-qhd-200-280hz-panel-na
+  product: null
+- title: Monitor Samsung Odyssey G8 OLED 34″ Ultra WQHD 175Hz 1800R LS34BG850SLXZB
+  store: thot
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:34-uwqhd-144-180hz-oled
+  product: monitor|samsung|s34bg850|34|uwqhd|175
+- title: Monitor Samsung Odyssey G9 Curvo 49″ OLED DQHD 144hz S49DG910SN
+  store: thot
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:49-dqhd-144-180hz-oled
+  product: monitor|samsung|s49dg910|49|dqhd|144
+- title: Monitor Samsung Odyssey G9 Curvo 49″ OLED DQHD 240hz S49DG956SN
+  store: thot
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:49-dqhd-200-280hz-oled
+  product: monitor|samsung|s49dg956|49|dqhd|240
+- title: Monitor Samsung Smart M5 32″ (FHD) 4ms – LS32DM500ENXGO
+  store: thot
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:32-fhd-hz-na-panel-na
+  product: monitor|samsung|s32dm500|32|fhd|
+- title: Monitor Samsung Viewfinity S6 34″ curvo VA 2k 100hz S34C650UAN
+  store: thot
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:34-uwqhd-100-120hz-va
+  product: monitor|samsung|s34c650|34|uwqhd|100
+- title: Monitor Viewsonic VA1903-H
+  store: thot
+  category: monitor
+  status: unparsed
+  condition: new
+  family: null
+  product: null
+- title: Monitor Viewsonic VA2214-H 22″ FHD 100Hz
+  store: thot
+  category: monitor
+  status: matched
+  condition: new
+  family: monitor:22-fhd-100-120hz-panel-na
+  product: monitor|viewsonic|va2214h|22|fhd|100

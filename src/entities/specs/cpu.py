@@ -69,6 +69,57 @@ def _models(text: str) -> set[tuple[str, str]]:
     return found
 
 
+_NAME_CORE_I = re.compile(r"^Intel Core i[3579]-(\d{4,5})([A-Z]*)$")
+_NAME_ULTRA = re.compile(r"^Intel Core Ultra [579] 2\d{2}([A-Z]*)(?: Plus)?$")
+_NAME_GOLD = re.compile(r"^Intel (Pentium Gold|Celeron) G(\d{4})$")
+_NAME_XEON = re.compile(r"^Intel Xeon W[3579]-([23][45]\d{2})X?$")
+_NAME_RYZEN = re.compile(r"^AMD Ryzen [3579] (\d)\d{3}([A-Z0-9]*)$")
+_NAME_THREADRIPPER = re.compile(r"^AMD Ryzen Threadripper(?: PRO)? (\d)\d{3}(WX|X)$")
+
+
+def cpu_platform(name: str) -> tuple[str | None, bool | None]:
+    """(socket, has integrated graphics) of a desktop CPU model name, None when unknown."""
+    if m := _NAME_ULTRA.match(name):
+        return "LGA1851", "F" not in m.group(1)
+    if m := _NAME_CORE_I.match(name):
+        number, suffix = m.group(1), m.group(2)
+        if len(number) == 5:
+            socket = "LGA1200" if number[:2] in ("10", "11") else "LGA1700"
+        else:
+            socket = {"2": "LGA1155", "3": "LGA1155", "4": "LGA1150", "5": "LGA1150"}.get(
+                number[0], "LGA1151"
+            )
+        return socket, "F" not in suffix
+    if m := _NAME_GOLD.match(name):
+        number = m.group(2)
+        if m.group(1) == "Celeron":
+            socket = {"69": "LGA1700", "59": "LGA1200", "49": "LGA1151"}.get(number[:2])
+        else:
+            socket = {"7": "LGA1700", "6": "LGA1200", "5": "LGA1151", "4": "LGA1151"}.get(number[0])
+        return socket, True
+    if name.startswith(("Intel Core 2", "Intel Pentium Dual-Core")):
+        return "LGA775", False
+    if _NAME_XEON.match(name):
+        return "LGA4677", False
+    if m := _NAME_RYZEN.match(name):
+        series, suffix = m.group(1), m.group(2)
+        if series in "12345":
+            return "AM4", suffix.startswith("G")
+        if series in "789":
+            return "AM5", "F" not in suffix
+        return None, None
+    if m := _NAME_THREADRIPPER.match(name):
+        series, kind = m.group(1), m.group(2)
+        if series in "79":
+            return "sTR5", False
+        if series in "35":
+            return ("sWRX8" if kind == "WX" else "sTRX4"), False
+        return "TR4", False
+    if name.startswith("AMD Athlon"):
+        return "AM4", True
+    return None, None
+
+
 def parse_cpu(title: str, store_brand: str | None, tax: Taxonomy) -> Parsed | ParseFailure:
     text = spaced(title)
     models = _models(text)
@@ -81,6 +132,7 @@ def parse_cpu(title: str, store_brand: str | None, tax: Taxonomy) -> Parsed | Pa
         return ParseFailure("ambiguous_model:" + "/".join(sorted(n for _, n in models)))
     vendor, name = next(iter(models))
     family_id = f"cpu:{slug(name)}"
+    socket, igpu = cpu_platform(name)
     return Parsed(
         category=Category.CPU,
         family_id=family_id,
@@ -89,6 +141,6 @@ def parse_cpu(title: str, store_brand: str | None, tax: Taxonomy) -> Parsed | Pa
         brand=vendor,
         line=None,
         fingerprint=family_id,
-        specs={"vendor": vendor, "model": name},
-        family_specs={"vendor": vendor, "model": name},
+        specs={"vendor": vendor, "model": name, "socket": socket, "igpu": igpu},
+        family_specs={"vendor": vendor, "model": name, "socket": socket},
     )

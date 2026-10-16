@@ -4,7 +4,7 @@ Entity resolution: store title -> (condition, family, exact product).
 Pipeline per listing:
 1. The category comes from the store category that was scraped (never guessed).
 2. Condition: open box / used / refurbished titles are not "new".
-3. Rejects: accessories, hard drives, coolers... sharing the store category.
+3. Rejects: accessories, hard drives, case fans... sharing the store category.
 4. Category parser (strict, no fuzzy matching).
 5. Identity: family always; exact product only when brand + line/model are known.
 
@@ -23,15 +23,20 @@ from dataclasses import dataclass, field
 from src.domain.models import Category, Condition
 from src.entities.mpn import extract_mpn
 from src.entities.specs import Parsed, ParseFailure
+from src.entities.specs.case import parse_case
+from src.entities.specs.cooler import parse_cooler
 from src.entities.specs.cpu import parse_cpu
 from src.entities.specs.gpu import parse_gpu
+from src.entities.specs.monitor import parse_monitor
+from src.entities.specs.motherboard import parse_motherboard
+from src.entities.specs.psu import parse_psu
 from src.entities.specs.ram import parse_ram
 from src.entities.specs.ssd import parse_ssd
 from src.entities.taxonomy import Taxonomy, load_taxonomy
 
 # Bump whenever parsing rules or the taxonomy change in a way that should
 # re-resolve every stored listing.
-RESOLVER_VERSION = "2.0.0"
+RESOLVER_VERSION = "2.1.0"  # 2.1: motherboard, cooler, psu, case, monitor; CPU socket
 
 Parser = Callable[[str, str | None, Taxonomy], Parsed | ParseFailure]
 
@@ -40,6 +45,11 @@ PARSERS: dict[Category, Parser] = {
     Category.CPU: parse_cpu,
     Category.RAM: parse_ram,
     Category.SSD: parse_ssd,
+    Category.MOTHERBOARD: parse_motherboard,
+    Category.COOLER: parse_cooler,
+    Category.PSU: parse_psu,
+    Category.CASE: parse_case,
+    Category.MONITOR: parse_monitor,
 }
 
 

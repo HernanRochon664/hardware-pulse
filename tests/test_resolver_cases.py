@@ -203,3 +203,205 @@ def test_open_box_is_detected():
 )
 def test_mpn_extraction(title, expected):
     assert extract_mpn(title) == expected
+
+
+# ---------------------------------------------------------------------------
+# Catalog expansion (2026-10-16): motherboard, cooler, psu, case, monitor.
+# ---------------------------------------------------------------------------
+
+MOBO, COOLER, PSU, CASE, MONITOR = (
+    Category.MOTHERBOARD,
+    Category.COOLER,
+    Category.PSU,
+    Category.CASE,
+    Category.MONITOR,
+)
+
+
+def parsed(category, title, brand=None):
+    r = resolve_title(category, title, brand)
+    assert r.parsed is not None, (title, r.status, r.notes)
+    return r.parsed
+
+
+@pytest.mark.parametrize(
+    ("title", "socket", "igpu"),
+    [
+        ("Procesador Intel Core i5-12400F", "LGA1700", False),
+        ("Procesador Intel Core i3-10105 LGA1200", "LGA1200", True),
+        ("Intel Core Ultra 7 265KF", "LGA1851", False),
+        ("AMD Ryzen 5 5600 AM4", "AM4", False),
+        ("AMD Ryzen 5 5600GT", "AM4", True),
+        ("AMD Ryzen 7 7800X3D", "AM5", True),
+        ("AMD Ryzen 5 7500F", "AM5", False),
+        ("AMD Ryzen 7 8700G", "AM5", True),
+    ],
+)
+def test_cpu_socket_and_integrated_graphics(title, socket, igpu):
+    specs = parsed(CPU, title).specs
+    assert (specs["socket"], specs["igpu"]) == (socket, igpu)
+
+
+@pytest.mark.parametrize(
+    ("title", "family"),
+    [
+        ("Motherboard ASUS TUF Gaming B650M-E WiFi DDR5 AM5", "B650 mATX (AM5)"),
+        ("Mother Asus Prime B650EM-A AM5", "B650E mATX (AM5)"),
+        ("Motherboard Gigabyte H610I DDR4 LGA1700 Mini-ITX", "H610 ITX (LGA1700)"),
+        ("Motherboard Asrock X870e Nova Wifi Am5", "X870E ATX (AM5)"),
+        ("Motherboard ASUS Prime H510M-A DDR4 LGA1200", "H510 mATX (LGA1200)"),
+    ],
+)
+def test_motherboard_family(title, family):
+    assert parsed(MOBO, title).family_name == family
+
+
+def test_motherboard_memory_is_part_of_the_identity_on_lga1700():
+    d4 = parsed(MOBO, "Motherboard ASUS Prime B760M-A D4 DDR4 LGA1700")
+    d5 = parsed(MOBO, "Motherboard Asus Prime B760M-A DDR5 Socket LGA1700 Intel M.2")
+    assert d4.fingerprint and d5.fingerprint and d4.fingerprint != d5.fingerprint
+    # Same name without the memory type: family only, never merged with either.
+    unknown = resolve_title(MOBO, "Motherboard Gigabyte Z790M AORUS ELITE AX")
+    assert unknown.status == "family_only" and "memory_unknown" in unknown.notes
+
+
+def test_motherboard_merges_store_spellings():
+    a = parsed(MOBO, "Motherboard ASRock B760M Steel Legend WiFi DDR5 LGA1700")
+    b = parsed(MOBO, "Motherboard Asrock B760m St Legend Wifi Ddr5 S1700")
+    assert a.fingerprint == b.fingerprint
+
+
+def test_motherboard_unknown_word_is_not_merged():
+    r = resolve_title(MOBO, "Motherboard MSI B760 Gaming PLUS WIFI/A DDR5")
+    assert r.status == "family_only"
+
+
+def test_cooler_with_a_chipset_like_code_is_not_a_motherboard():
+    assert resolve_title(MOBO, "Cooler Master HYPER H410R Red").status == "rejected"
+
+
+@pytest.mark.parametrize(
+    ("title", "family"),
+    [
+        ("Monitor Samsung Odyssey G5 27″ Curvo VA 2k 165Hz", '27" QHD 1440p (2K) 144–180 Hz VA'),
+        ("Monitor ASUS VA249HG 23.8″ 1080p 120Hz IPS 1ms", '24" Full HD 1080p 100–120 Hz IPS'),
+        (
+            "Monitor Asus TUF VG34VQL3A 34″ WQHD Curvo 180Hz",
+            '34" Ultrawide 1440p 144–180 Hz panel sin dato',
+        ),
+        ("Monitor Teros TE-2790G 27″ 1440p 240Hz QD-OLED", '27" QHD 1440p (2K) 200–280 Hz OLED'),
+        ("Monitor Samsung Odyssey G7 27″ IPS 4K 180hz/360hz", '27" 4K UHD 144–180 Hz IPS'),
+        ("Monitor Gigabyte GS25F2 25″ 200hz IPS 1Ms", '25" Full HD 1080p 200–280 Hz IPS'),
+        ("Monitor Xiaomi 4K 27 UHD Profesional", '27" 4K UHD Hz sin dato panel sin dato'),
+    ],
+)
+def test_monitor_family(title, family):
+    assert parsed(MONITOR, title).family_name == family
+
+
+def test_monitor_needs_a_model_code_to_be_an_exact_product():
+    coded = parsed(MONITOR, "Monitor Gigabyte MO27Q28G QHD 27″ 280Hz OLED")
+    other_store = parsed(MONITOR, "Monitor Gigabyte MO27Q28G 27″ QHD OLED 280Hz 0.03ms")
+    assert coded.fingerprint and coded.fingerprint == other_store.fingerprint
+    series = resolve_title(MONITOR, "Monitor Samsung Odyssey G5 Curvo 27″ 2K 165Hz")
+    assert series.status == "family_only"
+
+
+def test_samsung_monitor_codes_are_normalized():
+    a = parsed(MONITOR, "Monitor Samsung Odyssey G9 Curvo 49″ OLED DQHD 144hz S49DG910SN")
+    b = parsed(
+        MONITOR, "Monitor Curvo Gaming OLED Samsung Odyssey G9 49'' Doble QHD 144Hz LS49DG910SNXZA"
+    )
+    assert a.fingerprint == b.fingerprint
+
+
+def test_case_title_is_not_a_monitor():
+    assert resolve_title(MONITOR, "Gabinete DeepCool Matrexx 50 ADD-RGB 4F").status == "rejected"
+
+
+@pytest.mark.parametrize(
+    ("title", "family", "series"),
+    [
+        (
+            "Fuente Gigabyte UD750GM PG5 V2 ICE 80 Plus Gold Full Modular",
+            "750 W 80 Plus Gold",
+            "UD GM",
+        ),
+        ("Fuente Cougar Atlas 600 80 Plus Bronce", "600 W 80 Plus Bronze", "Atlas"),
+        (
+            "Fuente ASUS TUF Gaming 1000G 1000W 80 Plus Gold ATX 3.1 Blanca",
+            "1000 W 80 Plus Gold",
+            "TUF Gaming",
+        ),
+        (
+            "Fuente be quiet! Power Zone 2 750W Platium Modular",
+            "750 W 80 Plus Platinum",
+            "Power Zone 2",
+        ),
+        ("Fuente Cougar STC 600W 80 Plus White", "600 W 80 Plus", "STC"),
+        ("Fuente ATX Xtreme 500w 24+4 pin", "500 W certificación sin dato", None),
+    ],
+)
+def test_psu_family_and_series(title, family, series):
+    p = parsed(PSU, title)
+    assert (p.family_name, p.line) == (family, series)
+
+
+def test_psu_rating_is_part_of_the_identity():
+    gold = parsed(PSU, "Fuente ASRock PRO 650G 650W 80 Plus Gold ATX 3.1")
+    bronze = parsed(PSU, "Fuente ATX ASRock PRO 650G 650W 80 Plus Bronze")
+    assert gold.fingerprint != bronze.fingerprint
+
+
+def test_case_with_psu_is_a_case():
+    assert resolve_title(PSU, "Gabinete NSX 902M 3 fanes + fuente 650W 80+ Bronce").status == (
+        "rejected"
+    )
+    p = parsed(CASE, "Gabinete NSX 902M 3 fanes + fuente 650W 80+ Bronce")
+    assert p.specs["psu_w"] == 650
+
+
+@pytest.mark.parametrize(
+    ("title", "family"),
+    [
+        ("Water Cooling DeepCool LE360 V2 360mm ARGB blanco", "Refrigeración líquida 360 mm"),
+        ("Water Cooling DeepCool LS720S Zero Dark 360mm", "Refrigeración líquida 360 mm"),
+        ("Cooler DeepCool AK400 G2 blanco", "Cooler de aire de una torre"),
+        ("Cooler DeepCool AK620 Digital SE", "Cooler de aire de doble torre"),
+        ("Cooler AMD Wraith Stealth", "Cooler de aire top-flow / bajo perfil"),
+    ],
+)
+def test_cooler_family(title, family):
+    assert parsed(COOLER, title).family_name == family
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "Fan DeepCool FL12 120mm Blanco",
+        "Fan Cooler be quiet! Pure Wings 3 White",
+        "Hub Deepcool SC790",
+    ],
+)
+def test_case_fans_are_not_cpu_coolers(title):
+    assert resolve_title(COOLER, title).status == "rejected"
+
+
+def test_cooler_color_and_rgb_are_products_of_the_same_family():
+    black = parsed(COOLER, "Watercooling Cougar Poseidon Elite 360 ARGB BK")
+    white = parsed(COOLER, "Water Cooling Cougar Poseidon Elite 360 Argb Wh")
+    assert black.family_id == white.family_id and black.fingerprint != white.fingerprint
+
+
+def test_case_family_is_the_model():
+    black = parsed(CASE, "Gabinete Cougar Fv270 Rgb Black")
+    white = parsed(CASE, "Gabinete Cougar Fv270 White")
+    assert black.family_name == white.family_name == "Cougar FV270"
+    assert black.fingerprint != white.fingerprint
+
+
+def test_case_model_code_fallback_keeps_the_edition():
+    assert (
+        parsed(CASE, "Gabinete Cooler Master HAF700").fingerprint
+        != parsed(CASE, "Gabinete Cooler Master HAF700 EVO").fingerprint
+    )
