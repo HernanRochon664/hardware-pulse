@@ -90,7 +90,8 @@ stores:
     base_url: https://tecnocity.com.uy
     platform: woocommerce
     categories:
-      gpu: [tarjetas-de-video]
+      # No GPUs since 2026-10-16: the tarjetas-de-video category was removed and the
+      # store only sells them inside notebooks and PCs.
       cpu: [cpu]
       ram: [memoria-ram]
       ssd: [discos]
