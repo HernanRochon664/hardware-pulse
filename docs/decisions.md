@@ -91,6 +91,25 @@ the dashboard. Details in [`importacion.md`](importacion.md).
 days). Without automatic US prices the catalog shows a target price per product instead of
 "import saves X%".
 
+## ADR-09: Five more categories, compatibility as warnings
+
+**Context.** The import cart compared single parts only; a whole build (CPU + board +
+cooler + RAM …) and monitors by variety could not be compared. 7 of the 9 active stores
+publish motherboards, coolers, PSUs, cases and monitors with parseable titles.
+**Decision.** Same pipeline and storage (no schema change), one strict parser per category,
+each requiring a strong category mark (chipset, inches, wattage, a taxonomy model) so no
+parser accepts another category's titles. Families: board = socket + chipset + format;
+monitor = rounded size + resolution + Hz range + panel (exact Hz is a spec and a filter);
+cooler = AIO radiator or air class; PSU = wattage + 80 Plus; case = model (a "light"
+category). A store URL that shows up under two categories in one run is kept by the first
+one in enum order, so GPU/CPU/RAM/SSD keep their listings; a listing whose category changes
+is re-resolved. The build in the import page has one slot per category and
+`src/entities/compat.py` reports socket, DDR, SODIMM, iGPU and board-format mismatches as
+warnings, never as blocks: a missing spec means "not checked".
+**Consequences.** The old 820 gold entries resolve exactly as before. Coverage of the
+cooler and case taxonomies grows by hand from `qa-report`. New categories have no buy/wait
+signal until they collect 21 days of history.
+
 ## ADR-07: Import the v1 history once, as `origin='legacy'`
 
 **Decision.** `import-legacy` walks the git commits that contain the v1 DB,

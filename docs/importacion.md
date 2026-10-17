@@ -48,6 +48,28 @@ on the invoice of all their shipments together (they may differ by a cent of sal
 rounding; the plan warns when it is that close). `tests/test_crossborder_optimizer.py`
 compares it with a brute force on random carts.
 
+## Build by component
+
+The "Armado" tab has one selector per slot in build order (CPU, motherboard, cooler, RAM,
+GPU, SSD, PSU, case, monitor) plus "Otros productos" for extras. "Mostrar solo lo
+compatible con lo elegido" filters boards by the CPU socket (and back) and RAM by DDR
+generation and DIMM/SODIMM. `src/entities/compat.py` warns, without blocking, about:
+
+- CPU socket ≠ board socket;
+- RAM DDR generation ≠ board's (an LGA1700 board without a declared DDR asks to confirm it);
+- SODIMM memory on a desktop board;
+- a CPU without iGPU and no GPU in the build;
+- board format bigger than the case supports, only when the case title states it.
+
+Parts without a US price are always bought here: they do not enter the subset DP (their cost
+is constant and they use no franchise), so `MAX_UNITS` counts only units with a US price and
+a full PC fits. `package_alerts` runs per shipment of the plan: estimated weights and boxes
+that are large for their weight when the courier does not publish a volumetric rule.
+
+Package profiles for the new categories (`configs/shipping_profiles.yaml`, estimates): monitor
+by size (≤24", 27", 32", 34–40", 45"+), motherboard by format, cooler by kind and radiator,
+PSU by wattage and one case profile.
+
 ## What is not in the total
 
 Warranty (RMA to the US), returns (international freight, taxes not refunded), delivery
