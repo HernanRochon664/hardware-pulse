@@ -14,6 +14,8 @@ from src.crossborder.intake import (
     parse_weight_kg,
     sold_by_amazon,
 )
+from src.domain.models import Category
+from src.entities.resolver import resolve_title
 
 
 @pytest.mark.parametrize(
@@ -172,3 +174,45 @@ def test_other_brand_of_the_same_chip_is_only_an_equivalent():
 
 def test_unknown_product_is_not_matched():
     assert match_catalog("Logitech G502 Hero Gaming Mouse", None, PRODUCTS) is None
+
+
+def _catalog_product(pid: int, category: str, store_title: str) -> CatalogProduct:
+    parsed = resolve_title(Category(category), store_title).parsed
+    assert parsed is not None and parsed.fingerprint, store_title
+    return CatalogProduct(pid, parsed.name, category, parsed.family_id, parsed.fingerprint, None)
+
+
+@pytest.mark.parametrize(
+    ("category", "store_title", "us_title"),
+    [
+        (
+            "motherboard",
+            "Motherboard ASUS TUF Gaming B650M-E WiFi DDR5 AM5",
+            "ASUS TUF Gaming B650M-E WiFi AM5 Micro-ATX Motherboard, DDR5, PCIe 4.0",
+        ),
+        (
+            "monitor",
+            "Monitor ASUS TUF Gaming VG34VQL3A 34″ UWQHD 180Hz VA 1ms curvo",
+            'ASUS TUF Gaming 34" Ultrawide WQHD (3440x1440) Curved Monitor (VG34VQL3A) 180Hz',
+        ),
+        (
+            "cooler",
+            "Water Cooling DeepCool LE360 V2 360mm ARGB",
+            "DeepCool LE360 V2 360mm AIO CPU Liquid Cooler, ARGB, Intel/AMD",
+        ),
+        (
+            "psu",
+            "Fuente Corsair RM850e 850W 80 Plus Gold Modular",
+            "CORSAIR RM850e Fully Modular Low-Noise ATX Power Supply - 80 PLUS Gold - 850 Watt",
+        ),
+        (
+            "case",
+            "Gabinete Cougar Fv270 Rgb Black",
+            "COUGAR FV270 RGB Black Mid-Tower Case with Tempered Glass",
+        ),
+    ],
+)
+def test_us_titles_of_the_new_categories_match_the_local_product(category, store_title, us_title):
+    products = [*PRODUCTS, _catalog_product(99, category, store_title)]
+    match = match_catalog(us_title, None, products)
+    assert match is not None and match.kind == "exact" and match.product_ids == (99,), match

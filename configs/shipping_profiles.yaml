@@ -22,6 +22,27 @@ profiles:
   ssd_external: {label: "SSD externo", weight_kg: 0.2, dims_cm: [15, 11, 4]}
   ssd_sata: {label: "SSD SATA 2,5\"", weight_kg: 0.15, dims_cm: [15, 11, 3]}
   ssd_m2: {label: "SSD M.2", weight_kg: 0.08, dims_cm: [14, 9, 2]}
+  # Catalog expansion (2026-10-16). Retail-box estimates; monitors and cases are
+  # the bulky items of a build (couriers without a published volume rule may
+  # charge more than this, see docs/known_issues.md).
+  mobo_itx: {label: "Motherboard Mini-ITX", weight_kg: 1.2, dims_cm: [28, 24, 8]}
+  mobo_matx: {label: "Motherboard Micro-ATX", weight_kg: 1.6, dims_cm: [32, 29, 8]}
+  mobo_atx: {label: "Motherboard ATX", weight_kg: 2.2, dims_cm: [36, 31, 9]}
+  cooler_air_s: {label: "Cooler de aire chico / top-flow", weight_kg: 0.6, dims_cm: [15, 15, 10]}
+  cooler_air_m: {label: "Cooler de aire de una torre", weight_kg: 1.0, dims_cm: [20, 16, 14]}
+  cooler_air_l: {label: "Cooler de aire de doble torre", weight_kg: 1.6, dims_cm: [25, 20, 18]}
+  cooler_aio_s: {label: "Refrigeración líquida 120-240 mm", weight_kg: 2.0, dims_cm: [40, 18, 14]}
+  cooler_aio_m: {label: "Refrigeración líquida 280-360 mm", weight_kg: 2.8, dims_cm: [48, 20, 15]}
+  cooler_aio_l: {label: "Refrigeración líquida 420 mm", weight_kg: 3.3, dims_cm: [54, 22, 15]}
+  psu_s: {label: "Fuente hasta 750 W", weight_kg: 2.5, dims_cm: [26, 22, 12]}
+  psu_m: {label: "Fuente 800-1000 W", weight_kg: 3.0, dims_cm: [28, 24, 13]}
+  psu_l: {label: "Fuente de más de 1000 W", weight_kg: 3.8, dims_cm: [32, 26, 15]}
+  case: {label: "Gabinete mid tower", weight_kg: 9.0, dims_cm: [55, 30, 52]}
+  monitor_s: {label: "Monitor hasta 24\"", weight_kg: 5.5, dims_cm: [62, 42, 14]}
+  monitor_m: {label: "Monitor 25-29\"", weight_kg: 7.5, dims_cm: [70, 48, 16]}
+  monitor_l: {label: "Monitor 30-33\"", weight_kg: 9.5, dims_cm: [82, 55, 18]}
+  monitor_xl: {label: "Monitor 34-44\" (ultrawide)", weight_kg: 11.0, dims_cm: [95, 50, 22]}
+  monitor_xxl: {label: "Monitor de 45\" o más", weight_kg: 18.0, dims_cm: [130, 55, 30]}
   generic: {label: "Producto genérico", weight_kg: 1.0, dims_cm: [30, 20, 10]}
 
 rules:
@@ -38,6 +59,24 @@ rules:
   - {pattern: '^ssd:external', profile: ssd_external}
   - {pattern: '^ssd:sata', profile: ssd_sata}
   - {pattern: '^ssd:', profile: ssd_m2}
+  - {pattern: '^motherboard:.*-itx$', profile: mobo_itx}
+  - {pattern: '^motherboard:.*-matx$', profile: mobo_matx}
+  - {pattern: '^motherboard:', profile: mobo_atx}
+  - {pattern: '^cooler:aio-(120|240)$', profile: cooler_aio_s}
+  - {pattern: '^cooler:aio-(280|360)$', profile: cooler_aio_m}
+  - {pattern: '^cooler:aio-', profile: cooler_aio_l}
+  - {pattern: '^cooler:air-low', profile: cooler_air_s}
+  - {pattern: '^cooler:air-dual', profile: cooler_air_l}
+  - {pattern: '^cooler:', profile: cooler_air_m}
+  - {pattern: '^psu:([2-6][0-9]{2}|7[0-5][0-9])w', profile: psu_s}
+  - {pattern: '^psu:([89][0-9]{2}|1000)w', profile: psu_m}
+  - {pattern: '^psu:', profile: psu_l}
+  - {pattern: '^case:', profile: case}
+  - {pattern: '^monitor:(1[0-9]|2[0-4])-', profile: monitor_s}
+  - {pattern: '^monitor:2[5-9]-', profile: monitor_m}
+  - {pattern: '^monitor:3[0-3]-', profile: monitor_l}
+  - {pattern: '^monitor:(3[4-9]|4[0-4])-', profile: monitor_xl}
+  - {pattern: '^monitor:', profile: monitor_xxl}
 
 # Used when the family is unknown (free-form items).
 category_defaults:
@@ -45,3 +84,8 @@ category_defaults:
   cpu: cpu
   ram: ram
   ssd: ssd_m2
+  motherboard: mobo_atx
+  cooler: cooler_air_m
+  psu: psu_m
+  case: case
+  monitor: monitor_m

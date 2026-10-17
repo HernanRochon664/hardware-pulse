@@ -16,7 +16,10 @@ the subsets ("masks") of units:
   q[k_p][sub] + H_{p-1}[m \\ sub]``.
 
 Costs are integer cents paired with the number of shipments, so equal totals
-prefer fewer shipments. Each pass is O(3^n); n is capped at MAX_UNITS.
+prefer fewer shipments. Each pass is O(3^n) over the units with a US offer;
+n is capped at MAX_UNITS. Units sold only in Uruguay (no US price) are always
+bought here, so they are added to the plan outside the search: a whole PC build
+fits even when only some parts are worth checking abroad.
 """
 
 from __future__ import annotations
@@ -110,8 +113,8 @@ def expand_units(items: Sequence[CartItem]) -> list[Unit]:
         for item in items
         for _ in range(item.qty)
     ]
-    if len(units) > MAX_UNITS:
-        raise ValueError(f"El armado admite hasta {MAX_UNITS} unidades.")
+    if sum(unit.foreign is not None for unit in units) > MAX_UNITS:
+        raise ValueError(f"El armado admite hasta {MAX_UNITS} unidades con precio de EE. UU.")
     return units
 
 
@@ -134,10 +137,13 @@ def optimize(
         else:
             unplaced.append(unit)
 
+    local_only = tuple(unit for unit in placeable if unit.foreign is None)
+    searched = [unit for unit in placeable if unit.foreign is not None]
+    local_only_usd = sum(unit.item.local_usd or 0.0 for unit in local_only)
     plans = [
-        plan
+        replace(plan, local=local_only + plan.local, total=cents(plan.total + local_only_usd))
         for courier in couriers
-        if (plan := _optimize_for_courier(placeable, pools, settings, cfg, courier, hassle_usd))
+        if (plan := _optimize_for_courier(searched, pools, settings, cfg, courier, hassle_usd))
     ]
     plans.sort(key=lambda p: (p.objective, len(p.shipments), p.courier.name))
 

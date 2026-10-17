@@ -21,12 +21,19 @@ EAGLE = "GPU Gigabyte GeForce RTX5060 Eagle OC 8Gb"
 EAGLE_B = "Tarjeta de Video Gigabyte GeForce RTX 5060 8GB GDDR7 Eagle OC"
 SHADOW = "GPU MSI GeForce RTX 5070 Shadow 2X OC 12GB"
 FURY = "Memoria RAM Kingston Fury Beast 16GB DDR5 5600MHz"
+RYZEN = "AMD Ryzen 7 7800X3D"
+B550 = "Motherboard MSI B550M-A PRO DDR4 AM4"
+B650 = "Motherboard ASUS TUF Gaming B650M-E WiFi DDR5 AM5"
+OLED = "Monitor Gigabyte MO27Q28G QHD 27″ 280Hz OLED"
 
 # store -> category -> [(slug, title, price_then, price_now)]
 CATALOG: dict[str, dict[Category, list[tuple[str, str, float, float]]]] = {
     "alfa": {
         Category.GPU: [("eagle", EAGLE, 600.0, 560.0), ("shadow", SHADOW, 1050.0, 1050.0)],
         Category.RAM: [("fury", FURY, 75.0, 72.0)],
+        Category.CPU: [("r7", RYZEN, 420.0, 410.0)],
+        Category.MOTHERBOARD: [("b550", B550, 95.0, 90.0), ("b650", B650, 270.0, 266.0)],
+        Category.MONITOR: [("oled", OLED, 800.0, 790.0)],
     },
     "beta": {
         Category.GPU: [("eagle", EAGLE_B, 590.0, 575.0)],
@@ -42,7 +49,7 @@ class FakeAdapter:
         self.store = store
 
     def fetch_category(self, category: Category, scraped_at: datetime) -> Iterator[ScrapedListing]:
-        for slug, title, then, now in CATALOG[self.store.id][category]:
+        for slug, title, then, now in CATALOG[self.store.id].get(category, []):
             yield ScrapedListing(
                 store_id=self.store.id,
                 category=category,
@@ -63,7 +70,7 @@ def _config() -> StoresConfig:
                 name=sid.title(),
                 base_url=f"https://{sid}.example",
                 platform=Platform.WOOCOMMERCE,
-                categories={Category.GPU: ["gpu"], Category.RAM: ["ram"]},
+                categories={c: [c.value] for c in CATALOG["alfa"]},
             )
             for sid in CATALOG
         }

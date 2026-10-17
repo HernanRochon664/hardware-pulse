@@ -238,3 +238,20 @@ def test_unit_limit():
     item = CartItem("RAM", MAX_UNITS + 1, 50, "X", ForeignItem("RAM", 30))
     with pytest.raises(ValueError, match="hasta"):
         expand_units([item])
+
+
+def test_units_sold_only_here_do_not_count_against_the_limit(cfg):
+    """A full build: 12 parts, only two of them priced in the US."""
+    local_parts = [CartItem(f"Parte {i}", 1, 50.0 + i, "Tienda") for i in range(10)]
+    abroad = [
+        CartItem("SSD", 1, 200, "PCParts", ForeignItem("SSD", 120, unit_weight_kg=0.08)),
+        CartItem("RAM", 1, 150, "Thot", ForeignItem("RAM", 90, unit_weight_kg=0.18)),
+    ]
+    result = optimize(local_parts + abroad, [FranchisePool()], SETTINGS, cfg)
+    assert result.best is not None
+    assert len(result.best.local) >= 10
+    # Same plan as optimizing the US-priced parts alone, plus the local parts.
+    alone = optimize(abroad, [FranchisePool()], SETTINGS, cfg).best
+    assert alone is not None
+    assert result.best.total == round(alone.total + sum(i.local_usd or 0 for i in local_parts), 2)
+    assert len(result.best.shipments) == len(alone.shipments)
