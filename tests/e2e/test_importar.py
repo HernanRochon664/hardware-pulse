@@ -51,6 +51,31 @@ def test_bookmarklet_params_prefill_the_calculator(page: Page, app_url: str):
     _no_exceptions(page)
 
 
+def test_build_warns_about_incompatible_parts_and_computes_a_plan(page: Page, app_url: str):
+    _open(page, f"{app_url}/importar")
+    page.get_by_role("tab", name="Armado (varios productos)").click()
+    page.get_by_text("Mostrar solo lo compatible con lo elegido").click()
+
+    def choose(slot: str, option: str) -> None:
+        box = page.get_by_role("combobox", name=slot, exact=True)
+        box.scroll_into_view_if_needed()
+        box.click()
+        page.get_by_role("option", name=re.compile(option)).click()
+        expect(page.locator('[data-testid="stStatusWidget"]')).to_have_count(0, timeout=TIMEOUT)
+
+    choose("Procesador", "Ryzen 7 7800X3D")
+    choose("Motherboard", "B550M-A")
+    expect(page.get_by_text("no son compatibles", exact=False)).to_be_visible(timeout=TIMEOUT)
+    choose("Motherboard", "B650M-E")
+    expect(page.get_by_text("no son compatibles", exact=False)).to_have_count(0, timeout=TIMEOUT)
+    choose("Monitor", "MO27Q28G")
+
+    page.get_by_role("button", name="Calcular el mejor plan").click()
+    expect(page.get_by_text("Todo en Uruguay")).to_be_visible(timeout=TIMEOUT)
+    expect(page.get_by_text("Comprá en Uruguay", exact=False)).to_be_visible()
+    _no_exceptions(page)
+
+
 @pytest.mark.parametrize("tab", ["Armado (varios productos)", "Cómo se calcula"])
 def test_importar_tabs_render(page: Page, app_url: str, tab: str):
     _open(page, f"{app_url}/importar")

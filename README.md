@@ -1,7 +1,7 @@
 # Hardware Pulse
 
-Exact-product price comparator for PC hardware in Uruguay (GPUs, CPUs, RAM and
-SSDs), in the spirit of [preciospc.uy](https://preciospc.uy). It scrapes 10 local
+Exact-product price comparator for PC hardware in Uruguay (GPUs, CPUs, RAM, SSDs,
+motherboards, CPU coolers, power supplies, cases and monitors), in the spirit of [preciospc.uy](https://preciospc.uy). It scrapes 10 local
 stores twice a day, groups their listings into the **same exact product**
 (brand + line + specs), keeps a compact price history per offer and shows the
 lowest in-stock price, every store's offer and a 180-day history in a Spanish
@@ -66,12 +66,29 @@ excluded).
 No fuzzy matching. Each category has a strict spec parser in
 [`src/entities/specs/`](src/entities/specs/) (exact GPU chip suffixes such as Ti / Super /
 XT, CPU model + suffix, RAM kit / speed / DIMM vs SODIMM, SSD capacity / interface /
-form factor) plus brand, line and modifier vocabularies in
+form factor; motherboard chipset → socket + DDR + format, monitor size + resolution + Hz +
+panel, PSU wattage + 80 Plus, cooler and case models) plus brand, line and modifier
+vocabularies in
 [`configs/taxonomy.yaml`](configs/taxonomy.yaml) and manufacturer part numbers. When the
 line is not recognized the listing stays in its family as a product of its own:
 **it is never merged by guessing**. A versioned gold set of ≥ 250 real titles
 ([`tests/fixtures/resolution_gold.yaml`](tests/fixtures/resolution_gold.yaml)) gates CI:
-family precision ≥ 0.98, recall ≥ 0.90, product precision ≥ 0.95.
+family precision ≥ 0.98, recall ≥ 0.90, product precision ≥ 0.95, overall and for each
+of the five newer categories, and no parser may accept another category's titles.
+
+| Category | Family | Product |
+|---|---|---|
+| GPU | chip (RTX 4060 Ti) | brand + line + chip + VRAM + variants |
+| CPU | model (Ryzen 5 7600) | model + box/tray/cooler; specs add socket and iGPU |
+| RAM / SSD | generation + capacity | brand + line + kit / speed / interface |
+| Motherboard | socket + chipset + format (`B650 mATX (AM5)`) | brand + model + Wi-Fi + DDR + color |
+| Monitor | size + resolution + Hz range + panel (`27" QHD 144–180 Hz IPS`) | brand + model code |
+| Cooler | AIO by radiator size, air by class (tower, dual tower, low profile) | brand + model + variants |
+| PSU | wattage + 80 Plus (`750 W Gold`) | brand + series + wattage + version |
+| Case | the model (light: it hardly fluctuates) | model + color |
+
+A monitor without a declared panel, or a board without a declared DDR generation where the
+socket allows both, stays in a family or product of its own.
 `python -m src.cli qa-report` renders every product group for manual review.
 
 ### Buy/wait signal

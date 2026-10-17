@@ -10,8 +10,9 @@ from src.domain.models import CATEGORY_LABELS
 
 st.title("Hardware Pulse")
 st.markdown(
-    "Compará precios de **tarjetas de video, procesadores, memorias y SSD** en las tiendas "
-    "de Uruguay. Cada producto agrupa las ofertas de todas las tiendas que lo venden."
+    "Compará precios de **tarjetas de video, procesadores, memorias, SSD, motherboards, "
+    "coolers, fuentes, gabinetes y monitores** en las tiendas de Uruguay. Cada producto "
+    "agrupa las ofertas de todas las tiendas que lo venden."
 )
 
 catalog = data.catalog()
@@ -20,7 +21,7 @@ rate = data.usd_uyu()
 
 query = st.text_input(
     "Buscar",
-    placeholder="Ej: rtx 5060 ti, ryzen 7 7800x3d, ddr5 32gb, nv3 1tb",
+    placeholder="Ej: rtx 5060 ti, ryzen 7 7800x3d, ddr5 32gb, b650m, 27 qhd ips",
     label_visibility="collapsed",
 )
 if query:

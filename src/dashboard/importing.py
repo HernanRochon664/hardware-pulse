@@ -50,10 +50,13 @@ from src.crossborder.verdict import (
     VerdictCode,
     alerts,
     judge,
+    package_alerts,
     risks,
 )
-from src.dashboard.components import cost_waterfall
+from src.dashboard.components import category_label, cost_waterfall
 from src.dashboard.formatting import md, money, pct
+from src.domain.models import Category
+from src.entities.compat import BuildPart, check_build, fits
 from src.settings import LOCAL_TZ
 
 APP_URL = "https://hardware-pulse.streamlit.app"
@@ -750,15 +753,23 @@ def product_section(product: dict, local_usd: float | None, local_store: str | N
             ):
                 import_dialog(prefill, rate)
             if st.button("Agregar al armado", icon=":material/add_shopping_cart:", key="imp_add"):
-                add_to_cart(int(product["id"]))
+                add_to_cart(int(product["id"]), product.get("category"))
                 st.toast("Agregado al armado (página Importar).", icon=":material/check:")
 
 
-def add_to_cart(product_id: int) -> None:
-    ids = list(st.session_state.get("imp_cart_ids", []))
-    if product_id not in ids:
+def add_to_cart(product_id: int, category: str | None = None) -> None:
+    """Into the component slot of its category when it is free, else to "Otros"."""
+    state = st.session_state
+    build = dict(state.get("imp_build", {}))
+    if category in BUILD_SLOT_KEYS and not build.get(category):
+        build[category] = product_id
+        state["imp_build"] = build
+        state.pop(f"w_imp_slot_{category}", None)  # the selectbox picks the new value up
+        return
+    ids = list(state.get("imp_cart_ids", []))
+    if product_id not in ids and product_id not in build.values():
         ids.append(product_id)
-    st.session_state["imp_cart_ids"] = ids
+    state["imp_cart_ids"] = ids
 
 
 # ---------------------------------------------------------------------------
@@ -911,6 +922,98 @@ CART_COLUMNS = [
     "Peso (kg)",
     "Medidas (cm)",
 ]
+# Package estimate of the row (hidden): an unedited weight is flagged as estimated.
+ESTIMATE_COLUMNS = ["_peso_estimado", "_medidas_estimadas"]
+
+# Component slots of a PC build, in assembly order.
+BUILD_SLOTS = (
+    (Category.CPU, "Procesador"),
+    (Category.MOTHERBOARD, "Motherboard"),
+    (Category.COOLER, "Cooler"),
+    (Category.RAM, "Memoria RAM"),
+    (Category.GPU, "Tarjeta de video"),
+    (Category.SSD, "SSD"),
+    (Category.PSU, "Fuente"),
+    (Category.CASE, "Gabinete"),
+    (Category.MONITOR, "Monitor"),
+)
+BUILD_SLOT_KEYS = {c.value for c, _ in BUILD_SLOTS}
+
+
+def build_part(row: dict) -> BuildPart:
+    specs = row.get("specs")
+    return BuildPart(
+        Category(row["category"]), str(row["name"]), specs if isinstance(specs, dict) else {}
+    )
+
+
+def slot_options(
+    catalog: pd.DataFrame, category: Category, chosen: list[BuildPart], only_fit: bool
+) -> list[int]:
+    """Products of a slot, cheapest first; with only_fit, those that fit the chosen parts."""
+    rows = catalog.loc[catalog["category"] == category.value].sort_values("best_price_usd")
+    others = [p for p in chosen if p.category is not category]
+    return [
+        int(row["id"])
+        for row in rows.to_dict("records")
+        if not only_fit or not others or fits(build_part(row), others)
+    ]
+
+
+def build_section(catalog: pd.DataFrame, rate) -> list[int]:
+    """One selector per component, compatibility warnings; returns the chosen ids."""
+    state = st.session_state
+    rows = {int(r["id"]): r for r in catalog.to_dict("records")}
+    build = dict(state.get("imp_build", {}))
+    # The widget values of this rerun are already in the session state: read them
+    # first so the other slots filter against what was just chosen.
+    for category, _ in BUILD_SLOTS:
+        key = f"w_imp_slot_{category.value}"
+        if key in state:
+            build[category.value] = state[key]
+    build = {k: v for k, v in build.items() if v in rows}
+    chosen = [build_part(rows[pid]) for pid in build.values()]
+
+    def label(pid: int) -> str:
+        row = rows[pid]
+        return f"{row['name']} — {money(row['best_price_usd'], rate)} ({row['best_store']})"
+
+    only_fit = st.toggle(
+        "Mostrar solo lo compatible con lo elegido",
+        value=True,
+        key="w_imp_only_fit",
+        help="Filtra por socket del procesador y del mother y por tipo de memoria. Son datos "
+        "de los títulos de las tiendas: si un título no los dice, el producto se muestra igual.",
+    )
+    grid = st.columns(3)
+    for i, (category, name) in enumerate(BUILD_SLOTS):
+        current = build.get(category.value)
+        options = slot_options(catalog, category, chosen, only_fit)
+        if current is not None and current not in options:
+            options.append(current)  # an incompatible part already chosen stays visible
+        key = f"w_imp_slot_{category.value}"
+        if key in state and state[key] is not None and state[key] not in options:
+            state.pop(key, None)
+        with grid[i % 3]:
+            choice = st.selectbox(
+                name,
+                options,
+                index=options.index(current) if current in options else None,
+                format_func=label,
+                key=key,
+                placeholder="Ninguno",
+            )
+        if choice is None:
+            build.pop(category.value, None)
+        else:
+            build[category.value] = choice
+    state["imp_build"] = build
+    for issue in check_build([build_part(rows[pid]) for pid in build.values()]):
+        if issue.level == "warning":
+            st.warning(md(issue.message), icon=":material/report:")
+        else:
+            st.info(md(issue.message), icon=":material/info:")
+    return list(build.values())
 
 
 def _number(value: object) -> float | None:
@@ -954,11 +1057,13 @@ def _cart_rows(
                 "Precio en EE. UU.": None,
                 "Peso (kg)": profile.weight_kg,
                 "Medidas (cm)": " x ".join(f"{d:g}" for d in profile.dims_cm),
+                "_peso_estimado": profile.weight_kg,
+                "_medidas_estimadas": " x ".join(f"{d:g}" for d in profile.dims_cm),
             }
         )
     if previous is not None and not previous.empty:  # free rows added by the user
         rows.extend(row for row in previous.to_dict("records") if _number(row.get("id")) is None)
-    return pd.DataFrame(rows, columns=CART_COLUMNS)
+    return pd.DataFrame(rows, columns=CART_COLUMNS + ESTIMATE_COLUMNS)
 
 
 def _parse_dims(text: object) -> tuple[float, float, float] | None:
@@ -980,12 +1085,19 @@ def cart_items(table: pd.DataFrame) -> tuple[list[CartItem], list[str]]:
         us_price = _number(row.get("Precio en EE. UU."))
         foreign = None
         if us_price is not None:
+            weight = _number(row.get("Peso (kg)"))
+            estimated = weight is None or (
+                weight == _number(row.get("_peso_estimado"))
+                and _parse_dims(row.get("Medidas (cm)"))
+                == _parse_dims(row.get("_medidas_estimadas"))
+            )
             foreign = ForeignItem(
                 label,
                 us_price,
                 store_id=str(row.get("Tienda en EE. UU.") or "amazon"),
-                unit_weight_kg=_number(row.get("Peso (kg)")) or 0.5,
+                unit_weight_kg=weight or 0.5,
                 unit_dims_cm=_parse_dims(row.get("Medidas (cm)")),
+                weight_estimated=estimated,
             )
         if foreign is None and local is None:
             problems.append(label)
@@ -1003,19 +1115,23 @@ def cart_tab(prefs: Prefs, catalog: pd.DataFrame, rate) -> None:
     cfg = load_config()
     state = st.session_state
     names = {int(i): str(n) for i, n in zip(catalog["id"], catalog["name"], strict=True)}
+    categories = {int(i): str(c) for i, c in zip(catalog["id"], catalog["category"], strict=True)}
     st.markdown(
-        "Elegí los productos y completá el precio en EE. UU. de cada uno. El plan decide qué "
-        "conviene comprar acá, qué importar y cómo agrupar los envíos para aprovechar las "
-        "franquicias y el tope de U$S 200 sin IVA."
+        "Armá tu PC por componente y completá el precio en EE. UU. de lo que quieras comparar. "
+        "El plan decide qué conviene comprar acá, qué importar y cómo agrupar los envíos para "
+        "aprovechar las franquicias y el tope de U$S 200 sin IVA. Lo que no tenga precio de "
+        "EE. UU. se compra acá."
     )
-    selected = st.multiselect(
-        "Productos del catálogo",
-        sorted(names, key=lambda i: names[i]),
+    slots = build_section(catalog, rate)
+    extras = st.multiselect(
+        "Otros productos (un segundo SSD, otro monitor…)",
+        sorted(names, key=lambda i: (categories[i], names[i])),
         placeholder="Elegí uno o más productos",
         default=[i for i in state.get("imp_cart_ids", []) if i in names],
-        format_func=lambda i: names.get(i, str(i)),
+        format_func=lambda i: f"{names.get(i, str(i))} · {category_label(categories.get(i, ''))}",
         key="w_imp_cart_ids",
     )
+    selected = list(dict.fromkeys([*slots, *extras]))
     # The editor applies its edits on top of the table it receives, so that table
     # only changes when the selection changes (new editor key) or when coming back
     # to the page (the editor state is gone and the last edited table is the base).
@@ -1027,7 +1143,7 @@ def cart_tab(prefs: Prefs, catalog: pd.DataFrame, rate) -> None:
         state["imp_cart_version"] = version
     elif f"w_imp_cart_{version}" not in state and state.get("imp_cart_last") is not None:
         state["imp_cart_base"] = state["imp_cart_last"]
-    state["imp_cart_ids"] = selected
+    state["imp_cart_ids"] = extras
     stores = list(STORE_CHOICES)
     edited = st.data_editor(
         state["imp_cart_base"],
@@ -1068,9 +1184,11 @@ def cart_tab(prefs: Prefs, catalog: pd.DataFrame, rate) -> None:
         )
     if not items:
         return
-    units = sum(item.qty for item in items)
+    units = sum(item.qty for item in items if item.foreign is not None)
     if units > MAX_UNITS:
-        st.error(f"El armado admite hasta {MAX_UNITS} unidades (tenés {units}).")
+        st.error(
+            f"El armado admite hasta {MAX_UNITS} unidades con precio de EE. UU. (tenés {units})."
+        )
         return
     today = today_local()
     settings = prefs.settings(today, cfg)
@@ -1149,6 +1267,13 @@ def show_plan(result: CartResult, alone: CartResult | None, prefs: Prefs, rate) 
     )
     for note in plan.notes:
         st.warning(md(note), icon=":material/warning:")
+    shown: set[str] = set()
+    for shipment in plan.shipments:
+        for alert in package_alerts(shipment.quote):
+            if alert.text not in shown:
+                shown.add(alert.text)
+                show = st.warning if alert.level == "warning" else st.info
+                show(md(alert.text), icon=":material/package_2:")
     for number, shipment in enumerate(plan.shipments, start=1):
         with st.expander(f"Desglose del envío {number}"):
             show_lines(list(shipment.quote.lines), rate)

@@ -21,7 +21,9 @@
 
 ## Configuration
 - Stores: `configs/stores.yaml` (platform, categories, delays)
-- Taxonomy: `configs/taxonomy.yaml` (brands, lines, modifiers, condition/accessory words)
+- Taxonomy: `configs/taxonomy.yaml` (brands, lines, modifiers, condition/accessory words;
+  `board_chipsets`, `monitor_lines`, `psu_series`, `cooler_models`, `case_models`)
+- Build compatibility (socket, DDR, SODIMM, iGPU, board format): `src/entities/compat.py`
 - Paths and time zone: `src/settings.py` (`HP_DB_PATH`, `HP_DATA_URL`)
 - Import calculator (`src/crossborder/`, docs/importacion.md): `configs/import_rules.yaml`,
   `couriers.yaml`, `us_stores.yaml`, `shipping_profiles.yaml`. When a rule or tariff changes,

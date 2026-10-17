@@ -19,6 +19,17 @@ Listings whose line is not in `configs/taxonomy.yaml` become products of their
 own inside the right family. Review `qa-report` and extend the taxonomy and
 the gold set when a store's naming is new.
 
+## Newer categories: limits of the parsers
+
+- Case family = model: two cases with the same model and different colors are one family.
+  Cases and air coolers whose model is not in `configs/taxonomy.yaml` stay `unparsed`;
+  extend `case_models` / `cooler_models` from `qa-report`.
+- LGA1700 boards (600/700 chipsets) exist in DDR4 and DDR5. Without "D4"/"DDR4" in the
+  title the DDR stays empty, the product is kept apart and the build asks to confirm it.
+- Monitors without a declared panel form their own family and never merge.
+- Gripper, Urubox and Aerobox do not publish a volumetric rule; monitors and cases only get
+  a "box is large for its weight" warning.
+
 ## Banifox stock is unknown
 
 The nopCommerce listing pages do not show availability, so Banifox offers have

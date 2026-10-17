@@ -196,10 +196,14 @@ def record_observation(
         listing_id, was_active, is_new = cur.lastrowid, False, True
     else:
         listing_id, was_active, is_new = row["id"], bool(row["is_active"]), False
+        # A listing that moves to another category must be resolved again with
+        # that category's parser: clearing resolver_version queues it.
         conn.execute(
             """
             UPDATE listings SET
-                title = ?, store_sku = COALESCE(?, store_sku), category = ?,
+                title = ?, store_sku = COALESCE(?, store_sku),
+                resolver_version = CASE WHEN category = ? THEN resolver_version END,
+                category = ?,
                 brand = COALESCE(?, brand), image_url = COALESCE(?, image_url),
                 last_seen_at = ?, is_active = 1
             WHERE id = ?
@@ -207,6 +211,7 @@ def record_observation(
             (
                 listing.title,
                 listing.store_sku,
+                listing.category.value,
                 listing.category.value,
                 listing.brand,
                 listing.image_url,

@@ -163,3 +163,97 @@ def test_product_daily_and_change_from_history(conn, monkeypatch):
     stats = _stats(conn, "Eagle OC")
     assert stats["change_7d"] == pytest.approx(-0.10)
     assert stats["last_change_at"] == "2026-10-08"
+
+
+# ---------------------------------------------------------------------------
+# Catalog expansion: URLs listed in two categories, and products whose stores
+# disagree on how much the title says.
+# ---------------------------------------------------------------------------
+
+
+class CategoryAdapter:
+    """Each category returns its own titles; the same URL may appear in two."""
+
+    items: dict[Category, list[tuple[str, str, float]]] = {}
+
+    def __init__(self, store: StoreConfig):
+        self.store = store
+
+    def fetch_category(self, category: Category, scraped_at: datetime) -> Iterator[ScrapedListing]:
+        for slug, title, price in self.items.get(category, []):
+            yield ScrapedListing(
+                store_id=self.store.id,
+                category=category,
+                url=f"{self.store.base_url}/p/{slug}",
+                title=title,
+                price=price,
+                currency=Currency.USD,
+                in_stock=True,
+                scraped_at=scraped_at,
+            )
+
+
+def _multi_config(*categories: Category) -> StoresConfig:
+    store = StoreConfig(
+        id="a",
+        name="A",
+        base_url="https://a.test",
+        platform=Platform.WOOCOMMERCE,
+        # YAML order on purpose different from the Category order.
+        categories={c: ["x"] for c in reversed(categories)},
+    )
+    return StoresConfig(stores={"a": store})
+
+
+def test_url_in_two_categories_stays_in_the_first_one(conn):
+    CategoryAdapter.items = {
+        Category.CPU: [
+            ("r5", "AMD Ryzen 5 7600 AM5", 200.0),
+            ("kit", "Cooler AMD Wraith Stealth", 15.0),
+        ],
+        Category.COOLER: [("kit", "Cooler AMD Wraith Stealth", 15.0)],
+    }
+    results = scrape_stores(
+        conn,
+        _multi_config(Category.CPU, Category.COOLER),
+        run_id="r1",
+        adapter_factory=CategoryAdapter,
+    )
+    assert [r.category for r in results] == [Category.CPU, Category.COOLER]
+    assert {r.category: r.n_found for r in results} == {Category.CPU: 2, Category.COOLER: 0}
+    rows = conn.execute("SELECT url, category FROM listings ORDER BY url").fetchall()
+    assert [(r["url"].rsplit("/", 1)[1], r["category"]) for r in rows] == [
+        ("kit", "cpu"),
+        ("r5", "cpu"),
+    ]
+
+
+def test_listing_that_changes_category_is_resolved_again(conn):
+    CategoryAdapter.items = {Category.CPU: [("w", "Cooler AMD Wraith Stealth", 15.0)]}
+    scrape_stores(conn, _multi_config(Category.CPU), run_id="r1", adapter_factory=CategoryAdapter)
+    resolve_listings(conn)
+    first = conn.execute("SELECT match_status FROM listings").fetchone()
+    assert first["match_status"] == "rejected"  # a cooler is not a CPU
+
+    CategoryAdapter.items = {Category.COOLER: [("w", "Cooler AMD Wraith Stealth", 15.0)]}
+    scrape_stores(
+        conn, _multi_config(Category.COOLER), run_id="r2", adapter_factory=CategoryAdapter
+    )
+    assert resolve_listings(conn).processed == 1
+    row = conn.execute("SELECT category, match_status FROM listings").fetchone()
+    assert (row["category"], row["match_status"]) == ("cooler", "matched")
+
+
+@pytest.mark.parametrize("panel_first", [True, False])
+def test_product_keeps_the_most_informative_family(conn, panel_first):
+    listings = [
+        ("a", "Monitor Gigabyte MO27Q28G QHD 27″ 280Hz OLED", 800.0),
+        ("b", "Monitor Gigabyte MO27Q28G QHD 27″ 280Hz", 790.0),
+    ]
+    CategoryAdapter.items = {Category.MONITOR: listings if panel_first else listings[::-1]}
+    scrape_stores(
+        conn, _multi_config(Category.MONITOR), run_id="r1", adapter_factory=CategoryAdapter
+    )
+    resolve_listings(conn)
+    products = conn.execute("SELECT family_id FROM products").fetchall()
+    assert [p["family_id"] for p in products] == ["monitor:27-qhd-200-280hz-oled"]

@@ -135,6 +135,34 @@ class Alert:
     text: str
 
 
+def package_alerts(quote: ShipmentQuote) -> list[Alert]:
+    """Estimated weights and bulky boxes (monitors, cases): shared with the cart plan."""
+    out: list[Alert] = []
+    if any(i.weight_estimated for i in quote.items):
+        out.append(
+            Alert(
+                "warning",
+                "Peso y medidas estimados para la categoría: el flete depende del peso. Si lo "
+                "sabés (figura en la ficha de la tienda), corregilo.",
+            )
+        )
+
+    box = sum(i.box_cm3 or 0.0 for i in quote.items)
+    if (
+        quote.courier.volumetric is None
+        and box
+        and box / VOLUME_WARNING_DIVISOR > VOLUME_WARNING_RATIO * quote.real_kg
+    ):
+        out.append(
+            Alert(
+                "info",
+                f"La caja es grande para su peso: {quote.courier.name} podría cobrar peso "
+                "volumétrico (no publica la regla).",
+            )
+        )
+    return out
+
+
 def alerts(
     quote: ShipmentQuote,
     comparison: Comparison,
@@ -197,28 +225,7 @@ def alerts(
                 )
             out.append(Alert("warning", text))
 
-    if any(i.weight_estimated for i in quote.items):
-        out.append(
-            Alert(
-                "warning",
-                "Peso y medidas estimados para la categoría: el flete depende del peso. Si lo "
-                "sabés (figura en la ficha de la tienda), corregilo.",
-            )
-        )
-
-    box = sum(i.box_cm3 or 0.0 for i in quote.items)
-    if (
-        quote.courier.volumetric is None
-        and box
-        and box / VOLUME_WARNING_DIVISOR > VOLUME_WARNING_RATIO * quote.real_kg
-    ):
-        out.append(
-            Alert(
-                "info",
-                f"La caja es grande para su peso: {quote.courier.name} podría cobrar peso "
-                "volumétrico (no publica la regla).",
-            )
-        )
+    out += package_alerts(quote)
 
     if quote.regime is Regime.FRANCHISE and pool is not None:
         left_usd = pool.usd_left - quote.invoice_usd

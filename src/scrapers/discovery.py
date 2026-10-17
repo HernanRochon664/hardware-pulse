@@ -15,7 +15,9 @@ from src.scrapers.http import HttpClient
 from src.scrapers.woocommerce import API_PATH, PER_PAGE
 
 KEYWORDS = re.compile(
-    r"video|grafic|gpu|procesador|cpu|memori|ram|ssd|solido|nvme|disco|almacen", re.I
+    r"video|grafic|gpu|procesador|cpu|memori|ram|ssd|solido|nvme|disco|almacen"
+    r"|mother|placa|madre|cool|refrig|disip|water|liquid|monitor|fuente|gabinete",
+    re.I,
 )
 
 

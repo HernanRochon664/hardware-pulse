@@ -25,7 +25,31 @@ SPEC_LABELS = {
     "variants": "Variante",
     "rgb": "RGB",
     "white": "Blanca",
+    "socket": "Socket",
+    "igpu": "Video integrado",
+    "chipset": "Chipset",
+    "memory": "Memoria",
+    "wifi": "Wi-Fi",
+    "panel": "Panel",
+    "size_in": "Tamaño (pulgadas)",
+    "resolution": "Resolución",
+    "refresh_hz": "Frecuencia (Hz)",
+    "curved": "Curvo",
+    "portable": "Portátil",
+    "touch": "Táctil",
+    "model_code": "Código de modelo",
+    "kind": "Tipo",
+    "radiator_mm": "Radiador (mm)",
+    "lcd": "Pantalla LCD",
+    "wattage_w": "Potencia (W)",
+    "rating": "Certificación",
+    "modular": "Modular",
+    "atx_version": "Versión ATX",
+    "color": "Color",
+    "psu_w": "Fuente incluida (W)",
 }
+# Specs where "No" is worth showing (other False flags are hidden).
+SHOW_FALSE = {"igpu"}
 
 rate = data.usd_uyu()
 raw_id = st.query_params.get("p")
@@ -177,7 +201,9 @@ else:
         )
 
 specs = {
-    SPEC_LABELS.get(k, k): v for k, v in product["specs"].items() if v not in (None, [], False)
+    SPEC_LABELS.get(k, k): ("No" if v is False else v)
+    for k, v in product["specs"].items()
+    if v not in (None, []) and (v is not False or k in SHOW_FALSE)
 }
 if specs:
     st.subheader("Especificaciones")

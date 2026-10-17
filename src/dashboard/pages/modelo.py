@@ -70,6 +70,11 @@ FEATURE_LABELS = {
     "cat_cpu": "Categoría: procesador",
     "cat_ram": "Categoría: memoria RAM",
     "cat_ssd": "Categoría: disco SSD",
+    "cat_motherboard": "Categoría: motherboard",
+    "cat_cooler": "Categoría: cooler de CPU",
+    "cat_psu": "Categoría: fuente de poder",
+    "cat_case": "Categoría: gabinete",
+    "cat_monitor": "Categoría: monitor",
 }
 features = model["params"]["features"]
 coefs = pd.DataFrame(

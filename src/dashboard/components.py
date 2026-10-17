@@ -38,7 +38,13 @@ def inject_css() -> None:
 
 
 def category_label(value: str) -> str:
-    return CATEGORY_LABELS.get(Category(value), value) if value else ""
+    """Spanish label; a category this code does not know (newer DB) shows as is."""
+    if not value:
+        return ""
+    try:
+        return CATEGORY_LABELS[Category(value)]
+    except ValueError:
+        return value
 
 
 def freshness_banner() -> None:

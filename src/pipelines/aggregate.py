@@ -32,7 +32,17 @@ logger = logging.getLogger(__name__)
 
 FRESH_HOURS = 72
 OUTLIER_LOW, OUTLIER_HIGH = 0.5, 2.0
-CATEGORY_FLOOR_USD = {"gpu": 20.0, "cpu": 2.0, "ram": 3.0, "ssd": 10.0}
+CATEGORY_FLOOR_USD = {
+    "gpu": 20.0,
+    "cpu": 2.0,
+    "ram": 3.0,
+    "ssd": 10.0,
+    "motherboard": 30.0,
+    "cooler": 3.0,
+    "psu": 10.0,
+    "case": 10.0,
+    "monitor": 40.0,
+}
 HISTORIC_LOW_MIN_DAYS = 14
 
 CURRENT_OFFERS_SQL = """

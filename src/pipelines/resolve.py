@@ -81,6 +81,11 @@ def resolve_listings(conn: sqlite3.Connection, *, full: bool = False) -> Resolve
     return stats
 
 
+def _unknowns(family_id: str | None) -> int:
+    """Specs a family id leaves "sin dato" (monitor panel/Hz/resolution, PSU rating)."""
+    return (family_id or "").count("-na")
+
+
 def _assign_product(
     conn: sqlite3.Connection, row: sqlite3.Row, resolution: Resolution, now: str
 ) -> int | None:
@@ -110,8 +115,18 @@ def _assign_product(
 
     fingerprint = parsed.fingerprint or f"listing:{row['id']}"
     existing = conn.execute(
-        "SELECT id, mpn, image_url FROM products WHERE fingerprint = ?", (fingerprint,)
+        "SELECT id, mpn, image_url, family_id FROM products WHERE fingerprint = ?", (fingerprint,)
     ).fetchone()
+    if existing and _unknowns(parsed.family_id) > _unknowns(existing["family_id"]):
+        # Another store's title said more (e.g. the monitor's panel): keep that
+        # family, name and specs. Families of the first four categories never
+        # have unknown parts, so they keep updating as before.
+        conn.execute(
+            "UPDATE products SET mpn = COALESCE(mpn, ?), image_url = COALESCE(image_url, ?),"
+            " updated_at = ? WHERE id = ?",
+            (resolution.mpn, row["image_url"], now, existing["id"]),
+        )
+        return int(existing["id"])
     if existing:
         conn.execute(
             """
