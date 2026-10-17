@@ -293,6 +293,9 @@ def test_cooler_with_a_chipset_like_code_is_not_a_motherboard():
         ("Monitor Samsung Odyssey G7 27″ IPS 4K 180hz/360hz", '27" 4K UHD 144–180 Hz IPS'),
         ("Monitor Gigabyte GS25F2 25″ 200hz IPS 1Ms", '25" Full HD 1080p 200–280 Hz IPS'),
         ("Monitor Xiaomi 4K 27 UHD Profesional", '27" 4K UHD Hz sin dato panel sin dato'),
+        # "400H" is part of the model code, not 400 Hz
+        ('MONITOR 20" LG 20MK400H-B (HD/HDMI/VGA/VESA)', '20" HD Hz sin dato panel sin dato'),
+        ("Monitor Samsung G9 49″OLED DQHD5120X1440 240H 0.03", '49" Doble QHD 200–280 Hz OLED'),
     ],
 )
 def test_monitor_family(title, family):

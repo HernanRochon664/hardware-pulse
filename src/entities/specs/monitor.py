@@ -36,7 +36,8 @@ _OTHER = re.compile(
     r"|\btarjeta de video|\bgpu\b"
 )
 _PIXELS = re.compile(r"(\d{3,4}) ?[x×*] ?(\d{3,4})")
-_HZ = re.compile(r"(?<![\d.])(\d{2,3}) ?h(?:z|\b)")
+# "165Hz", "165 Hz", truncated "240H"; never inside a model code (LG 20MK400H-B).
+_HZ = re.compile(r"(?<![\w.])(\d{2,3}) ?h(?:z|\b)")
 _CODE_TOKEN = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 _SAMSUNG_CODE = re.compile(r"([scfu]\d{2}[a-z]{1,2}\d{2,3})")
 _MSI_SUFFIX = re.compile(r"^[xe]\d{2}[a-z]?$")
