@@ -14,8 +14,9 @@ rate = data.usd_uyu()
 st.title("Familias")
 st.markdown(
     "Una familia agrupa todos los modelos del mismo chip o especificación (por ejemplo, todas "
-    "las **RTX 5060 Ti 16GB** de cualquier marca). Sirve para ver cuánto cuesta entrar a ese "
-    "nivel de rendimiento y cómo se mueve el mercado."
+    'las **RTX 5060 Ti 16GB**, los mothers **B650 mATX** o los monitores **27" QHD 144–180 Hz '
+    "IPS** de cualquier marca). Sirve para ver cuánto cuesta entrar a ese nivel y cómo se mueve "
+    "el mercado. En gabinetes, la familia es el modelo y agrupa sus colores y versiones."
 )
 
 families = data.families()
@@ -32,6 +33,10 @@ view = pd.DataFrame(view).copy()
 per_gb = pd.Series(view["specs"]).apply(lambda s: s.get("capacity_gb"))
 if cat in ("ram", "ssd"):
     view["usd_per_gb"] = view["min_usd"] / per_gb
+if cat == "psu":
+    view["usd_per_w"] = view["min_usd"] / pd.Series(view["specs"]).apply(
+        lambda s: s.get("wattage_w")
+    )
 factor = rate if currency() == "UYU" and rate else 1.0
 table = pd.DataFrame(
     {
@@ -45,6 +50,8 @@ table = pd.DataFrame(
 )
 if "usd_per_gb" in view:
     table["U$S por GB"] = view["usd_per_gb"].round(2)
+if "usd_per_w" in view:
+    table["U$S por W"] = view["usd_per_w"].round(3)
 prefix = "$ " if factor != 1.0 else "U$S "
 selection = st.dataframe(
     table.sort_values(by=["Desde"]),

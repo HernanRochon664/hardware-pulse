@@ -8,7 +8,10 @@ import streamlit as st
 from src.dashboard import data
 from src.dashboard.components import category_label
 from src.dashboard.formatting import ago, local_datetime
+from src.domain.models import Category
 from src.pipelines.aggregate import FRESH_HOURS
+
+CATEGORY_ORDER = {c.value: i for i, c in enumerate(Category)}
 
 STATUS_LABELS = {
     "ok": "OK",
@@ -32,7 +35,9 @@ st.caption(
 rows = []
 stores = sorted(status["stores"].values(), key=lambda s: (bool(s.get("paused")), s["name"]))
 for store in stores:
-    for category, run in sorted(store["categories"].items()):
+    for category, run in sorted(
+        store["categories"].items(), key=lambda item: (CATEGORY_ORDER.get(item[0], 99), item[0])
+    ):
         rows.append(
             {
                 "Tienda": store["name"],

@@ -21,6 +21,32 @@ SORTS = {
     "Nombre A–Z": ("name", True),
 }
 PAGE_SIZES = (24, 48, 96)
+# Spec filters of the categories added in 2026-10 (the first four keep the
+# family filter only). key -> label; values come from the products' specs.
+CATEGORY_FILTERS = {
+    "monitor": {
+        "panel": "Panel",
+        "resolution": "Resolución",
+        "refresh_hz": "Frecuencia (Hz)",
+        "size_class": "Tamaño (pulgadas)",
+    },
+    "motherboard": {
+        "socket": "Socket",
+        "chipset": "Chipset",
+        "form": "Formato",
+        "memory": "Memoria",
+    },
+    "cooler": {"kind": "Tipo", "radiator_mm": "Radiador (mm)"},
+    "psu": {"wattage_w": "Potencia (W)", "rating": "Certificación", "modular": "Modular"},
+}
+
+
+def spec_value(specs: dict, key: str):
+    if key == "size_class":  # 23.8" and 24" are the same size class
+        size = specs.get("size_in")
+        return int(size + 0.5) if isinstance(size, int | float) else None
+    return specs.get(key)
+
 
 params = st.query_params
 catalog = data.catalog()
@@ -46,6 +72,13 @@ with st.sidebar:
         family_names,
         default=[f for f in params.get_all("fam") if f in family_names],
     )
+    spec_filters: dict[str, list] = {}
+    for key, label in CATEGORY_FILTERS.get(cat or "", {}).items():
+        values = {spec_value(s, key) for s in pool["specs"]} - {None}
+        if values:
+            spec_filters[key] = st.multiselect(
+                label, sorted(values, key=lambda v: (str(type(v)), v))
+            )
     brands = st.multiselect("Marca", sorted(pool["brand"].dropna().unique()))
     stores = st.multiselect(
         "Tienda con el mejor precio",
@@ -70,6 +103,9 @@ if query:
     df = df.loc[haystack.apply(lambda text: all(t in text for t in terms))]
 if families:
     df = df.loc[df["family"].isin(families)]
+for key, chosen in spec_filters.items():
+    if chosen:
+        df = df.loc[df["specs"].apply(lambda s, k=key, c=chosen: spec_value(s, k) in c)]
 if brands:
     df = df.loc[df["brand"].isin(brands)]
 if stores:

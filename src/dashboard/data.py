@@ -72,7 +72,8 @@ def catalog() -> pd.DataFrame:
     df = _query(
         """
         SELECT p.id, p.name, p.category, p.brand, p.image_url, p.family_id, p.mpn, p.fingerprint,
-               f.name AS family, s.best_price_usd, s.best_store_id, st.name AS best_store,
+               p.specs_json, f.name AS family, s.best_price_usd, s.best_store_id,
+               st.name AS best_store,
                s.best_regular_usd, s.n_offers, s.n_stores, s.min_180d, s.max_180d,
                s.change_7d, s.change_30d, s.last_change_at, s.is_historic_low, s.history_days,
                sig.recommendation, sig.p_drop
@@ -90,6 +91,7 @@ def catalog() -> pd.DataFrame:
     )
     series = spark.groupby("product_id")["min_usd"].apply(list).to_dict()
     df["sparkline"] = [series.get(i, []) for i in df["id"].tolist()]
+    df["specs"] = df["specs_json"].apply(lambda s: json.loads(s or "{}"))
     return df
 
 
