@@ -60,11 +60,12 @@ stores:
     name: NetPC
     base_url: https://netpc.uy
     platform: woocommerce
-    # Moved off WordPress to a site hosted on Vercel on 2026-10-20; the WooCommerce
-    # Store API now answers HTTP 404. Disabled until a new adapter exists; its
-    # history stays in the DB.
+    # Moved off WooCommerce to retai.la (SvelteKit on Vercel) on 2026-10-20 and stopped
+    # selling components: no GPUs, only notebooks and 5 monitors. Its history stays in
+    # the DB. If needed, every catalog page has a JSON twin at <path>/__data.json
+    # (devalue-encoded; price, currency, stock, and a SKU keeping the old WOO-<id>).
     enabled: false
-    pause_reason: La tienda cambió de plataforma y su catálogo no se puede leer por ahora.
+    pause_reason: La tienda dejó de vender componentes.
     categories:
       gpu: ["search:tarjeta de video"]
 
