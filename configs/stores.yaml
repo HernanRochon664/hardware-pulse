@@ -60,6 +60,11 @@ stores:
     name: NetPC
     base_url: https://netpc.uy
     platform: woocommerce
+    # Moved off WordPress to a site hosted on Vercel on 2026-10-20; the WooCommerce
+    # Store API now answers HTTP 404. Disabled until a new adapter exists; its
+    # history stays in the DB.
+    enabled: false
+    pause_reason: La tienda cambió de plataforma y su catálogo no se puede leer por ahora.
     categories:
       gpu: ["search:tarjeta de video"]
 
