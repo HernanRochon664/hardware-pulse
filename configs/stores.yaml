@@ -96,9 +96,10 @@ stores:
     base_url: https://tecnocity.com.uy
     platform: woocommerce
     categories:
-      # No GPUs since 2026-10-16: the tarjetas-de-video category was removed and the
-      # store only sells them inside notebooks and PCs.
-      cpu: [cpu]
+      # tarjetas-de-video disappeared on 2026-10-16 and came back by 2026-10-24 (30 GPUs).
+      # No CPUs since 2026-10-20: the cpu category was removed and searches only return
+      # notebooks.
+      gpu: [tarjetas-de-video]
       ram: [memoria-ram]
       ssd: [discos]
       motherboard: [motherboards]
@@ -130,6 +131,12 @@ stores:
     name: HardPC
     base_url: https://www.hardpc.com.uy
     platform: sme
+    # Since 2026-10-22 every category page says "N encontrados" but renders an empty
+    # #resultado_productos grid ("La búsqueda no dio resultados"), also outside GitHub
+    # Actions; bursts of requests get HTTP 403. Its history stays in the DB. To re-enable,
+    # check that `scrape --dry-run --stores hardpc` finds products and flip `enabled`.
+    enabled: false
+    pause_reason: El sitio dejó de mostrar el listado de productos.
     categories:
       gpu: [/catalogo/componentes/tarjeta-de-video/hardpc/]
       cpu: [/catalogo/componentes/procesadores/hardpc/]
