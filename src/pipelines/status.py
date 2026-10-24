@@ -10,32 +10,45 @@ import logging
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from src.settings import to_iso, utcnow
+
+if TYPE_CHECKING:
+    from src.config import StoreConfig
 
 logger = logging.getLogger(__name__)
 
 
-def paused_stores() -> dict[str, str]:
-    """Stores disabled on purpose in configs/stores.yaml, with the reason to show."""
+def _configured_stores() -> list[StoreConfig]:
     from src.config import load_stores_config
 
     try:
-        stores = load_stores_config().stores.values()
+        return list(load_stores_config().stores.values())
     except Exception:  # the dashboard must still render without the config
         logger.warning("Could not read the stores config", exc_info=True)
-        return {}
-    return {s.id: s.pause_reason or "Pausada" for s in stores if not s.enabled}
+        return []
+
+
+def paused_stores() -> dict[str, str]:
+    """Stores disabled on purpose in configs/stores.yaml, with the reason to show."""
+    return {s.id: s.pause_reason or "Pausada" for s in _configured_stores() if not s.enabled}
+
+
+def configured_categories() -> dict[str, set[str]]:
+    """Categories each store still scrapes; runs of removed ones are history only."""
+    return {s.id: {str(c) for c in s.categories} for s in _configured_stores()}
 
 
 def build_status(
     conn: sqlite3.Connection,
     now: datetime | None = None,
     paused: dict[str, str] | None = None,
+    categories: dict[str, set[str]] | None = None,
 ) -> dict[str, Any]:
     now = now or utcnow()
     paused = paused_stores() if paused is None else paused
+    categories = configured_categories() if categories is None else categories
     latest_runs = conn.execute(
         """
         SELECT r.* FROM scrape_runs r
@@ -57,6 +70,8 @@ def build_status(
     stores: dict[str, Any] = {}
     names = {r["id"]: r for r in conn.execute("SELECT id, name, base_url FROM stores")}
     for run in latest_runs:
+        if run["store_id"] in categories and run["category"] not in categories[run["store_id"]]:
+            continue
         store = stores.setdefault(
             run["store_id"],
             {
