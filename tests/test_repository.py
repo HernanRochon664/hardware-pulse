@@ -90,6 +90,25 @@ def test_classify_run_detects_empty_and_anomalous_counts(db_conn):
     assert repository.classify_run(db_conn, "thot", Category.GPU, 55) == "ok"
 
 
+def test_classify_run_accepts_a_drop_that_held_for_three_runs(db_conn):
+    def finish(i: int, status: str, n_found: int) -> None:
+        run = repository.start_scrape_run(db_conn, f"r{i}", "thot", Category.GPU, T0 + timedelta(i))
+        repository.finish_scrape_run(
+            db_conn, run, status=status, finished_at=T0 + timedelta(i), n_found=n_found
+        )
+
+    for i in range(3):
+        finish(i, "ok", 35)
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 13) == "anomaly"
+    finish(3, "anomaly", 13)
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 13) == "anomaly"
+    finish(4, "anomaly", 14)
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 13) == "ok"
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 8) == "anomaly"
+    finish(5, "ok", 13)  # still below half the median of the ok runs, but held
+    assert repository.classify_run(db_conn, "thot", Category.GPU, 13) == "ok"
+
+
 def test_fx_rate_falls_back_to_latest_earlier_date(db_conn):
     repository.save_fx_rate(db_conn, "2026-10-10", 40.1, "test", T0)
     assert repository.get_fx_rate(db_conn, "2026-10-14") == 40.1

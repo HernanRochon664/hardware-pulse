@@ -6,7 +6,9 @@ For each (store, category):
 2. Every listing found extends or opens its price period (repository rule 1).
 3. The run is classified (ok / empty / anomaly / error). Only an "ok" run
    deactivates listings that disappeared from the store (rule 2): a failed or
-   partial scrape never makes products vanish.
+   partial scrape never makes products vanish. An anomalous drop is accepted
+   as "ok" when most of a sample of the missing product pages answer 404/410,
+   i.e. the store really removed them.
 
 Categories are scraped in the order of ``Category``. A URL that a store lists
 in two categories is kept in the first one and skipped in the others, so a
@@ -33,6 +35,9 @@ from src.storage.repository import canonical_url
 logger = logging.getLogger(__name__)
 
 AdapterFactory = Callable[[StoreConfig], StoreAdapter]
+
+PROBE_SAMPLE = 10  # missing product pages checked when a run looks anomalous
+PROBE_GONE_RATIO = 0.8
 
 
 @dataclass
@@ -124,6 +129,8 @@ def _scrape_one(
         result.status = "error"
     else:
         result.status = repository.classify_run(conn, store.id, category, result.n_found)
+    if result.status == "anomaly" and _drop_confirmed(conn, adapter, store, category, seen):
+        result.status = "ok"
     if result.status == "ok":
         with conn:
             result.n_delisted = repository.deactivate_unseen(conn, store.id, category, seen)
@@ -152,3 +159,23 @@ def _scrape_one(
         result.seconds,
     )
     return result
+
+
+def _drop_confirmed(
+    conn: sqlite3.Connection,
+    adapter: StoreAdapter,
+    store: StoreConfig,
+    category: Category,
+    seen: set[int],
+) -> bool:
+    """True when most of the missing product pages are gone from the store."""
+    urls = repository.unseen_active_urls(conn, store.id, category, seen, PROBE_SAMPLE)
+    gone = sum(adapter.listing_gone(url) is True for url in urls)
+    logger.info(
+        "%s/%s: anomalous drop, %d of %d missing pages are gone",
+        store.id,
+        category.value,
+        gone,
+        len(urls),
+    )
+    return bool(urls) and gone >= PROBE_GONE_RATIO * len(urls)

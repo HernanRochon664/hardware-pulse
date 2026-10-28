@@ -16,6 +16,7 @@ from src.pipelines.scrape import scrape_stores
 from src.storage.db import connect
 
 STORE_ITEMS: dict[str, list[tuple[str, str, float, bool | None]]] = {}
+GONE_URLS: set[str] = set()  # product pages that answer 404
 
 
 class FakeAdapter:
@@ -38,6 +39,9 @@ class FakeAdapter:
                 scraped_at=scraped_at,
             )
 
+    def listing_gone(self, url: str) -> bool | None:
+        return url in GONE_URLS
+
 
 def _config() -> StoresConfig:
     stores = {
@@ -57,6 +61,7 @@ def _config() -> StoresConfig:
 def conn(monkeypatch):
     monkeypatch.setattr(scrape_module, "ensure_fx_rate", lambda conn, day, now: 40.0)
     STORE_ITEMS.clear()
+    GONE_URLS.clear()
     db = connect(":memory:")
     yield db
     db.close()
@@ -117,6 +122,36 @@ def test_listing_removed_by_store_stops_counting(conn):
     _run(conn, "r2")  # b no longer sells the Eagle
     assert _stats(conn, "Eagle OC")["best_price_usd"] == 570.0
     assert _stats(conn, "RTX 5070 12GB Shadow")["n_stores"] == 2
+
+
+def _coolers(n: int) -> list[tuple[str, str, float, bool | None]]:
+    return [(f"c{i}", f"Cooler DeepCool AK{i}", 30.0 + i, True) for i in range(n)]
+
+
+def _active(conn, store_id: str) -> int:
+    return conn.execute(
+        "SELECT COUNT(*) FROM listings WHERE store_id = ? AND is_active = 1", (store_id,)
+    ).fetchone()[0]
+
+
+def test_drop_confirmed_by_gone_pages_is_ok_and_delists(conn):
+    STORE_ITEMS["a"] = _coolers(35)
+    _run(conn, "r1")
+    STORE_ITEMS["a"] = _coolers(13)
+    GONE_URLS.update(f"https://a.test/p/c{i}" for i in range(13, 35))
+    results = {r.store_id: r for r in _run(conn, "r2")}
+    assert results["a"].status == "ok"
+    assert results["a"].n_delisted == 22
+    assert _active(conn, "a") == 13
+
+
+def test_drop_with_live_pages_stays_anomalous_and_keeps_listings(conn):
+    STORE_ITEMS["a"] = _coolers(35)
+    _run(conn, "r1")
+    STORE_ITEMS["a"] = _coolers(13)  # partial scrape: the pages still exist
+    results = {r.store_id: r.status for r in _run(conn, "r2")}
+    assert results["a"] == "anomaly"
+    assert _active(conn, "a") == 35
 
 
 def test_parse_error_price_is_flagged_and_excluded(conn):

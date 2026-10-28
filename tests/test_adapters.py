@@ -127,3 +127,12 @@ def test_nopcommerce_paginates_until_empty_and_404_category_fails():
     )
     with pytest.raises(ScrapeError):
         list(broken.fetch_category(Category.GPU, NOW))
+
+
+@pytest.mark.parametrize(
+    ("status", "expected"), [(404, True), (410, True), (200, False), (503, None)]
+)
+def test_listing_gone_reads_the_product_page_status(status, expected):
+    client = FakeClient(lambda url, params: FakeResponse(status=status))
+    adapter = build_adapter(store(Platform.WOOCOMMERCE, {"gpu": ["gpu"]}), client)  # type: ignore[arg-type]
+    assert adapter.listing_gone("https://shop.test/product/x/") is expected

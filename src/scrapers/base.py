@@ -16,11 +16,15 @@ from collections.abc import Iterator
 from datetime import datetime
 from urllib.parse import urljoin
 
+import requests
+
 from src.config import StoreConfig
 from src.domain.models import Category, ScrapedListing
 from src.scrapers.http import HttpClient
 
 logger = logging.getLogger(__name__)
+
+GONE_STATUS = (404, 410)
 
 
 class ScrapeError(RuntimeError):
@@ -44,6 +48,18 @@ class StoreAdapter(ABC):
                     continue
                 seen.add(listing.url)
                 yield listing
+
+    def listing_gone(self, url: str) -> bool | None:
+        """True when the store answers 404/410 for a product page, None when unsure."""
+        try:
+            response = self.client.get(url)
+        except requests.RequestException:
+            return None
+        if response.status_code in GONE_STATUS:
+            return True
+        if 200 <= response.status_code < 300:
+            return False
+        return None
 
     @abstractmethod
     def fetch_source(
