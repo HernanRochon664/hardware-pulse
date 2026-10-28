@@ -11,7 +11,9 @@ Business rules implemented here (each one is covered by tests):
 2. Delisting: after a successful run of (store, category), listings of that
    store/category that were not seen in the run become inactive.
 3. Anomalies: a run with zero listings, or with fewer than half the median of
-   the last successful runs, never deactivates anything (see classify_run).
+   the last successful runs, never deactivates anything (see classify_run),
+   unless the drop already held for the previous runs: then it is the store's
+   new size, not a broken scrape.
 """
 
 from __future__ import annotations
@@ -39,6 +41,8 @@ TRACKING_PARAMS = {
 
 ANOMALY_RATIO = 0.5
 ANOMALY_WINDOW = 7
+NEW_LEVEL_RUNS = 3  # runs at the same lower count that make it the new normal
+NEW_LEVEL_TOLERANCE = 0.1
 
 
 def canonical_url(url: str) -> str:
@@ -140,9 +144,24 @@ def classify_run(conn: sqlite3.Connection, store_id: str, category: Category, n_
     ).fetchall()
     if rows:
         median = statistics.median(r[0] for r in rows)
-        if n_found < ANOMALY_RATIO * median:
+        if n_found < ANOMALY_RATIO * median and not _held_level(conn, store_id, category, n_found):
             return "anomaly"
     return "ok"
+
+
+def _held_level(conn: sqlite3.Connection, store_id: str, category: Category, n_found: int) -> bool:
+    """True when the previous runs already found about ``n_found`` listings."""
+    rows = conn.execute(
+        """
+        SELECT n_found FROM scrape_runs
+        WHERE store_id = ? AND category = ? AND status IN ('ok', 'anomaly')
+        ORDER BY started_at DESC LIMIT ?
+        """,
+        (store_id, category.value, NEW_LEVEL_RUNS - 1),
+    ).fetchall()
+    return len(rows) == NEW_LEVEL_RUNS - 1 and all(
+        abs(r[0] - n_found) <= NEW_LEVEL_TOLERANCE * n_found for r in rows
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -266,6 +285,22 @@ def record_observation(
         open_period["price"] != listing.price or open_period["in_stock"] != in_stock
     )
     return ObservationResult(listing_id, is_new, price_changed=price_changed)
+
+
+def unseen_active_urls(
+    conn: sqlite3.Connection, store_id: str, category: Category, seen_ids: set[int], limit: int
+) -> list[str]:
+    """A random sample of the active listings of the store/category missing from this run."""
+    rows = conn.execute(
+        """
+        SELECT url FROM listings
+        WHERE store_id = ? AND category = ? AND is_active = 1
+          AND id NOT IN (SELECT value FROM json_each(?))
+        ORDER BY RANDOM() LIMIT ?
+        """,
+        (store_id, category.value, json.dumps(sorted(seen_ids)), limit),
+    ).fetchall()
+    return [r[0] for r in rows]
 
 
 def deactivate_unseen(
